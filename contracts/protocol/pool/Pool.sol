@@ -389,7 +389,7 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
 
     function getUserFlashLoanFeeDiscount(address user) public view returns (uint256){
         //Variable flash loan fee, based on user's supplied assets
-        ( uint256 totalCollateralBase, uint256 totalDebtBase,,,,uint256 healthFactor ) = PoolLogic.executeGetUserAccountData(
+        ( uint256 totalCollateralBase, uint256 totalDebtBase,,,, uint256 healthFactor ) = PoolLogic.executeGetUserAccountData(
             _reserves,
             _reservesList,
             _eModeCategories,
