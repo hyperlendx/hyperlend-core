@@ -28,7 +28,7 @@ async function main() {
     // 5. Add EmergencyAdmin  to ACLManager contract
     await aclManager.addEmergencyAdmin(emergencyAdmin)
 
-    const isACLAdmin = await aclManager.hasRole(ZERO_BYTES_32, aclAdmin);
+    const isACLAdmin = await aclManager.hasRole(config.ZERO_BYTES_32, aclAdmin);
     const isPoolAdmin = await aclManager.isPoolAdmin(poolAdmin);
     const isEmergencyAdmin = await aclManager.isEmergencyAdmin(emergencyAdmin);
 

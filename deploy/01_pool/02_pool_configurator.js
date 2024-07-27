@@ -1,13 +1,10 @@
 const { ethers } = require("hardhat");
-const fs = require("fs")
 const path = require('path');
 
 const { config, saveDeploymentInfo, getDeployedContractAddress } = require("../../markets")
 
-const poolAddressesProvider = getDeployedContractAddress("poolAddressesProvider")
-
 async function main() {
-    const PoolConfigurator = await ethers.PoolConfigurator("PoolConfigurator", {
+    const PoolConfigurator = await ethers.getContractFactory("PoolConfigurator", {
         libraries: {
             ConfiguratorLogic: getDeployedContractAddress("configuratorLogic"),
         }
@@ -15,9 +12,9 @@ async function main() {
     const poolConfigurator = await PoolConfigurator.deploy();
     console.log(`poolConfigurator deployed to ${poolConfigurator.address}`);
 
-    await poolConfigurator.initialize(poolAddressesProvider);
+    await poolConfigurator.initialize(getDeployedContractAddress("poolAddressesProvider"));
 
-    const ReservesSetupHelper = await ethers.PoolConfigurator("ReservesSetupHelper");
+    const ReservesSetupHelper = await ethers.getContractFactory("ReservesSetupHelper");
     const reservesSetupHelper = await ReservesSetupHelper.deploy()
     console.log(`reservesSetupHelper deployed to ${reservesSetupHelper.address}`);
 

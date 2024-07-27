@@ -8,7 +8,7 @@ async function main() {
     const poolAddressesProvider = PoolAddressesProvider.attach(getDeployedContractAddress("poolAddressesProvider"));
 
     const AaveOracle = await ethers.getContractFactory("AaveOracle");
-    const aaveOracle = AaveOracle.deploy(
+    const aaveOracle = await AaveOracle.deploy(
         poolAddressesProvider.address,
         config.oracle.assets,
         config.oracle.sources,

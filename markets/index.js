@@ -3,6 +3,7 @@ const fs = require("fs")
 
 const config = {
     ZERO_ADDRESS: "0x0000000000000000000000000000000000000000",
+    ZERO_BYTES_32: "0x0000000000000000000000000000000000000000000000000000000000000000",
     poolAddressesProviderRegistry_owner: "0x16703F774Bd7b2F2E6f39E7dCead924fa2080a0D",
     poolAddressesProvider_owner: "0x16703F774Bd7b2F2E6f39E7dCead924fa2080a0D",
     poolConfig: {
@@ -10,14 +11,14 @@ const config = {
         providerId: 2,
         isL2PoolSupported: false,
         flashLoanPremiums: {
-            total: "5",
-            protocol: "4"
+            total: 5,
+            protocol: 4
         }
     },
     acl: {
         aclAdmin: "0x16703F774Bd7b2F2E6f39E7dCead924fa2080a0D",
-        poolAdmin: "0xF8b76b29A7fcd23A2A44a23CaEe298f4afCB0Ebd",
-        emergencyAdmin: "0xF8b76b29A7fcd23A2A44a23CaEe298f4afCB0Ebd"
+        poolAdmin: "0x16703F774Bd7b2F2E6f39E7dCead924fa2080a0D",
+        emergencyAdmin: "0x16703F774Bd7b2F2E6f39E7dCead924fa2080a0D"
     },
     oracle: {
         assets: [
@@ -29,7 +30,7 @@ const config = {
         fallbackOracleAddress: "0x0000000000000000000000000000000000000000",
         baseCurrencyUnit: "100000000"
     },
-    treasuryAddress: "",
+    treasuryAddress: "0x0000000000000000000000000000000000000000",
     incentivesController: "0x0000000000000000000000000000000000000000",
     reservesAddresses: {},
     rateStrategies: [{
@@ -45,9 +46,8 @@ const config = {
         optimalStableToTotalDebtRatio: ethers.utils.parseUnits("0.2", 27).toString(),
     }],
     tokenAddresses: {
-        DAI: "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
-        LINK: "0xf97f4df75117a78c1A5a0DBb814Af92458539FB4",
-        USDC: "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
+        DAI: "0x00a7095e063859D73F6154C945d7F47C42B4A3f2",
+        LINK: "0x9E72BFA05F9857ab605594aDa74EC0be8bd6Ae81",
     },
     market: {
         MarketId: "Testnet Hyperlend Market",
@@ -79,9 +79,8 @@ const config = {
         },
         ReserveAssets: {
             arbitrum: {
-                DAI: "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
-                LINK: "0xf97f4df75117a78c1A5a0DBb814Af92458539FB4",
-                USDC: "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
+                DAI: "0x00a7095e063859D73F6154C945d7F47C42B4A3f2",
+                LINK: "0x9E72BFA05F9857ab605594aDa74EC0be8bd6Ae81",
             }
         },
         EModes: {
@@ -107,7 +106,7 @@ const config = {
 
 let deployedContracts = JSON.parse(fs.readFileSync("./markets/deployedContracts.json"))
 
-async function getDeployedContractAddress(id){
+function getDeployedContractAddress(id){
     return deployedContracts[id]
 }
 

@@ -1,28 +1,18 @@
 const { ethers } = require("hardhat");
-const fs = require("fs")
 const path = require('path');
 
 const { config, saveDeploymentInfo, getDeployedContractAddress, setDeployedContractAddress } = require("../../markets")
-
-const poolConfig = {
-    ATokenNamePrefix: "",
-    StableDebtTokenNamePrefix: "",
-    VariableDebtTokenNamePrefix: "",
-    SymbolPrefix: "",
-    ReservesConfig: "",
-    RateStrategies: ""
-}
-
-let reservesAddresses = []
-export const ArbitrumConfig = {
-   
-  };
 
 async function main() {
     const PoolAddressesProvider = await ethers.getContractFactory("PoolAddressesProvider");
     const poolAddressesProvider = PoolAddressesProvider.attach(getDeployedContractAddress("poolAddressesProvider"));
     const poolAddress = await poolAddressesProvider.getPool();
-    const Pool = await ethers.getContractFactory("Pool"); 
+    const poolLibraries = await getPoolLibraries()
+    const Pool = await ethers.getContractFactory("Pool", {
+        libraries: {
+            ...poolLibraries,
+        }
+    }); 
     const pool = Pool.attach(poolAddress)
 
     // Deploy Rate Strategies
@@ -49,12 +39,7 @@ async function main() {
         setDeployedContractAddress(strategyData.name, defaultReserveInterestRateStrategy.address)
     }
 
-    // Deploy Reserves ATokens
-    if (Object.keys(reservesAddresses).length == 0) {
-        console.log("[WARNING] Skipping Reserves initialization. Empty asset list.");
-        return;
-    }
-
+    // Deploy Reserves
     let initChunks = 3
     let initInputParams = []
     let reserveTokens = [];
@@ -97,7 +82,7 @@ async function main() {
         }
 
         reserveInitDecimals.push(reserveDecimals);
-        reserveTokens.push(tokenAddresses[symbol]);
+        reserveTokens.push(config.tokenAddresses[symbol]);
         reserveSymbols.push(symbol);
     }
 
@@ -116,15 +101,15 @@ async function main() {
             underlyingAssetDecimals: reserveInitDecimals[i],
             interestRateStrategyAddress: strategyAddressPerAsset[reserveSymbols[i]],
             underlyingAsset: reserveTokens[i],
-            treasury: treasuryAddress,
+            treasury: config.treasuryAddress,
             incentivesController: config.incentivesController,
             underlyingAssetName: reserveSymbols[i],
-            aTokenName: `Hyperlend ${aTokenNamePrefix} ${reserveSymbols[i]}`,
-            aTokenSymbol: `h${symbolPrefix}${reserveSymbols[i]}`,
-            variableDebtTokenName: `Hyperlend ${variableDebtTokenNamePrefix} Variable Debt ${reserveSymbols[i]}`,
-            variableDebtTokenSymbol: `variableDebt${symbolPrefix}${reserveSymbols[i]}`,
-            stableDebtTokenName: `Hyperlend ${stableDebtTokenNamePrefix} Stable Debt ${reserveSymbols[i]}`,
-            stableDebtTokenSymbol: `stableDebt${symbolPrefix}${reserveSymbols[i]}`,
+            aTokenName: `Hyperlend ${config.market.ATokenNamePrefix} ${reserveSymbols[i]}`,
+            aTokenSymbol: `h${config.market.SymbolPrefix}${reserveSymbols[i]}`,
+            variableDebtTokenName: `Hyperlend ${config.market.VariableDebtTokenNamePrefix} Variable Debt ${reserveSymbols[i]}`,
+            variableDebtTokenSymbol: `variableDebt${config.market.SymbolPrefix}${reserveSymbols[i]}`,
+            stableDebtTokenName: `Hyperlend ${config.market.StableDebtTokenNamePrefix} Stable Debt ${reserveSymbols[i]}`,
+            stableDebtTokenSymbol: `stableDebt${config.market.SymbolPrefix}${reserveSymbols[i]}`,
             params: "0x10",
         });
     }
@@ -133,12 +118,16 @@ async function main() {
     const chunkedSymbols = chunk(reserveSymbols, initChunks);
     const chunkedInitInputParams = chunk(initInputParams, initChunks);
 
-    const PoolConfigurator = await ethers.getContractFactory("PoolConfigurator");
-    const poolConfigurator = PoolConfigurator.attach(getDeployedContractAddress("poolConfigurator"));
+    const PoolConfigurator = await ethers.getContractFactory("PoolConfigurator", {
+        libraries: {
+            ConfiguratorLogic: getDeployedContractAddress("configuratorLogic")
+        }
+    });
+    const poolConfigurator = PoolConfigurator.attach(await poolAddressesProvider.getPoolConfigurator());
 
     console.log(`- Reserves initialization in ${chunkedInitInputParams.length} txs`);
     for (let chunkIndex = 0; chunkIndex < chunkedInitInputParams.length; chunkIndex++) {
-        const tx = poolConfigurator.initReserves(chunkedInitInputParams[chunkIndex])
+        const tx = await poolConfigurator.initReserves(chunkedInitInputParams[chunkIndex])
 
         console.log(
             `  - Reserve ready for: ${chunkedSymbols[chunkIndex].join(", ")}`,
@@ -154,7 +143,7 @@ async function main() {
     const reservesSetupHelper = await ReservesSetupHelper.deploy()
 
     const AaveProtocolDataProvider = await ethers.getContractFactory("AaveProtocolDataProvider");
-    const protocolDataArtifact = AaveProtocolDataProvider.attach(getDeployedContractAddress("AaveProtocolDataProvider"))
+    const protocolDataProvider = AaveProtocolDataProvider.attach(await poolAddressesProvider.getPoolDataProvider())
 
     const tokens = [];
     const symbols = [];
@@ -174,7 +163,7 @@ async function main() {
                 borrowingEnabled,
                 flashLoanEnabled,
             }
-        ] of Object.entries(reservesParams)
+        ] of Object.entries(config.market.ReservesConfig)
     ) {
         if (!config.tokenAddresses[assetSymbol]) {
             console.log(`- Skipping init of ${assetSymbol} due token address is not set at markets config`);
@@ -240,10 +229,10 @@ async function main() {
     saveDeploymentInfo(path.basename(__filename), {
         defaultReserveInterestRateStrategy: deployedIRStrategies,
         reservesSetupHelper: reservesSetupHelper.address,
-        protocolDataArtifact: protocolDataArtifact
+        protocolDataProvider: protocolDataProvider
     })  
 
-    deployments.log(`[Deployment] Configured all reserves`);_init_periphery
+    console.log(`[Deployment] Configured all reserves`);
 }
 
 function chunk(arr, chunkSize){
@@ -254,6 +243,18 @@ function chunk(arr, chunkSize){
             : prevVal,
         []
     );
+};
+
+async function getPoolLibraries(){
+    return {
+        LiquidationLogic: getDeployedContractAddress("liquidationLogic"),
+        SupplyLogic: getDeployedContractAddress("supplyLogic"),
+        EModeLogic: getDeployedContractAddress("eModeLogic"),
+        FlashLoanLogic: getDeployedContractAddress("flashLoanLogic"),
+        BorrowLogic: getDeployedContractAddress("borrowLogic"),
+        BridgeLogic: getDeployedContractAddress("bridgeLogic"),
+        PoolLogic: getDeployedContractAddress("poolLogic"),
+    };
 };
 
 
