@@ -229,7 +229,7 @@ async function main() {
     saveDeploymentInfo(path.basename(__filename), {
         defaultReserveInterestRateStrategy: deployedIRStrategies,
         reservesSetupHelper: reservesSetupHelper.address,
-        protocolDataProvider: protocolDataProvider
+        protocolDataProvider: protocolDataProvider.address
     })  
 
     console.log(`[Deployment] Configured all reserves`);
