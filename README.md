@@ -16,8 +16,10 @@ npx hardhat run deploy/01_pool/06_tokens_implementations.js --network localhost
 npx hardhat run deploy/01_pool/07_init_reserves.js --network localhost
 ```
 
+```
 NEW MARKETS MUST BE SEEDED WITH SMALL DEPOSIT
 TOKENS MUST NOT BE REENTRANT/HAVE HOOKS
+```
 
 ---
 
