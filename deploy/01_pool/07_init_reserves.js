@@ -141,6 +141,7 @@ async function main() {
 
     const ReservesSetupHelper = await ethers.getContractFactory("ReservesSetupHelper");
     const reservesSetupHelper = await ReservesSetupHelper.deploy()
+    console.log(`reservesSetupHelper deployed to ${reservesSetupHelper.address}`)
 
     const AaveProtocolDataProvider = await ethers.getContractFactory("AaveProtocolDataProvider");
     const protocolDataProvider = AaveProtocolDataProvider.attach(await poolAddressesProvider.getPoolDataProvider())

@@ -8,6 +8,7 @@ require("solidity-coverage");
 
 require("@nomiclabs/hardhat-web3");
 require("@nomiclabs/hardhat-waffle");
+require("@nomicfoundation/hardhat-verify");
 
 // Ensure that we have all the environment variables we need.
 const mnemonic = process.env.MNEMONIC;
@@ -18,7 +19,8 @@ const chainIds = {
   mainnet: 1,
   "polygon-mainnet": 137,
   rinkeby: 4,
-  arbitrum: 42161
+  arbitrum: 42161,
+  arbitrumTestnet: 421614
 };
 
 function getRemappings() {
@@ -48,6 +50,11 @@ const config = {
         accounts: [process.env.PRIVATE_KEY],
         chainId: chainIds.arbitrum,
         url: arbitrumUrl,
+    },
+    arbitrumTestnet: {
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: chainIds.arbitrumTestnet,
+      url: process.env.ARBITRUM_TESTNET_URL,
     }
   },
   paths: {
@@ -76,7 +83,12 @@ const config = {
         },
       },
     ],
-  }
+  },
+  etherscan: {
+    // Your API key for Etherscan
+    // Obtain one at https://etherscan.io/
+    apiKey: process.env.ETHERSCAN_API_KEY
+  },
 };
 
 module.exports = config

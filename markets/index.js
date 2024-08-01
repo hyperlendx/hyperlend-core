@@ -22,10 +22,12 @@ const config = {
     },
     oracle: {
         assets: [
-            "0xF8b76b29A7fcd23A2A44a23CaEe298f4afCB0Ebd"
+            "0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d", //usdc
+            "0x1dF462e2712496373A347f8ad10802a5E95f053D" //weth
         ],
         sources: [
-            "0xF8b76b29A7fcd23A2A44a23CaEe298f4afCB0Ebd"
+            "0x0153002d20B96532C639313c2d54c3dA09109309", //usdc/usd
+            "0xd30e2101a97dcbAeBCBC04F14C3f624E67A35165" //eth/usd
         ],
         fallbackOracleAddress: "0x0000000000000000000000000000000000000000",
         baseCurrencyUnit: "100000000"
@@ -46,18 +48,37 @@ const config = {
         optimalStableToTotalDebtRatio: ethers.utils.parseUnits("0.2", 27).toString(),
     }],
     tokenAddresses: {
-        DAI: "0x00a7095e063859D73F6154C945d7F47C42B4A3f2",
-        LINK: "0x9E72BFA05F9857ab605594aDa74EC0be8bd6Ae81",
+        USDC: "0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d",
+        WETH: "0x1dF462e2712496373A347f8ad10802a5E95f053D"
     },
     market: {
-        MarketId: "Testnet Hyperlend Market",
-        ATokenNamePrefix: "Testnet",
-        StableDebtTokenNamePrefix: "Testnet",
-        VariableDebtTokenNamePrefix: "Testnet",
-        SymbolPrefix: "Tst",
+        MarketId: "Arbitrum Testnet Hyperlend Market",
+        ATokenNamePrefix: "Arbitrum Testnet",
+        StableDebtTokenNamePrefix: "Arbitrum Testnet",
+        VariableDebtTokenNamePrefix: "Arbitrum Testnet",
+        SymbolPrefix: "ArbTst",
         ProviderId: 36,
         ReservesConfig: {
-            DAI:  {
+            USDC:  {
+                strategy: {
+                    name: "rateStrategyVolatileOne"
+                },
+                baseLTVAsCollateral: "7500",
+                liquidationThreshold: "8000",
+                liquidationBonus: "10500",
+                liquidationProtocolFee: "1000",
+                borrowingEnabled: true,
+                stableBorrowRateEnabled: true,
+                flashLoanEnabled: true,
+                reserveDecimals: "18",
+                aTokenImpl: "AToken",
+                reserveFactor: "1000",
+                supplyCap: "2000000000",
+                borrowCap: "0",
+                debtCeiling: "0",
+                borrowableIsolation: true,
+            },
+            WETH: {
                 strategy: {
                     name: "rateStrategyVolatileOne"
                 },
@@ -78,9 +99,9 @@ const config = {
             }
         },
         ReserveAssets: {
-            arbitrum: {
-                DAI: "0x00a7095e063859D73F6154C945d7F47C42B4A3f2",
-                LINK: "0x9E72BFA05F9857ab605594aDa74EC0be8bd6Ae81",
+            arbitrumTestnet: {
+                USDC: "0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d",
+                WETH: "0x1dF462e2712496373A347f8ad10802a5E95f053D"
             }
         },
         EModes: {
@@ -94,10 +115,9 @@ const config = {
             },
         },
         ChainlinkAggregator: {
-            arbitrum: {
-                LINK: "0x86E53CF1B870786351Da77A57575e79CB55812CB",
-                USDC: "0x50834F3163758fcC1Df9973b6e91f0F0F0434aD3",
-                DAI: "0xc5C8E77B397E531B8EC06BFb0048328B30E9eCfB",
+            arbitrumTestnet: {
+                USDC: "0x0153002d20B96532C639313c2d54c3dA09109309",
+                WETH: "0xd30e2101a97dcbAeBCBC04F14C3f624E67A35165"
             }
         }
     },

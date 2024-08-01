@@ -16,6 +16,7 @@ async function main() {
         config.ZERO_ADDRESS,
         config.oracle.baseCurrencyUnit
     )
+    console.log(`priceOracle deployed to ${aaveOracle.address}`)
 
     const configPriceOracle = aaveOracle.address;
     const statePriceOracle = await poolAddressesProvider.getPriceOracle();
