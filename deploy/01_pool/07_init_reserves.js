@@ -143,8 +143,8 @@ async function main() {
     const reservesSetupHelper = await ReservesSetupHelper.deploy()
     console.log(`reservesSetupHelper deployed to ${reservesSetupHelper.address}`)
 
-    const AaveProtocolDataProvider = await ethers.getContractFactory("AaveProtocolDataProvider");
-    const protocolDataProvider = AaveProtocolDataProvider.attach(await poolAddressesProvider.getPoolDataProvider())
+    const HyperlendProtocolDataProvider = await ethers.getContractFactory("HyperlendProtocolDataProvider");
+    const protocolDataProvider = HyperlendProtocolDataProvider.attach(await poolAddressesProvider.getPoolDataProvider())
 
     const tokens = [];
     const symbols = [];
