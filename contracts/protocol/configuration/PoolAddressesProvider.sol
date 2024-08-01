@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 
 import {Ownable} from '../../dependencies/openzeppelin/contracts/Ownable.sol';
 import {IPoolAddressesProvider} from '../../interfaces/IPoolAddressesProvider.sol';
-import {InitializableImmutableAdminUpgradeabilityProxy} from '../libraries/aave-upgradeability/InitializableImmutableAdminUpgradeabilityProxy.sol';
+import {InitializableImmutableAdminUpgradeabilityProxy} from '../libraries/upgradeability/InitializableImmutableAdminUpgradeabilityProxy.sol';
 
 /**
  * @title PoolAddressesProvider

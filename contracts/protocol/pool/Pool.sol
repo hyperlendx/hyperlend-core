@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.10;
 
-import {VersionedInitializable} from '../libraries/aave-upgradeability/VersionedInitializable.sol';
+import {VersionedInitializable} from '../libraries/upgradeability/VersionedInitializable.sol';
 import {Errors} from '../libraries/helpers/Errors.sol';
 import {ReserveConfiguration} from '../libraries/configuration/ReserveConfiguration.sol';
 import {PoolLogic} from '../libraries/logic/PoolLogic.sol';
@@ -262,7 +262,7 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
                     amount: amount,
                     interestRateMode: DataTypes.InterestRateMode(interestRateMode),
                     onBehalfOf: onBehalfOf,
-                    useATokens: false
+                    useHTokens: false
                 })
             );
     }
@@ -295,14 +295,14 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
                 amount: amount,
                 interestRateMode: DataTypes.InterestRateMode(interestRateMode),
                 onBehalfOf: onBehalfOf,
-                useATokens: false
+                useHTokens: false
             });
             return BorrowLogic.executeRepay(_reserves, _reservesList, _usersConfig[onBehalfOf], params);
         }
     }
 
     /// @inheritdoc IPool
-    function repayWithATokens(
+    function repayWithHTokens(
         address asset,
         uint256 amount,
         uint256 interestRateMode
@@ -317,7 +317,7 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
                     amount: amount,
                     interestRateMode: DataTypes.InterestRateMode(interestRateMode),
                     onBehalfOf: msg.sender,
-                    useATokens: true
+                    useHTokens: true
                 })
             );
     }
@@ -361,7 +361,7 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
         address debtAsset,
         address user,
         uint256 debtToCover,
-        bool receiveAToken
+        bool receiveHToken
     ) public virtual override {
         LiquidationLogic.executeLiquidationCall(
             _reserves,
@@ -374,7 +374,7 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
                 collateralAsset: collateralAsset,
                 debtAsset: debtAsset,
                 user: user,
-                receiveAToken: receiveAToken,
+                receiveHToken: receiveHToken,
                 priceOracle: ADDRESSES_PROVIDER.getPriceOracle(),
                 userEModeCategory: _usersEModeCategory[user],
                 priceOracleSentinel: ADDRESSES_PROVIDER.getPriceOracleSentinel()
@@ -621,7 +621,7 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
         uint256 balanceFromBefore,
         uint256 balanceToBefore
     ) external virtual override {
-        require(msg.sender == _reserves[asset].aTokenAddress, Errors.CALLER_NOT_ATOKEN);
+        require(msg.sender == _reserves[asset].hTokenAddress, Errors.CALLER_NOT_ATOKEN);
         SupplyLogic.executeFinalizeTransfer(
             _reserves,
             _reservesList,
@@ -644,7 +644,7 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
     /// @inheritdoc IPool
     function initReserve(
         address asset,
-        address aTokenAddress,
+        address hTokenAddress,
         address stableDebtAddress,
         address variableDebtAddress,
         address interestRateStrategyAddress
@@ -655,7 +655,7 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
                 _reservesList,
                 DataTypes.InitReserveParams({
                     asset: asset,
-                    aTokenAddress: aTokenAddress,
+                    hTokenAddress: hTokenAddress,
                     stableDebtAddress: stableDebtAddress,
                     variableDebtAddress: variableDebtAddress,
                     interestRateStrategyAddress: interestRateStrategyAddress,

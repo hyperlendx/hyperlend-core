@@ -4,7 +4,7 @@ pragma solidity ^0.8.10;
 import {IERC20} from '../../../dependencies/openzeppelin/contracts/IERC20.sol';
 import {GPv2SafeERC20} from '../../../dependencies/gnosis/contracts/GPv2SafeERC20.sol';
 import {SafeCast} from '../../../dependencies/openzeppelin/contracts/SafeCast.sol';
-import {IAToken} from '../../../interfaces/IAToken.sol';
+import {IHToken} from '../../../interfaces/IHToken.sol';
 import {DataTypes} from '../types/DataTypes.sol';
 import {UserConfiguration} from '../configuration/UserConfiguration.sol';
 import {ReserveConfiguration} from '../configuration/ReserveConfiguration.sol';
@@ -36,16 +36,16 @@ library BridgeLogic {
     event BackUnbacked(address indexed reserve, address indexed backer, uint256 amount, uint256 fee);
 
     /**
-     * @notice Mint unbacked aTokens to a user and updates the unbacked for the reserve.
+     * @notice Mint unbacked hTokens to a user and updates the unbacked for the reserve.
      * @dev Essentially a supply without transferring the underlying.
      * @dev Emits the `MintUnbacked` event
      * @dev Emits the `ReserveUsedAsCollateralEnabled` if asset is set as collateral
      * @param reservesData The state of all the reserves
      * @param reservesList The addresses of all the active reserves
      * @param userConfig The user configuration mapping that tracks the supplied/borrowed assets
-     * @param asset The address of the underlying asset to mint aTokens of
+     * @param asset The address of the underlying asset to mint hTokens of
      * @param amount The amount to mint
-     * @param onBehalfOf The address that will receive the aTokens
+     * @param onBehalfOf The address that will receive the hTokens
      * @param referralCode Code used to register the integrator originating the operation, for potential rewards.
      *     0 if the action is executed directly by the user, without any middle-man
      */
@@ -77,7 +77,7 @@ library BridgeLogic {
 
         reserve.updateInterestRates(reserveCache, asset, 0, 0);
 
-        bool isFirstSupply = IAToken(reserveCache.aTokenAddress).mint(
+        bool isFirstSupply = IHToken(reserveCache.hTokenAddress).mint(
             msg.sender,
             onBehalfOf,
             amount,
@@ -91,7 +91,7 @@ library BridgeLogic {
                     reservesList,
                     userConfig,
                     reserveCache.reserveConfiguration,
-                    reserveCache.aTokenAddress
+                    reserveCache.hTokenAddress
                 )
             ) {
                 userConfig.setUsingAsCollateral(reserve.id, true);
@@ -131,7 +131,7 @@ library BridgeLogic {
         uint256 added = backingAmount + fee;
 
         reserveCache.nextLiquidityIndex = reserve.cumulateToLiquidityIndex(
-            IERC20(reserveCache.aTokenAddress).totalSupply() +
+            IERC20(reserveCache.hTokenAddress).totalSupply() +
                 uint256(reserve.accruedToTreasury).rayMul(reserveCache.nextLiquidityIndex),
             feeToLP
         );
@@ -141,7 +141,7 @@ library BridgeLogic {
         reserve.unbacked -= backingAmount.toUint128();
         reserve.updateInterestRates(reserveCache, asset, added, 0);
 
-        IERC20(asset).safeTransferFrom(msg.sender, reserveCache.aTokenAddress, added);
+        IERC20(asset).safeTransferFrom(msg.sender, reserveCache.hTokenAddress, added);
 
         emit BackUnbacked(asset, msg.sender, backingAmount, fee);
 

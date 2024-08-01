@@ -9,33 +9,33 @@ async function main() {
 
     const poolAddress = await poolAddressesProvider.getPool();
 
-    const AToken = await ethers.getContractFactory("AToken");
-    const aToken = await AToken.deploy(poolAddress)
-    console.log(`Deployed AToken to ${aToken.address}`)
+    const HToken = await ethers.getContractFactory("HToken");
+    const hToken = await HToken.deploy(poolAddress)
+    console.log(`Deployed HToken to ${hToken.address}`)
 
-    await aToken.initialize(
+    await hToken.initialize(
         poolAddress, // initializingPool
         config.ZERO_ADDRESS, // treasury
         config.ZERO_ADDRESS, // underlyingAsset
         config.ZERO_ADDRESS, // incentivesController
-        0, // aTokenDecimals
-        "ATOKEN_IMPL", // aTokenName
-        "ATOKEN_IMPL", // aTokenSymbol
+        0, // hTokenDecimals
+        "ATOKEN_IMPL", // hTokenName
+        "ATOKEN_IMPL", // hTokenSymbol
         "0x00" // params
     )
 
-    const DelegationAwareAToken = await ethers.getContractFactory("DelegationAwareAToken");
-    const delegationAwareAToken = await DelegationAwareAToken.deploy(poolAddress)
-    console.log(`Deployed delegationAwareAToken to ${delegationAwareAToken.address}`)
+    const DelegationAwareHToken = await ethers.getContractFactory("DelegationAwareHToken");
+    const delegationAwareHToken = await DelegationAwareHToken.deploy(poolAddress)
+    console.log(`Deployed delegationAwareHToken to ${delegationAwareHToken.address}`)
 
-    await delegationAwareAToken.initialize(
+    await delegationAwareHToken.initialize(
         poolAddress, // initializingPool
         config.ZERO_ADDRESS, // treasury
         config.ZERO_ADDRESS, // underlyingAsset
         config.ZERO_ADDRESS, // incentivesController
-        0, // aTokenDecimals
-        "DELEGATION_AWARE_ATOKEN_IMPL", // aTokenName
-        "DELEGATION_AWARE_ATOKEN_IMPL", // aTokenSymbol
+        0, // hTokenDecimals
+        "DELEGATION_AWARE_ATOKEN_IMPL", // hTokenName
+        "DELEGATION_AWARE_ATOKEN_IMPL", // hTokenSymbol
         "0x00" // params
     )
 
@@ -68,8 +68,8 @@ async function main() {
     )
 
     saveDeploymentInfo(path.basename(__filename), {
-        aToken: aToken.address,
-        delegationAwareAToken: delegationAwareAToken.address,
+        hToken: hToken.address,
+        delegationAwareHToken: delegationAwareHToken.address,
         variableDebtToken: variableDebtToken.address,
         stableDebtToken: stableDebtToken.address
     })  

@@ -81,8 +81,8 @@ interface IL2Pool {
     function repayWithPermit(bytes32 args, bytes32 r, bytes32 s) external returns (uint256);
 
     /**
-    * @notice Calldata efficient wrapper of the repayWithATokens function
-    * @param args Arguments for the repayWithATokens function packed in one bytes32
+    * @notice Calldata efficient wrapper of the repayWithHTokens function
+    * @param args Arguments for the repayWithHTokens function packed in one bytes32
     *    104 bits             8 bits               128 bits       16 bits
     * | 0-padding | shortenedInterestRateMode | shortenedAmount | assetId |
     * @dev the shortenedAmount is cast to 256 bits at decode time, if type(uint128).max the value will be expanded to
@@ -90,7 +90,7 @@ interface IL2Pool {
     * @dev assetId is the index of the asset in the reservesList.
     * @return The final amount repaid
     */
-    function repayWithATokens(bytes32 args) external returns (uint256);
+    function repayWithHTokens(bytes32 args) external returns (uint256);
 
     /**
     * @notice Calldata efficient wrapper of the swapBorrowRateMode function
@@ -126,7 +126,7 @@ interface IL2Pool {
     * | 0-padding | user address | debtAssetId | collateralAssetId |
     * @param args2 part of the arguments for the liquidationCall function packed in one bytes32
     *    127 bits       1 bit             128 bits
-    * | 0-padding | receiveAToken | shortenedDebtToCover |
+    * | 0-padding | receiveHToken | shortenedDebtToCover |
     * @dev the shortenedDebtToCover is cast to 256 bits at decode time,
     * if type(uint128).max the value will be expanded to type(uint256).max
     */

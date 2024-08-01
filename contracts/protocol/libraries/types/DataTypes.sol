@@ -19,8 +19,8 @@ library DataTypes {
         uint40 lastUpdateTimestamp;
         //the id of the reserve. Represents the position in the list of the active reserves
         uint16 id;
-        //aToken address
-        address aTokenAddress;
+        //hToken address
+        address hTokenAddress;
         //stableDebtToken address
         address stableDebtTokenAddress;
         //variableDebtToken address
@@ -29,7 +29,7 @@ library DataTypes {
         address interestRateStrategyAddress;
         //the current treasury balance, scaled
         uint128 accruedToTreasury;
-        //the outstanding unbacked aTokens minted through the bridging feature
+        //the outstanding unbacked hTokens minted through the bridging feature
         uint128 unbacked;
         //the outstanding debt borrowed against this asset in isolation mode
         uint128 isolationModeTotalDebt;
@@ -97,7 +97,7 @@ library DataTypes {
         uint256 currVariableBorrowRate;
         uint256 reserveFactor;
         ReserveConfigurationMap reserveConfiguration;
-        address aTokenAddress;
+        address hTokenAddress;
         address stableDebtTokenAddress;
         address variableDebtTokenAddress;
         uint40 reserveLastUpdateTimestamp;
@@ -110,7 +110,7 @@ library DataTypes {
         address collateralAsset;
         address debtAsset;
         address user;
-        bool receiveAToken;
+        bool receiveHToken;
         address priceOracle;
         uint8 userEModeCategory;
         address priceOracleSentinel;
@@ -143,7 +143,7 @@ library DataTypes {
         uint256 amount;
         InterestRateMode interestRateMode;
         address onBehalfOf;
-        bool useATokens;
+        bool useHTokens;
     }
 
     struct ExecuteWithdrawParams {
@@ -250,12 +250,12 @@ library DataTypes {
         uint256 averageStableBorrowRate;
         uint256 reserveFactor;
         address reserve;
-        address aToken;
+        address hToken;
     }
 
     struct InitReserveParams {
         address asset;
-        address aTokenAddress;
+        address hTokenAddress;
         address stableDebtAddress;
         address variableDebtAddress;
         address interestRateStrategyAddress;

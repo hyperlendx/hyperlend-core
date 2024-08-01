@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 library ConfiguratorInputTypes {
     struct InitReserveInput {
-        address aTokenImpl;
+        address hTokenImpl;
         address stableDebtTokenImpl;
         address variableDebtTokenImpl;
         uint8 underlyingAssetDecimals;
@@ -11,8 +11,8 @@ library ConfiguratorInputTypes {
         address underlyingAsset;
         address treasury;
         address incentivesController;
-        string aTokenName;
-        string aTokenSymbol;
+        string hTokenName;
+        string hTokenSymbol;
         string variableDebtTokenName;
         string variableDebtTokenSymbol;
         string stableDebtTokenName;
@@ -20,7 +20,7 @@ library ConfiguratorInputTypes {
         bytes params;
     }
 
-    struct UpdateATokenInput {
+    struct UpdateHTokenInput {
         address asset;
         address treasury;
         address incentivesController;

@@ -2,9 +2,9 @@
 pragma solidity ^0.8.10;
 
 import {IPool} from '../../../interfaces/IPool.sol';
-import {IInitializableAToken} from '../../../interfaces/IInitializableAToken.sol';
+import {IInitializableHToken} from '../../../interfaces/IInitializableHToken.sol';
 import {IInitializableDebtToken} from '../../../interfaces/IInitializableDebtToken.sol';
-import {InitializableImmutableAdminUpgradeabilityProxy} from '../aave-upgradeability/InitializableImmutableAdminUpgradeabilityProxy.sol';
+import {InitializableImmutableAdminUpgradeabilityProxy} from '../upgradeability/InitializableImmutableAdminUpgradeabilityProxy.sol';
 import {ReserveConfiguration} from '../configuration/ReserveConfiguration.sol';
 import {DataTypes} from '../types/DataTypes.sol';
 import {ConfiguratorInputTypes} from '../types/ConfiguratorInputTypes.sol';
@@ -12,7 +12,7 @@ import {ConfiguratorInputTypes} from '../types/ConfiguratorInputTypes.sol';
 /**
  * @title ConfiguratorLogic library
  * @author Aave
- * @notice Implements the functions to initialize reserves and update aTokens and debtTokens
+ * @notice Implements the functions to initialize reserves and update hTokens and debtTokens
  */
 library ConfiguratorLogic {
     using ReserveConfiguration for DataTypes.ReserveConfigurationMap;
@@ -20,12 +20,12 @@ library ConfiguratorLogic {
     // See `IPoolConfigurator` for descriptions
     event ReserveInitialized(
         address indexed asset,
-        address indexed aToken,
+        address indexed hToken,
         address stableDebtToken,
         address variableDebtToken,
         address interestRateStrategyAddress
     );
-    event ATokenUpgraded(
+    event HTokenUpgraded(
         address indexed asset,
         address indexed proxy,
         address indexed implementation
@@ -42,7 +42,7 @@ library ConfiguratorLogic {
     );
 
     /**
-     * @notice Initialize a reserve by creating and initializing aToken, stable debt token and variable debt token
+     * @notice Initialize a reserve by creating and initializing hToken, stable debt token and variable debt token
      * @dev Emits the `ReserveInitialized` event
      * @param pool The Pool in which the reserve will be initialized
      * @param input The needed parameters for the initialization
@@ -51,17 +51,17 @@ library ConfiguratorLogic {
         IPool pool,
         ConfiguratorInputTypes.InitReserveInput calldata input
     ) public {
-        address aTokenProxyAddress = _initTokenWithProxy(
-            input.aTokenImpl,
+        address hTokenProxyAddress = _initTokenWithProxy(
+            input.hTokenImpl,
             abi.encodeWithSelector(
-                IInitializableAToken.initialize.selector,
+                IInitializableHToken.initialize.selector,
                 pool,
                 input.treasury,
                 input.underlyingAsset,
                 input.incentivesController,
                 input.underlyingAssetDecimals,
-                input.aTokenName,
-                input.aTokenSymbol,
+                input.hTokenName,
+                input.hTokenSymbol,
                 input.params
             )
         );
@@ -96,7 +96,7 @@ library ConfiguratorLogic {
 
         pool.initReserve(
             input.underlyingAsset,
-            aTokenProxyAddress,
+            hTokenProxyAddress,
             stableDebtTokenProxyAddress,
             variableDebtTokenProxyAddress,
             input.interestRateStrategyAddress
@@ -114,7 +114,7 @@ library ConfiguratorLogic {
 
         emit ReserveInitialized(
             input.underlyingAsset,
-            aTokenProxyAddress,
+            hTokenProxyAddress,
             stableDebtTokenProxyAddress,
             variableDebtTokenProxyAddress,
             input.interestRateStrategyAddress
@@ -122,21 +122,21 @@ library ConfiguratorLogic {
     }
 
     /**
-     * @notice Updates the aToken implementation and initializes it
-     * @dev Emits the `ATokenUpgraded` event
-     * @param cachedPool The Pool containing the reserve with the aToken
+     * @notice Updates the hToken implementation and initializes it
+     * @dev Emits the `HTokenUpgraded` event
+     * @param cachedPool The Pool containing the reserve with the hToken
      * @param input The parameters needed for the initialize call
      */
-    function executeUpdateAToken(
+    function executeUpdateHToken(
         IPool cachedPool,
-        ConfiguratorInputTypes.UpdateATokenInput calldata input
+        ConfiguratorInputTypes.UpdateHTokenInput calldata input
     ) public {
         DataTypes.ReserveData memory reserveData = cachedPool.getReserveData(input.asset);
 
         (, , , uint256 decimals, , ) = cachedPool.getConfiguration(input.asset).getParams();
 
         bytes memory encodedCall = abi.encodeWithSelector(
-            IInitializableAToken.initialize.selector,
+            IInitializableHToken.initialize.selector,
             cachedPool,
             input.treasury,
             input.asset,
@@ -147,9 +147,9 @@ library ConfiguratorLogic {
             input.params
         );
 
-        _upgradeTokenImplementation(reserveData.aTokenAddress, input.implementation, encodedCall);
+        _upgradeTokenImplementation(reserveData.hTokenAddress, input.implementation, encodedCall);
 
-        emit ATokenUpgraded(input.asset, reserveData.aTokenAddress, input.implementation);
+        emit HTokenUpgraded(input.asset, reserveData.hTokenAddress, input.implementation);
     }
 
     /**

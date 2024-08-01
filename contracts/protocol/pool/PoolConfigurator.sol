@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.10;
 
-import {VersionedInitializable} from '../libraries/aave-upgradeability/VersionedInitializable.sol';
+import {VersionedInitializable} from '../libraries/upgradeability/VersionedInitializable.sol';
 import {ReserveConfiguration} from '../libraries/configuration/ReserveConfiguration.sol';
 import {IPoolAddressesProvider} from '../../interfaces/IPoolAddressesProvider.sol';
 import {Errors} from '../libraries/helpers/Errors.sol';
@@ -95,10 +95,10 @@ contract PoolConfigurator is VersionedInitializable, IPoolConfigurator {
     }
 
     /// @inheritdoc IPoolConfigurator
-    function updateAToken(
-        ConfiguratorInputTypes.UpdateATokenInput calldata input
+    function updateHToken(
+        ConfiguratorInputTypes.UpdateHTokenInput calldata input
     ) external override onlyPoolAdmin {
-        ConfiguratorLogic.executeUpdateAToken(_pool, input);
+        ConfiguratorLogic.executeUpdateHToken(_pool, input);
     }
 
     /// @inheritdoc IPoolConfigurator
@@ -469,11 +469,11 @@ contract PoolConfigurator is VersionedInitializable, IPoolConfigurator {
     }
 
     function _checkNoSuppliers(address asset) internal view {
-        (, uint256 accruedToTreasury, uint256 totalATokens, , , , , , , , , ) = IPoolDataProvider(
+        (, uint256 accruedToTreasury, uint256 totalHTokens, , , , , , , , , ) = IPoolDataProvider(
             _addressesProvider.getPoolDataProvider()
         ).getReserveData(asset);
 
-        require(totalATokens == 0 && accruedToTreasury == 0, Errors.RESERVE_LIQUIDITY_NOT_ZERO);
+        require(totalHTokens == 0 && accruedToTreasury == 0, Errors.RESERVE_LIQUIDITY_NOT_ZERO);
     }
 
     function _checkNoBorrowers(address asset) internal view {

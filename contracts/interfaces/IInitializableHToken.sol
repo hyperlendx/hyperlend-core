@@ -5,48 +5,52 @@ import {IHyperlendIncentivesController} from './IHyperlendIncentivesController.s
 import {IPool} from './IPool.sol';
 
 /**
- * @title IInitializableDebtToken
+ * @title IInitializableHToken
  * @author Aave
- * @notice Interface for the initialize function common between debt tokens
+ * @notice Interface for the initialize function on HToken
  */
-interface IInitializableDebtToken {
+interface IInitializableHToken {
     /**
-     * @dev Emitted when a debt token is initialized
+     * @dev Emitted when an hToken is initialized
      * @param underlyingAsset The address of the underlying asset
      * @param pool The address of the associated pool
+     * @param treasury The address of the treasury
      * @param incentivesController The address of the incentives controller for this hToken
-     * @param debtTokenDecimals The decimals of the debt token
-     * @param debtTokenName The name of the debt token
-     * @param debtTokenSymbol The symbol of the debt token
+     * @param hTokenDecimals The decimals of the underlying
+     * @param hTokenName The name of the hToken
+     * @param hTokenSymbol The symbol of the hToken
      * @param params A set of encoded parameters for additional initialization
      */
     event Initialized(
         address indexed underlyingAsset,
         address indexed pool,
+        address treasury,
         address incentivesController,
-        uint8 debtTokenDecimals,
-        string debtTokenName,
-        string debtTokenSymbol,
+        uint8 hTokenDecimals,
+        string hTokenName,
+        string hTokenSymbol,
         bytes params
     );
 
     /**
-     * @notice Initializes the debt token.
+     * @notice Initializes the hToken
      * @param pool The pool contract that is initializing this contract
-     * @param underlyingAsset The address of the underlying asset of this hToken (E.g. WETH for aWETH)
+     * @param treasury The address of the Aave treasury, receiving the fees on this hToken
+     * @param underlyingAsset The address of the underlying asset of this hToken (E.g. WETH for hWETH)
      * @param incentivesController The smart contract managing potential incentives distribution
-     * @param debtTokenDecimals The decimals of the debtToken, same as the underlying asset's
-     * @param debtTokenName The name of the token
-     * @param debtTokenSymbol The symbol of the token
+     * @param hTokenDecimals The decimals of the hToken, same as the underlying asset's
+     * @param hTokenName The name of the hToken
+     * @param hTokenSymbol The symbol of the hToken
      * @param params A set of encoded parameters for additional initialization
      */
     function initialize(
         IPool pool,
+        address treasury,
         address underlyingAsset,
         IHyperlendIncentivesController incentivesController,
-        uint8 debtTokenDecimals,
-        string memory debtTokenName,
-        string memory debtTokenSymbol,
+        uint8 hTokenDecimals,
+        string calldata hTokenName,
+        string calldata hTokenSymbol,
         bytes calldata params
     ) external;
 }

@@ -6,7 +6,7 @@ import {SafeCast} from '../../../dependencies/openzeppelin/contracts/SafeCast.so
 import {IERC20} from '../../../dependencies/openzeppelin/contracts/IERC20.sol';
 import {IStableDebtToken} from '../../../interfaces/IStableDebtToken.sol';
 import {IVariableDebtToken} from '../../../interfaces/IVariableDebtToken.sol';
-import {IAToken} from '../../../interfaces/IAToken.sol';
+import {IHToken} from '../../../interfaces/IHToken.sol';
 import {UserConfiguration} from '../configuration/UserConfiguration.sol';
 import {ReserveConfiguration} from '../configuration/ReserveConfiguration.sol';
 import {Helpers} from '../helpers/Helpers.sol';
@@ -43,7 +43,7 @@ library BorrowLogic {
         address indexed user,
         address indexed repayer,
         uint256 amount,
-        bool useATokens
+        bool useHTokens
     );
     event RebalanceStableBorrowRate(address indexed reserve, address indexed user);
     event SwapBorrowRateMode(
@@ -150,7 +150,7 @@ library BorrowLogic {
         );
 
         if (params.releaseUnderlying) {
-            IAToken(reserveCache.aTokenAddress).transferUnderlyingTo(params.user, params.amount);
+            IHToken(reserveCache.hTokenAddress).transferUnderlyingTo(params.user, params.amount);
         }
 
         emit Borrow(
@@ -167,7 +167,7 @@ library BorrowLogic {
     }
 
     /**
-     * @notice Implements the repay feature. Repaying transfers the underlying back to the aToken and clears the
+     * @notice Implements the repay feature. Repaying transfers the underlying back to the hToken and clears the
      * equivalent amount of debt for the user by burning the corresponding debt token. For isolated positions, it also
      * reduces the isolated debt.
      * @dev    Emits the `Repay()` event
@@ -205,9 +205,9 @@ library BorrowLogic {
             ? stableDebt
             : variableDebt;
 
-        // Allows a user to repay with aTokens without leaving dust from interest.
-        if (params.useATokens && params.amount == type(uint256).max) {
-            params.amount = IAToken(reserveCache.aTokenAddress).balanceOf(msg.sender);
+        // Allows a user to repay with hTokens without leaving dust from interest.
+        if (params.useHTokens && params.amount == type(uint256).max) {
+            params.amount = IHToken(reserveCache.hTokenAddress).balanceOf(msg.sender);
         }
 
         if (params.amount < paybackAmount) {
@@ -227,7 +227,7 @@ library BorrowLogic {
         reserve.updateInterestRates(
             reserveCache,
             params.asset,
-            params.useATokens ? 0 : paybackAmount,
+            params.useHTokens ? 0 : paybackAmount,
             0
         );
 
@@ -243,23 +243,23 @@ library BorrowLogic {
             paybackAmount
         );
 
-        if (params.useATokens) {
-            IAToken(reserveCache.aTokenAddress).burn(
+        if (params.useHTokens) {
+            IHToken(reserveCache.hTokenAddress).burn(
                 msg.sender,
-                reserveCache.aTokenAddress,
+                reserveCache.hTokenAddress,
                 paybackAmount,
                 reserveCache.nextLiquidityIndex
             );
         } else {
-            IERC20(params.asset).safeTransferFrom(msg.sender, reserveCache.aTokenAddress, paybackAmount);
-            IAToken(reserveCache.aTokenAddress).handleRepayment(
+            IERC20(params.asset).safeTransferFrom(msg.sender, reserveCache.hTokenAddress, paybackAmount);
+            IHToken(reserveCache.hTokenAddress).handleRepayment(
                 msg.sender,
                 params.onBehalfOf,
                 paybackAmount
             );
         }
 
-        emit Repay(params.asset, params.onBehalfOf, msg.sender, paybackAmount, params.useATokens);
+        emit Repay(params.asset, params.onBehalfOf, msg.sender, paybackAmount, params.useHTokens);
 
         return paybackAmount;
     }
