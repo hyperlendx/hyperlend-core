@@ -19,20 +19,20 @@ async function main() {
     const poolAddressesProviderRegistry = PoolAddressesProviderRegistry.attach(getDeployedContractAddress("poolAddressesProviderRegistry"));
     await poolAddressesProviderRegistry.registerAddressesProvider(poolAddressesProvider.address, config.poolConfig.providerId)
 
-    // 4. Deploy HyperlendProtocolDataProvider getters contract
-    const ProtocolDataProvider = await ethers.getContractFactory("HyperlendProtocolDataProvider");
-    const protocolDataProvider = await ProtocolDataProvider.deploy(poolAddressesProvider.address);
-    console.log(`protocolDataProvider deployed to ${protocolDataProvider.address}`);
+    // 4. Deploy AaveProtocolDataProvider getters contract
+    const AaveProtocolDataProvider = await ethers.getContractFactory("AaveProtocolDataProvider");
+    const aaveProtocolDataProvider = await AaveProtocolDataProvider.deploy(poolAddressesProvider.address);
+    console.log(`aaveProtocolDataProvider deployed to ${aaveProtocolDataProvider.address}`);
 
     // Set the ProtocolDataProvider if is not already set at addresses provider
     const currentProtocolDataProvider = await poolAddressesProvider.getPoolDataProvider();
-    if (protocolDataProvider.address != currentProtocolDataProvider) {
-        await poolAddressesProvider.setPoolDataProvider(protocolDataProvider.address)
+    if (aaveProtocolDataProvider.address != currentProtocolDataProvider) {
+        await poolAddressesProvider.setPoolDataProvider(aaveProtocolDataProvider.address)
     }
 
     saveDeploymentInfo(path.basename(__filename), {
         poolAddressesProvider: poolAddressesProvider.address,
-        protocolDataProvider: protocolDataProvider.address
+        aaveProtocolDataProvider: aaveProtocolDataProvider.address
     })
 }
 

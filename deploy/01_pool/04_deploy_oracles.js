@@ -7,8 +7,8 @@ async function main() {
     const PoolAddressesProvider = await ethers.getContractFactory("PoolAddressesProvider");
     const poolAddressesProvider = PoolAddressesProvider.attach(getDeployedContractAddress("poolAddressesProvider"));
 
-    const HyperlendOracle = await ethers.getContractFactory("HyperlendOracle");
-    const hyperlendOracle = await HyperlendOracle.deploy(
+    const AaveOracle = await ethers.getContractFactory("AaveOracle");
+    const aaveOracle = await AaveOracle.deploy(
         poolAddressesProvider.address,
         config.oracle.assets,
         config.oracle.sources,
@@ -16,9 +16,9 @@ async function main() {
         config.ZERO_ADDRESS,
         config.oracle.baseCurrencyUnit
     )
-    console.log(`priceOracle deployed to ${hyperlendOracle.address}`)
+    console.log(`priceOracle deployed to ${aaveOracle.address}`)
 
-    const configPriceOracle = hyperlendOracle.address;
+    const configPriceOracle = aaveOracle.address;
     const statePriceOracle = await poolAddressesProvider.getPriceOracle();
     if (configPriceOracle == statePriceOracle) {
         console.log("[addresses-provider] Price oracle already set. Skipping tx.");
@@ -28,7 +28,7 @@ async function main() {
     }
     
     saveDeploymentInfo(path.basename(__filename), {
-        hyperlendOracle: hyperlendOracle.address
+        aaveOracle: aaveOracle.address
     })
 }
 
