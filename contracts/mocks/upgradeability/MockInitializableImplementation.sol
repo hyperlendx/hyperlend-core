@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.0;
 
-import {VersionedInitializable} from '../../protocol/libraries/upgradeability/VersionedInitializable.sol';
+import {VersionedInitializable} from '../../protocol/libraries/aave-upgradeability/VersionedInitializable.sol';
 
 contract MockInitializableImple is VersionedInitializable {
     uint256 public value;

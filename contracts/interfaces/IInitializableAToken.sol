@@ -5,48 +5,52 @@ import {IAaveIncentivesController} from './IAaveIncentivesController.sol';
 import {IPool} from './IPool.sol';
 
 /**
- * @title IInitializableDebtToken
+ * @title IInitializableAToken
  * @author Aave
- * @notice Interface for the initialize function common between debt tokens
+ * @notice Interface for the initialize function on AToken
  */
-interface IInitializableDebtToken {
+interface IInitializableAToken {
     /**
-     * @dev Emitted when a debt token is initialized
+     * @dev Emitted when an aToken is initialized
      * @param underlyingAsset The address of the underlying asset
      * @param pool The address of the associated pool
+     * @param treasury The address of the treasury
      * @param incentivesController The address of the incentives controller for this aToken
-     * @param debtTokenDecimals The decimals of the debt token
-     * @param debtTokenName The name of the debt token
-     * @param debtTokenSymbol The symbol of the debt token
+     * @param aTokenDecimals The decimals of the underlying
+     * @param aTokenName The name of the aToken
+     * @param aTokenSymbol The symbol of the aToken
      * @param params A set of encoded parameters for additional initialization
      */
     event Initialized(
         address indexed underlyingAsset,
         address indexed pool,
+        address treasury,
         address incentivesController,
-        uint8 debtTokenDecimals,
-        string debtTokenName,
-        string debtTokenSymbol,
+        uint8 aTokenDecimals,
+        string aTokenName,
+        string aTokenSymbol,
         bytes params
     );
 
     /**
-     * @notice Initializes the debt token.
+     * @notice Initializes the aToken
      * @param pool The pool contract that is initializing this contract
+     * @param treasury The address of the Aave treasury, receiving the fees on this aToken
      * @param underlyingAsset The address of the underlying asset of this aToken (E.g. WETH for aWETH)
      * @param incentivesController The smart contract managing potential incentives distribution
-     * @param debtTokenDecimals The decimals of the debtToken, same as the underlying asset's
-     * @param debtTokenName The name of the token
-     * @param debtTokenSymbol The symbol of the token
+     * @param aTokenDecimals The decimals of the aToken, same as the underlying asset's
+     * @param aTokenName The name of the aToken
+     * @param aTokenSymbol The symbol of the aToken
      * @param params A set of encoded parameters for additional initialization
      */
     function initialize(
         IPool pool,
+        address treasury,
         address underlyingAsset,
         IAaveIncentivesController incentivesController,
-        uint8 debtTokenDecimals,
-        string memory debtTokenName,
-        string memory debtTokenSymbol,
+        uint8 aTokenDecimals,
+        string calldata aTokenName,
+        string calldata aTokenSymbol,
         bytes calldata params
     ) external;
 }

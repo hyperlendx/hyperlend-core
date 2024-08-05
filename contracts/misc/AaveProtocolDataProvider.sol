@@ -13,11 +13,11 @@ import {IPool} from '../interfaces/IPool.sol';
 import {IPoolDataProvider} from '../interfaces/IPoolDataProvider.sol';
 
 /**
- * @title HyperlendProtocolDataProvider
+ * @title AaveProtocolDataProvider
  * @author Aave
  * @notice Peripheral contract to collect and pre-process information from the Pool.
  */
-contract HyperlendProtocolDataProvider is IPoolDataProvider {
+contract AaveProtocolDataProvider is IPoolDataProvider {
     using ReserveConfiguration for DataTypes.ReserveConfigurationMap;
     using UserConfiguration for DataTypes.UserConfigurationMap;
     using WadRayMath for uint256;
@@ -59,18 +59,18 @@ contract HyperlendProtocolDataProvider is IPoolDataProvider {
     }
 
     /// @inheritdoc IPoolDataProvider
-    function getAllHTokens() external view override returns (TokenData[] memory) {
+    function getAllATokens() external view override returns (TokenData[] memory) {
         IPool pool = IPool(ADDRESSES_PROVIDER.getPool());
         address[] memory reserves = pool.getReservesList();
-        TokenData[] memory hTokens = new TokenData[](reserves.length);
+        TokenData[] memory aTokens = new TokenData[](reserves.length);
         for (uint256 i = 0; i < reserves.length; i++) {
             DataTypes.ReserveData memory reserveData = pool.getReserveData(reserves[i]);
-            hTokens[i] = TokenData({
-                symbol: IERC20Detailed(reserveData.hTokenAddress).symbol(),
-                tokenAddress: reserveData.hTokenAddress
+            aTokens[i] = TokenData({
+                symbol: IERC20Detailed(reserveData.aTokenAddress).symbol(),
+                tokenAddress: reserveData.aTokenAddress
             });
         }
-        return hTokens;
+        return aTokens;
     }
 
     /// @inheritdoc IPoolDataProvider
@@ -158,7 +158,7 @@ contract HyperlendProtocolDataProvider is IPoolDataProvider {
         returns (
             uint256 unbacked,
             uint256 accruedToTreasuryScaled,
-            uint256 totalHToken,
+            uint256 totalAToken,
             uint256 totalStableDebt,
             uint256 totalVariableDebt,
             uint256 liquidityRate,
@@ -177,7 +177,7 @@ contract HyperlendProtocolDataProvider is IPoolDataProvider {
         return (
             reserve.unbacked,
             reserve.accruedToTreasury,
-            IERC20Detailed(reserve.hTokenAddress).totalSupply(),
+            IERC20Detailed(reserve.aTokenAddress).totalSupply(),
             IERC20Detailed(reserve.stableDebtTokenAddress).totalSupply(),
             IERC20Detailed(reserve.variableDebtTokenAddress).totalSupply(),
             reserve.currentLiquidityRate,
@@ -191,11 +191,11 @@ contract HyperlendProtocolDataProvider is IPoolDataProvider {
     }
 
     /// @inheritdoc IPoolDataProvider
-    function getHTokenTotalSupply(address asset) external view override returns (uint256) {
+    function getATokenTotalSupply(address asset) external view override returns (uint256) {
         DataTypes.ReserveData memory reserve = IPool(ADDRESSES_PROVIDER.getPool()).getReserveData(
             asset
         );
-        return IERC20Detailed(reserve.hTokenAddress).totalSupply();
+        return IERC20Detailed(reserve.aTokenAddress).totalSupply();
     }
 
     /// @inheritdoc IPoolDataProvider
@@ -217,7 +217,7 @@ contract HyperlendProtocolDataProvider is IPoolDataProvider {
         view
         override
         returns (
-            uint256 currentHTokenBalance,
+            uint256 currentATokenBalance,
             uint256 currentStableDebt,
             uint256 currentVariableDebt,
             uint256 principalStableDebt,
@@ -235,7 +235,7 @@ contract HyperlendProtocolDataProvider is IPoolDataProvider {
         DataTypes.UserConfigurationMap memory userConfig = IPool(ADDRESSES_PROVIDER.getPool())
             .getUserConfiguration(user);
 
-        currentHTokenBalance = IERC20Detailed(reserve.hTokenAddress).balanceOf(user);
+        currentATokenBalance = IERC20Detailed(reserve.aTokenAddress).balanceOf(user);
         currentVariableDebt = IERC20Detailed(reserve.variableDebtTokenAddress).balanceOf(user);
         currentStableDebt = IERC20Detailed(reserve.stableDebtTokenAddress).balanceOf(user);
         principalStableDebt = IStableDebtToken(reserve.stableDebtTokenAddress).principalBalanceOf(user);
@@ -256,7 +256,7 @@ contract HyperlendProtocolDataProvider is IPoolDataProvider {
         view
         override
         returns (
-            address hTokenAddress,
+            address aTokenAddress,
             address stableDebtTokenAddress,
             address variableDebtTokenAddress
         )
@@ -266,7 +266,7 @@ contract HyperlendProtocolDataProvider is IPoolDataProvider {
         );
 
         return (
-            reserve.hTokenAddress,
+            reserve.aTokenAddress,
             reserve.stableDebtTokenAddress,
             reserve.variableDebtTokenAddress
         );

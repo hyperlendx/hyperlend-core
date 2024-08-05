@@ -3,15 +3,15 @@ pragma solidity ^0.8.10;
 
 import {IPool} from '../../interfaces/IPool.sol';
 import {IDelegationToken} from '../../interfaces/IDelegationToken.sol';
-import {HToken} from './HToken.sol';
+import {AToken} from './AToken.sol';
 
 /**
- * @title DelegationAwareHToken
+ * @title DelegationAwareAToken
  * @author Aave
- * @notice HToken enabled to delegate voting power of the underlying asset to a different address
+ * @notice AToken enabled to delegate voting power of the underlying asset to a different address
  * @dev The underlying asset needs to be compatible with the COMP delegation interface
  */
-contract DelegationAwareHToken is HToken {
+contract DelegationAwareAToken is AToken {
     /**
      * @dev Emitted when underlying voting power is delegated
      * @param delegatee The address of the delegatee
@@ -22,7 +22,7 @@ contract DelegationAwareHToken is HToken {
      * @dev Constructor.
      * @param pool The address of the Pool contract
      */
-    constructor(IPool pool) HToken(pool) {
+    constructor(IPool pool) AToken(pool) {
         // Intentionally left blank
     }
 

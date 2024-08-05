@@ -242,14 +242,14 @@ library GenericLogic {
     }
 
     /**
-     * @notice Calculates total hToken balance of the user in the based currency used by the price oracle
-     * @dev For gas reasons, the hToken balance is calculated by fetching `scaledBalancesOf` normalized debt, which
+     * @notice Calculates total aToken balance of the user in the based currency used by the price oracle
+     * @dev For gas reasons, the aToken balance is calculated by fetching `scaledBalancesOf` normalized debt, which
      * is cheaper than fetching `balanceOf`
      * @param user The address of the user
-     * @param reserve The data of the reserve for which the total hToken balance of the user is being calculated
-     * @param assetPrice The price of the asset for which the total hToken balance of the user is being calculated
+     * @param reserve The data of the reserve for which the total aToken balance of the user is being calculated
+     * @param assetPrice The price of the asset for which the total aToken balance of the user is being calculated
      * @param assetUnit The value representing one full unit of the asset (10^decimals)
-     * @return The total hToken balance of the user normalized to the base currency of the price oracle
+     * @return The total aToken balance of the user normalized to the base currency of the price oracle
      */
     function _getUserBalanceInBaseCurrency(
         address user,
@@ -259,7 +259,7 @@ library GenericLogic {
     ) private view returns (uint256) {
         uint256 normalizedIncome = reserve.getNormalizedIncome();
         uint256 balance = (
-            IScaledBalanceToken(reserve.hTokenAddress).scaledBalanceOf(user).rayMul(normalizedIncome)
+            IScaledBalanceToken(reserve.aTokenAddress).scaledBalanceOf(user).rayMul(normalizedIncome)
         ) * assetPrice;
 
         unchecked {

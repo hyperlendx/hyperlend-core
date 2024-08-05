@@ -78,13 +78,13 @@ contract L2Pool is Pool, IL2Pool {
     }
 
     /// @inheritdoc IL2Pool
-    function repayWithHTokens(bytes32 args) external override returns (uint256) {
+    function repayWithATokens(bytes32 args) external override returns (uint256) {
         (address asset, uint256 amount, uint256 interestRateMode) = CalldataLogic.decodeRepayParams(
             _reservesList,
             args
         );
 
-        return repayWithHTokens(asset, amount, interestRateMode);
+        return repayWithATokens(asset, amount, interestRateMode);
     }
 
     /// @inheritdoc IL2Pool
@@ -121,8 +121,8 @@ contract L2Pool is Pool, IL2Pool {
             address debtAsset,
             address user,
             uint256 debtToCover,
-            bool receiveHToken
+            bool receiveAToken
         ) = CalldataLogic.decodeLiquidationCallParams(_reservesList, args1, args2);
-        liquidationCall(collateralAsset, debtAsset, user, debtToCover, receiveHToken);
+        liquidationCall(collateralAsset, debtAsset, user, debtToCover, receiveAToken);
     }
 }

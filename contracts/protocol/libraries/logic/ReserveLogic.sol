@@ -132,23 +132,23 @@ library ReserveLogic {
     /**
     * @notice Initializes a reserve.
     * @param reserve The reserve object
-    * @param hTokenAddress The address of the overlying atoken contract
+    * @param aTokenAddress The address of the overlying atoken contract
     * @param stableDebtTokenAddress The address of the overlying stable debt token contract
     * @param variableDebtTokenAddress The address of the overlying variable debt token contract
     * @param interestRateStrategyAddress The address of the interest rate strategy contract
     */
     function init(
         DataTypes.ReserveData storage reserve,
-        address hTokenAddress,
+        address aTokenAddress,
         address stableDebtTokenAddress,
         address variableDebtTokenAddress,
         address interestRateStrategyAddress
     ) internal {
-        require(reserve.hTokenAddress == address(0), Errors.RESERVE_ALREADY_INITIALIZED);
+        require(reserve.aTokenAddress == address(0), Errors.RESERVE_ALREADY_INITIALIZED);
 
         reserve.liquidityIndex = uint128(WadRayMath.RAY);
         reserve.variableBorrowIndex = uint128(WadRayMath.RAY);
-        reserve.hTokenAddress = hTokenAddress;
+        reserve.aTokenAddress = aTokenAddress;
         reserve.stableDebtTokenAddress = stableDebtTokenAddress;
         reserve.variableDebtTokenAddress = variableDebtTokenAddress;
         reserve.interestRateStrategyAddress = interestRateStrategyAddress;
@@ -196,7 +196,7 @@ library ReserveLogic {
                 averageStableBorrowRate: reserveCache.nextAvgStableBorrowRate,
                 reserveFactor: reserveCache.reserveFactor,
                 reserve: reserveAddress,
-                hToken: reserveCache.hTokenAddress
+                aToken: reserveCache.aTokenAddress
             })
         );
 
@@ -335,7 +335,7 @@ library ReserveLogic {
         reserveCache.currLiquidityRate = reserve.currentLiquidityRate;
         reserveCache.currVariableBorrowRate = reserve.currentVariableBorrowRate;
 
-        reserveCache.hTokenAddress = reserve.hTokenAddress;
+        reserveCache.aTokenAddress = reserve.aTokenAddress;
         reserveCache.stableDebtTokenAddress = reserve.stableDebtTokenAddress;
         reserveCache.variableDebtTokenAddress = reserve.variableDebtTokenAddress;
 

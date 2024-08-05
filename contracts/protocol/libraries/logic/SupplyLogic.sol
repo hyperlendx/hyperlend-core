@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 
 import {IERC20} from '../../../dependencies/openzeppelin/contracts/IERC20.sol';
 import {GPv2SafeERC20} from '../../../dependencies/gnosis/contracts/GPv2SafeERC20.sol';
-import {IHToken} from '../../../interfaces/IHToken.sol';
+import {IAToken} from '../../../interfaces/IAToken.sol';
 import {Errors} from '../helpers/Errors.sol';
 import {UserConfiguration} from '../configuration/UserConfiguration.sol';
 import {DataTypes} from '../types/DataTypes.sol';
@@ -64,9 +64,9 @@ library SupplyLogic {
 
         reserve.updateInterestRates(reserveCache, params.asset, params.amount, 0);
 
-        IERC20(params.asset).safeTransferFrom(msg.sender, reserveCache.hTokenAddress, params.amount);
+        IERC20(params.asset).safeTransferFrom(msg.sender, reserveCache.aTokenAddress, params.amount);
 
-        bool isFirstSupply = IHToken(reserveCache.hTokenAddress).mint(
+        bool isFirstSupply = IAToken(reserveCache.aTokenAddress).mint(
             msg.sender,
             params.onBehalfOf,
             params.amount,
@@ -80,7 +80,7 @@ library SupplyLogic {
                     reservesList,
                     userConfig,
                     reserveCache.reserveConfiguration,
-                    reserveCache.hTokenAddress
+                    reserveCache.aTokenAddress
                 )
             ) {
                 userConfig.setUsingAsCollateral(reserve.id, true);
@@ -92,7 +92,7 @@ library SupplyLogic {
     }
 
     /**
-     * @notice Implements the withdraw feature. Through `withdraw()`, users redeem their hTokens for the underlying asset
+     * @notice Implements the withdraw feature. Through `withdraw()`, users redeem their aTokens for the underlying asset
      * previously supplied in the Aave protocol.
      * @dev Emits the `Withdraw()` event.
      * @dev If the user withdraws everything, `ReserveUsedAsCollateralDisabled()` is emitted.
@@ -115,7 +115,7 @@ library SupplyLogic {
 
         reserve.updateState(reserveCache);
 
-        uint256 userBalance = IHToken(reserveCache.hTokenAddress).scaledBalanceOf(msg.sender).rayMul(
+        uint256 userBalance = IAToken(reserveCache.aTokenAddress).scaledBalanceOf(msg.sender).rayMul(
             reserveCache.nextLiquidityIndex
         );
 
@@ -136,7 +136,7 @@ library SupplyLogic {
             emit ReserveUsedAsCollateralDisabled(params.asset, msg.sender);
         }
 
-        IHToken(reserveCache.hTokenAddress).burn(
+        IAToken(reserveCache.aTokenAddress).burn(
             msg.sender,
             params.to,
             amountToWithdraw,
@@ -163,7 +163,7 @@ library SupplyLogic {
     }
 
     /**
-     * @notice Validates a transfer of hTokens. The sender is subjected to health factor validation to avoid
+     * @notice Validates a transfer of aTokens. The sender is subjected to health factor validation to avoid
      * collateralization constraints violation.
      * @dev Emits the `ReserveUsedAsCollateralEnabled()` event for the `to` account, if the asset is being activated as
      * collateral.
@@ -218,7 +218,7 @@ library SupplyLogic {
                         reservesList,
                         toConfig,
                         reserve.configuration,
-                        reserve.hTokenAddress
+                        reserve.aTokenAddress
                     )
                 ) {
                     toConfig.setUsingAsCollateral(reserveId, true);
@@ -258,7 +258,7 @@ library SupplyLogic {
         DataTypes.ReserveData storage reserve = reservesData[asset];
         DataTypes.ReserveCache memory reserveCache = reserve.cache();
 
-        uint256 userBalance = IERC20(reserveCache.hTokenAddress).balanceOf(msg.sender);
+        uint256 userBalance = IERC20(reserveCache.aTokenAddress).balanceOf(msg.sender);
 
         ValidationLogic.validateSetUseReserveAsCollateral(reserveCache, userBalance);
 

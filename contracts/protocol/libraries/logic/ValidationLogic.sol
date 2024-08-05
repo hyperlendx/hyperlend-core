@@ -8,7 +8,7 @@ import {IReserveInterestRateStrategy} from '../../../interfaces/IReserveInterest
 import {IStableDebtToken} from '../../../interfaces/IStableDebtToken.sol';
 import {IScaledBalanceToken} from '../../../interfaces/IScaledBalanceToken.sol';
 import {IPriceOracleGetter} from '../../../interfaces/IPriceOracleGetter.sol';
-import {IHToken} from '../../../interfaces/IHToken.sol';
+import {IAToken} from '../../../interfaces/IAToken.sol';
 import {IPriceOracleSentinel} from '../../../interfaces/IPriceOracleSentinel.sol';
 import {IPoolAddressesProvider} from '../../../interfaces/IPoolAddressesProvider.sol';
 import {IAccessControl} from '../../../dependencies/openzeppelin/contracts/IAccessControl.sol';
@@ -80,7 +80,7 @@ library ValidationLogic {
         uint256 supplyCap = reserveCache.reserveConfiguration.getSupplyCap();
         require(
             supplyCap == 0 ||
-                ((IHToken(reserveCache.hTokenAddress).scaledTotalSupply() +
+                ((IAToken(reserveCache.aTokenAddress).scaledTotalSupply() +
                     uint256(reserve.accruedToTreasury)).rayMul(reserveCache.nextLiquidityIndex) + amount) <=
                 supplyCap * (10 ** reserveCache.reserveConfiguration.getDecimals()),
             Errors.SUPPLY_CAP_EXCEEDED
@@ -281,11 +281,11 @@ library ValidationLogic {
             require(
                 !params.userConfig.isUsingAsCollateral(reservesData[params.asset].id) ||
                     params.reserveCache.reserveConfiguration.getLtv() == 0 ||
-                    params.amount > IERC20(params.reserveCache.hTokenAddress).balanceOf(params.userAddress),
+                    params.amount > IERC20(params.reserveCache.aTokenAddress).balanceOf(params.userAddress),
                 Errors.COLLATERAL_SAME_AS_BORROWING_CURRENCY
             );
 
-            vars.availableLiquidity = IERC20(params.asset).balanceOf(params.reserveCache.hTokenAddress);
+            vars.availableLiquidity = IERC20(params.asset).balanceOf(params.reserveCache.aTokenAddress);
 
             //calculate the max available loan size in stable rate mode as a percentage of the
             //available liquidity
@@ -384,7 +384,7 @@ library ValidationLogic {
             require(
                 !userConfig.isUsingAsCollateral(reserve.id) ||
                     reserveCache.reserveConfiguration.getLtv() == 0 ||
-                    stableDebt + variableDebt > IERC20(reserveCache.hTokenAddress).balanceOf(msg.sender),
+                    stableDebt + variableDebt > IERC20(reserveCache.aTokenAddress).balanceOf(msg.sender),
                 Errors.COLLATERAL_SAME_AS_BORROWING_CURRENCY
             );
         } else {
@@ -424,7 +424,7 @@ library ValidationLogic {
             averageStableBorrowRate: 0,
             reserveFactor: reserveCache.reserveFactor,
             reserve: reserveAddress,
-            hToken: reserveCache.hTokenAddress
+            aToken: reserveCache.aTokenAddress
             })
         );
 
@@ -583,7 +583,7 @@ library ValidationLogic {
     * @param eModeCategories The configuration of all the efficiency mode categories
     * @param userConfig The state of the user for the specific reserve
     * @param asset The asset for which the ltv will be validated
-    * @param from The user from which the hTokens are being transferred
+    * @param from The user from which the aTokens are being transferred
     * @param reservesCount The number of available reserves
     * @param oracle The price oracle
     * @param userEModeCategory The users active efficiency mode category
@@ -645,7 +645,7 @@ library ValidationLogic {
             Errors.VARIABLE_DEBT_SUPPLY_NOT_ZERO
         );
         require(
-            IERC20(reserve.hTokenAddress).totalSupply() == 0 && reserve.accruedToTreasury == 0,
+            IERC20(reserve.aTokenAddress).totalSupply() == 0 && reserve.accruedToTreasury == 0,
             Errors.UNDERLYING_CLAIMABLE_RIGHTS_NOT_ZERO
         );
     }
@@ -737,11 +737,11 @@ library ValidationLogic {
         mapping(uint256 => address) storage reservesList,
         DataTypes.UserConfigurationMap storage userConfig,
         DataTypes.ReserveConfigurationMap memory reserveConfig,
-        address hTokenAddress
+        address aTokenAddress
     ) internal view returns (bool) {
         if (reserveConfig.getDebtCeiling() != 0) {
             // ensures only the ISOLATED_COLLATERAL_SUPPLIER_ROLE can enable collateral as side-effect of an action
-            IPoolAddressesProvider addressesProvider = IncentivizedERC20(hTokenAddress)
+            IPoolAddressesProvider addressesProvider = IncentivizedERC20(aTokenAddress)
                 .POOL()
                 .ADDRESSES_PROVIDER();
             if (

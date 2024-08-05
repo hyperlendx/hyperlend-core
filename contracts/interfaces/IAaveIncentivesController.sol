@@ -2,12 +2,12 @@
 pragma solidity ^0.8.0;
 
 /**
- * @title IHyperlendIncentivesController
+ * @title IAaveIncentivesController
  * @author Aave
  * @notice Defines the basic interface for an Aave Incentives Controller.
- * @dev It only contains one single function, needed as a hook on hToken and debtToken transfers.
+ * @dev It only contains one single function, needed as a hook on aToken and debtToken transfers.
  */
-interface IHyperlendIncentivesController {
+interface IAaveIncentivesController {
     /**
      * @dev Called by the corresponding asset on transfer hook in order to update the rewards distribution.
      * @dev The units of `totalSupply` and `userBalance` should be the same.

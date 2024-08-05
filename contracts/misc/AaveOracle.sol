@@ -6,17 +6,17 @@ import {Errors} from '../protocol/libraries/helpers/Errors.sol';
 import {IACLManager} from '../interfaces/IACLManager.sol';
 import {IPoolAddressesProvider} from '../interfaces/IPoolAddressesProvider.sol';
 import {IPriceOracleGetter} from '../interfaces/IPriceOracleGetter.sol';
-import {IHyperlendOracle} from '../interfaces/IHyperlendOracle.sol';
+import {IAaveOracle} from '../interfaces/IAaveOracle.sol';
 
 /**
- * @title HyperlendOracle
+ * @title AaveOracle
  * @author Aave
  * @notice Contract to get asset prices, manage price sources and update the fallback oracle
  * - Use of Chainlink Aggregators as first source of price
  * - If the returned price by a Chainlink aggregator is <= 0, the call is forwarded to a fallback oracle
  * - Owned by the Aave governance
  */
-contract HyperlendOracle is IHyperlendOracle {
+contract AaveOracle is IAaveOracle {
     IPoolAddressesProvider public immutable ADDRESSES_PROVIDER;
 
     // Map of asset price sources (asset => priceSource)
@@ -60,7 +60,7 @@ contract HyperlendOracle is IHyperlendOracle {
         emit BaseCurrencySet(baseCurrency, baseCurrencyUnit);
     }
 
-    /// @inheritdoc IHyperlendOracle
+    /// @inheritdoc IAaveOracle
     function setAssetSources(
         address[] calldata assets,
         address[] calldata sources
@@ -68,7 +68,7 @@ contract HyperlendOracle is IHyperlendOracle {
         _setAssetsSources(assets, sources);
     }
 
-    /// @inheritdoc IHyperlendOracle
+    /// @inheritdoc IAaveOracle
     function setFallbackOracle(
         address fallbackOracle
     ) external override onlyAssetListingOrPoolAdmins {
@@ -115,7 +115,7 @@ contract HyperlendOracle is IHyperlendOracle {
         }
     }
 
-    /// @inheritdoc IHyperlendOracle
+    /// @inheritdoc IAaveOracle
     function getAssetsPrices(
         address[] calldata assets
     ) external view override returns (uint256[] memory) {
@@ -126,12 +126,12 @@ contract HyperlendOracle is IHyperlendOracle {
         return prices;
     }
 
-    /// @inheritdoc IHyperlendOracle
+    /// @inheritdoc IAaveOracle
     function getSourceOfAsset(address asset) external view override returns (address) {
         return address(assetsSources[asset]);
     }
 
-    /// @inheritdoc IHyperlendOracle
+    /// @inheritdoc IAaveOracle
     function getFallbackOracle() external view returns (address) {
         return address(_fallbackOracle);
     }

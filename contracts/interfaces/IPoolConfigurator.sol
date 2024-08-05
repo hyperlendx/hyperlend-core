@@ -12,14 +12,14 @@ interface IPoolConfigurator {
     /**
      * @dev Emitted when a reserve is initialized.
      * @param asset The address of the underlying asset of the reserve
-     * @param hToken The address of the associated hToken contract
+     * @param aToken The address of the associated aToken contract
      * @param stableDebtToken The address of the associated stable rate debt token
      * @param variableDebtToken The address of the associated variable rate debt token
      * @param interestRateStrategyAddress The address of the interest rate strategy for the reserve
      */
     event ReserveInitialized(
         address indexed asset,
-        address indexed hToken,
+        address indexed aToken,
         address stableDebtToken,
         address variableDebtToken,
         address interestRateStrategyAddress
@@ -174,12 +174,12 @@ interface IPoolConfigurator {
     );
 
     /**
-     * @dev Emitted when an hToken implementation is upgraded.
+     * @dev Emitted when an aToken implementation is upgraded.
      * @param asset The address of the underlying asset of the reserve
-     * @param proxy The hToken proxy address
-     * @param implementation The new hToken implementation
+     * @param proxy The aToken proxy address
+     * @param implementation The new aToken implementation
      */
-    event HTokenUpgraded(
+    event ATokenUpgraded(
         address indexed asset,
         address indexed proxy,
         address indexed implementation
@@ -189,7 +189,7 @@ interface IPoolConfigurator {
      * @dev Emitted when the implementation of a stable debt token is upgraded.
      * @param asset The address of the underlying asset of the reserve
      * @param proxy The stable debt token proxy address
-     * @param implementation The new hToken implementation
+     * @param implementation The new aToken implementation
      */
     event StableDebtTokenUpgraded(
         address indexed asset,
@@ -201,7 +201,7 @@ interface IPoolConfigurator {
      * @dev Emitted when the implementation of a variable debt token is upgraded.
      * @param asset The address of the underlying asset of the reserve
      * @param proxy The variable debt token proxy address
-     * @param implementation The new hToken implementation
+     * @param implementation The new aToken implementation
      */
     event VariableDebtTokenUpgraded(
         address indexed asset,
@@ -266,10 +266,10 @@ interface IPoolConfigurator {
     function initReserves(ConfiguratorInputTypes.InitReserveInput[] calldata input) external;
 
     /**
-     * @dev Updates the hToken implementation for the reserve.
-     * @param input The hToken update parameters
+     * @dev Updates the aToken implementation for the reserve.
+     * @param input The aToken update parameters
      */
-    function updateHToken(ConfiguratorInputTypes.UpdateHTokenInput calldata input) external;
+    function updateAToken(ConfiguratorInputTypes.UpdateATokenInput calldata input) external;
 
     /**
      * @notice Updates the stable debt token implementation for the reserve.
@@ -456,7 +456,7 @@ interface IPoolConfigurator {
     /**
      * @notice Updates the total flash loan premium.
      * Total flash loan premium consists of two parts:
-     * - A part is sent to hToken holders as extra balance
+     * - A part is sent to aToken holders as extra balance
      * - A part is collected by the protocol reserves
      * @dev Expressed in bps
      * @dev The premium is calculated on the total amount borrowed

@@ -238,7 +238,7 @@ library CalldataLogic {
      * @return The address of the underlying debt asset
      * @return The address of the user to liquidate
      * @return The amount of debt to cover
-     * @return True if receiving hTokens, false otherwise
+     * @return True if receiving aTokens, false otherwise
      */
     function decodeLiquidationCallParams(
         mapping(uint256 => address) storage reservesList,
@@ -249,7 +249,7 @@ library CalldataLogic {
         uint16 debtAssetId;
         address user;
         uint256 debtToCover;
-        bool receiveHToken;
+        bool receiveAToken;
 
         assembly {
             collateralAssetId := and(args1, 0xFFFF)
@@ -257,7 +257,7 @@ library CalldataLogic {
             user := and(shr(32, args1), 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF)
 
             debtToCover := and(args2, 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF)
-            receiveHToken := and(shr(128, args2), 0x1)
+            receiveAToken := and(shr(128, args2), 0x1)
         }
 
         if (debtToCover == type(uint128).max) {
@@ -269,7 +269,7 @@ library CalldataLogic {
             reservesList[debtAssetId],
             user,
             debtToCover,
-            receiveHToken
+            receiveAToken
         );
     }
 }

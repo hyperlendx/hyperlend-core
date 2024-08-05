@@ -48,26 +48,26 @@ async function main() {
 
     let strategyAddresses = {};
     let strategyAddressPerAsset = {};
-    let hTokenType = {};
+    let aTokenType = {};
 
-    let delegationAwareHTokenImplementationAddress = getDeployedContractAddress("delegationAwareHToken");
-    let hTokenImplementationAddress = getDeployedContractAddress("hToken");
+    let delegationAwareATokenImplementationAddress = getDeployedContractAddress("delegationAwareAToken");
+    let aTokenImplementationAddress = getDeployedContractAddress("aToken");
     let stableDebtTokenImplementationAddress = getDeployedContractAddress("stableDebtToken");
     let variableDebtTokenImplementationAddress = getDeployedContractAddress("variableDebtToken");
 
     const reserves = Object.entries(config.market.ReservesConfig).filter(
-    ([_, { hTokenImpl }]) =>
-        hTokenImpl === "DelegationAwareHToken" ||
-        hTokenImpl === "HToken"
+    ([_, { aTokenImpl }]) =>
+        aTokenImpl === "DelegationAwareAToken" ||
+        aTokenImpl === "AToken"
     );
 
     for (let [symbol, params] of reserves) {
         const poolReserve = await pool.getReserveData(config.tokenAddresses[symbol]);
-        if (poolReserve.hTokenAddress !== config.ZERO_ADDRESS) {
+        if (poolReserve.aTokenAddress !== config.ZERO_ADDRESS) {
             console.log(`- Skipping init of ${symbol} due is already initialized`);
             continue;
         }
-        const { strategy, hTokenImpl, reserveDecimals } = params;
+        const { strategy, aTokenImpl, reserveDecimals } = params;
         if (!config.strategyAddresses[strategy.name]) {
             // Strategy does not exist, load it
             strategyAddresses[strategy.name] = getDeployedContractAddress(strategy.name)
@@ -75,10 +75,10 @@ async function main() {
         strategyAddressPerAsset[symbol] = strategyAddresses[strategy.name];
         console.log("Strategy address for asset %s: %s", symbol, strategyAddressPerAsset[symbol]);
 
-        if (hTokenImpl === "HToken") {
-            hTokenType[symbol] = "generic";
-        } else if (hTokenImpl === "DelegationAwareHToken") {
-            hTokenType[symbol] = "delegation aware";
+        if (aTokenImpl === "AToken") {
+            aTokenType[symbol] = "generic";
+        } else if (aTokenImpl === "DelegationAwareAToken") {
+            aTokenType[symbol] = "delegation aware";
         }
 
         reserveInitDecimals.push(reserveDecimals);
@@ -87,15 +87,15 @@ async function main() {
     }
 
     for (let i = 0; i < reserveSymbols.length; i++) {
-        let hTokenToUse;
-        if (hTokenType[reserveSymbols[i]] === "generic") {
-            hTokenToUse = hTokenImplementationAddress;
+        let aTokenToUse;
+        if (aTokenType[reserveSymbols[i]] === "generic") {
+            aTokenToUse = aTokenImplementationAddress;
         } else {
-            hTokenToUse = delegationAwareHTokenImplementationAddress;
+            aTokenToUse = delegationAwareATokenImplementationAddress;
         }
 
         initInputParams.push({
-            hTokenImpl: hTokenToUse,
+            aTokenImpl: aTokenToUse,
             stableDebtTokenImpl: stableDebtTokenImplementationAddress,
             variableDebtTokenImpl: variableDebtTokenImplementationAddress,
             underlyingAssetDecimals: reserveInitDecimals[i],
@@ -104,8 +104,8 @@ async function main() {
             treasury: config.treasuryAddress,
             incentivesController: config.incentivesController,
             underlyingAssetName: reserveSymbols[i],
-            hTokenName: `Hyperlend ${config.market.HTokenNamePrefix} ${reserveSymbols[i]}`,
-            hTokenSymbol: `h${config.market.SymbolPrefix}${reserveSymbols[i]}`,
+            aTokenName: `Hyperlend ${config.market.ATokenNamePrefix} ${reserveSymbols[i]}`,
+            aTokenSymbol: `h${config.market.SymbolPrefix}${reserveSymbols[i]}`,
             variableDebtTokenName: `Hyperlend ${config.market.VariableDebtTokenNamePrefix} Variable Debt ${reserveSymbols[i]}`,
             variableDebtTokenSymbol: `variableDebt${config.market.SymbolPrefix}${reserveSymbols[i]}`,
             stableDebtTokenName: `Hyperlend ${config.market.StableDebtTokenNamePrefix} Stable Debt ${reserveSymbols[i]}`,
@@ -201,7 +201,7 @@ async function main() {
     }
 
     if (tokens.length) {
-        // Set hTokenAndRatesDeployer as temporal admin
+        // Set aTokenAndRatesDeployer as temporal admin
         await aclManager.addRiskAdmin(reservesSetupHelper.address)
 
         // Deploy init per chunks

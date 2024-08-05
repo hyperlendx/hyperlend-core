@@ -4,7 +4,7 @@ pragma solidity ^0.8.10;
 import {GPv2SafeERC20} from '../../../dependencies/gnosis/contracts/GPv2SafeERC20.sol';
 import {Address} from '../../../dependencies/openzeppelin/contracts/Address.sol';
 import {IERC20} from '../../../dependencies/openzeppelin/contracts/IERC20.sol';
-import {IHToken} from '../../../interfaces/IHToken.sol';
+import {IAToken} from '../../../interfaces/IAToken.sol';
 import {ReserveConfiguration} from '../configuration/ReserveConfiguration.sol';
 import {Errors} from '../helpers/Errors.sol';
 import {WadRayMath} from '../math/WadRayMath.sol';
@@ -42,7 +42,7 @@ library PoolLogic {
     ) external returns (bool) {
         require(Address.isContract(params.asset), Errors.NOT_CONTRACT);
         reservesData[params.asset].init(
-            params.hTokenAddress,
+            params.aTokenAddress,
             params.stableDebtAddress,
             params.variableDebtAddress,
             params.interestRateStrategyAddress
@@ -77,7 +77,7 @@ library PoolLogic {
     }
 
     /**
-     * @notice Mints the assets accrued through the reserve factor to the treasury in the form of hTokens
+     * @notice Mints the assets accrued through the reserve factor to the treasury in the form of aTokens
      * @param reservesData The state of all the reserves
      * @param assets The list of reserves for which the minting needs to be executed
      */
@@ -101,7 +101,7 @@ library PoolLogic {
                 reserve.accruedToTreasury = 0;
                 uint256 normalizedIncome = reserve.getNormalizedIncome();
                 uint256 amountToMint = accruedToTreasury.rayMul(normalizedIncome);
-                IHToken(reserve.hTokenAddress).mintToTreasury(amountToMint, normalizedIncome);
+                IAToken(reserve.aTokenAddress).mintToTreasury(amountToMint, normalizedIncome);
 
                 emit MintedToTreasury(assetAddress, amountToMint);
             }

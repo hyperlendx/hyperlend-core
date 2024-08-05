@@ -4,13 +4,13 @@ pragma solidity ^0.8.10;
 import {IERC20} from '../../dependencies/openzeppelin/contracts/IERC20.sol';
 import {GPv2SafeERC20} from '../../dependencies/gnosis/contracts/GPv2SafeERC20.sol';
 import {SafeCast} from '../../dependencies/openzeppelin/contracts/SafeCast.sol';
-import {VersionedInitializable} from '../libraries/upgradeability/VersionedInitializable.sol';
+import {VersionedInitializable} from '../libraries/aave-upgradeability/VersionedInitializable.sol';
 import {Errors} from '../libraries/helpers/Errors.sol';
 import {WadRayMath} from '../libraries/math/WadRayMath.sol';
 import {IPool} from '../../interfaces/IPool.sol';
-import {IHToken} from '../../interfaces/IHToken.sol';
-import {IHyperlendIncentivesController} from '../../interfaces/IHyperlendIncentivesController.sol';
-import {IInitializableHToken} from '../../interfaces/IInitializableHToken.sol';
+import {IAToken} from '../../interfaces/IAToken.sol';
+import {IAaveIncentivesController} from '../../interfaces/IAaveIncentivesController.sol';
+import {IInitializableAToken} from '../../interfaces/IInitializableAToken.sol';
 import {ScaledBalanceTokenBase} from './base/ScaledBalanceTokenBase.sol';
 import {IncentivizedERC20} from './base/IncentivizedERC20.sol';
 import {EIP712Base} from './base/EIP712Base.sol';
@@ -20,7 +20,7 @@ import {EIP712Base} from './base/EIP712Base.sol';
  * @author Aave and Hyperlend developers
  * @notice Implementation of the interest bearing token for the Hyperlend protocol
  */
-contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, IHToken {
+contract AToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, IAToken {
     using WadRayMath for uint256;
     using SafeCast for uint256;
     using GPv2SafeERC20 for IERC20;
@@ -48,21 +48,21 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
         // Intentionally left blank
     }
 
-    /// @inheritdoc IInitializableHToken
+    /// @inheritdoc IInitializableAToken
     function initialize(
         IPool initializingPool,
         address treasury,
         address underlyingAsset,
-        IHyperlendIncentivesController incentivesController,
-        uint8 hTokenDecimals,
-        string calldata hTokenName,
-        string calldata hTokenSymbol,
+        IAaveIncentivesController incentivesController,
+        uint8 aTokenDecimals,
+        string calldata aTokenName,
+        string calldata aTokenSymbol,
         bytes calldata params
     ) public virtual override initializer {
         require(initializingPool == POOL, Errors.POOL_ADDRESSES_DO_NOT_MATCH);
-        _setName(hTokenName);
-        _setSymbol(hTokenSymbol);
-        _setDecimals(hTokenDecimals);
+        _setName(aTokenName);
+        _setSymbol(aTokenSymbol);
+        _setDecimals(aTokenDecimals);
 
         _treasury = treasury;
         _underlyingAsset = underlyingAsset;
@@ -75,14 +75,14 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
             address(POOL),
             treasury,
             address(incentivesController),
-            hTokenDecimals,
-            hTokenName,
-            hTokenSymbol,
+            aTokenDecimals,
+            aTokenName,
+            aTokenSymbol,
             params
         );
     }
 
-    /// @inheritdoc IHToken
+    /// @inheritdoc IAToken
     function mint(
         address caller,
         address onBehalfOf,
@@ -92,7 +92,7 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
         return _mintScaled(caller, onBehalfOf, amount, index);
     }
 
-    /// @inheritdoc IHToken
+    /// @inheritdoc IAToken
     function burn(
         address from,
         address receiverOfUnderlying,
@@ -105,7 +105,7 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
         }
     }
 
-    /// @inheritdoc IHToken
+    /// @inheritdoc IAToken
     function mintToTreasury(uint256 amount, uint256 index) external virtual override onlyPool {
         if (amount == 0) {
             return;
@@ -113,7 +113,7 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
         _mintScaled(address(POOL), _treasury, amount, index);
     }
 
-    /// @inheritdoc IHToken
+    /// @inheritdoc IAToken
     function transferOnLiquidation(
         address from,
         address to,
@@ -142,22 +142,22 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
         return currentSupplyScaled.rayMul(POOL.getReserveNormalizedIncome(_underlyingAsset));
     }
 
-    /// @inheritdoc IHToken
+    /// @inheritdoc IAToken
     function RESERVE_TREASURY_ADDRESS() external view override returns (address) {
         return _treasury;
     }
 
-    /// @inheritdoc IHToken
+    /// @inheritdoc IAToken
     function UNDERLYING_ASSET_ADDRESS() external view override returns (address) {
         return _underlyingAsset;
     }
 
-    /// @inheritdoc IHToken
+    /// @inheritdoc IAToken
     function transferUnderlyingTo(address target, uint256 amount) external virtual override onlyPool {
         IERC20(_underlyingAsset).safeTransfer(target, amount);
     }
 
-    /// @inheritdoc IHToken
+    /// @inheritdoc IAToken
     function handleRepayment(
         address user,
         address onBehalfOf,
@@ -166,7 +166,7 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
         // Intentionally left blank
     }
 
-    /// @inheritdoc IHToken
+    /// @inheritdoc IAToken
     function permit(
         address owner,
         address spender,
@@ -193,7 +193,7 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
     }
 
     /**
-     * @notice Transfers the hTokens between two users. Validates the transfer
+     * @notice Transfers the aTokens between two users. Validates the transfer
      * (ie checks for valid HF after the transfer) if required
      * @param from The source address
      * @param to The destination address
@@ -228,18 +228,18 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
     }
 
     /**
-     * @dev Overrides the base function to fully implement IHToken
+     * @dev Overrides the base function to fully implement IAToken
      * @dev see `EIP712Base.DOMAIN_SEPARATOR()` for more detailed documentation
      */
-    function DOMAIN_SEPARATOR() public view override(IHToken, EIP712Base) returns (bytes32) {
+    function DOMAIN_SEPARATOR() public view override(IAToken, EIP712Base) returns (bytes32) {
         return super.DOMAIN_SEPARATOR();
     }
 
     /**
-     * @dev Overrides the base function to fully implement IHToken
+     * @dev Overrides the base function to fully implement IAToken
      * @dev see `EIP712Base.nonces()` for more detailed documentation
      */
-    function nonces(address owner) public view override(IHToken, EIP712Base) returns (uint256) {
+    function nonces(address owner) public view override(IAToken, EIP712Base) returns (uint256) {
         return super.nonces(owner);
     }
 
@@ -248,7 +248,7 @@ contract HToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
         return name();
     }
 
-    /// @inheritdoc IHToken
+    /// @inheritdoc IAToken
     function rescueTokens(address token, address to, uint256 amount) external override onlyPoolAdmin {
         require(token != _underlyingAsset, Errors.UNDERLYING_CANNOT_BE_RESCUED);
         IERC20(token).safeTransfer(to, amount);
