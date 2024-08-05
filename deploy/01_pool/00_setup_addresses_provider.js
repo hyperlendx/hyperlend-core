@@ -7,7 +7,7 @@ const { config, saveDeploymentInfo, getDeployedContractAddress } = require("../.
 async function main() {
     // 1. Deploy PoolAddressesProvider
     const PoolAddressesProvider = await ethers.getContractFactory("PoolAddressesProvider");
-    const poolAddressesProvider = await PoolAddressesProvider.deploy(0, config.poolAddressesProvider_owner);
+    const poolAddressesProvider = await PoolAddressesProvider.deploy(config.poolConfig.marketId, config.poolAddressesProvider_owner);
     console.log(`poolAddressesProvider deployed to ${poolAddressesProvider.address}`);
 
     // 2. Set the MarketId
@@ -19,20 +19,20 @@ async function main() {
     const poolAddressesProviderRegistry = PoolAddressesProviderRegistry.attach(getDeployedContractAddress("poolAddressesProviderRegistry"));
     await poolAddressesProviderRegistry.registerAddressesProvider(poolAddressesProvider.address, config.poolConfig.providerId)
 
-    // 4. Deploy AaveProtocolDataProvider getters contract
-    const AaveProtocolDataProvider = await ethers.getContractFactory("AaveProtocolDataProvider");
-    const aaveProtocolDataProvider = await AaveProtocolDataProvider.deploy(poolAddressesProvider.address);
-    console.log(`aaveProtocolDataProvider deployed to ${aaveProtocolDataProvider.address}`);
+    // 4. Deploy ProtocolDataProvider getters contract
+    const ProtocolDataProvider = await ethers.getContractFactory("ProtocolDataProvider");
+    const protocolDataProvider = await ProtocolDataProvider.deploy(poolAddressesProvider.address);
+    console.log(`protocolDataProvider deployed to ${protocolDataProvider.address}`);
 
     // Set the ProtocolDataProvider if is not already set at addresses provider
     const currentProtocolDataProvider = await poolAddressesProvider.getPoolDataProvider();
-    if (aaveProtocolDataProvider.address != currentProtocolDataProvider) {
-        await poolAddressesProvider.setPoolDataProvider(aaveProtocolDataProvider.address)
+    if (protocolDataProvider.address != currentProtocolDataProvider) {
+        await poolAddressesProvider.setPoolDataProvider(protocolDataProvider.address)
     }
 
     saveDeploymentInfo(path.basename(__filename), {
         poolAddressesProvider: poolAddressesProvider.address,
-        aaveProtocolDataProvider: aaveProtocolDataProvider.address
+        protocolDataProvider: protocolDataProvider.address
     })
 }
 

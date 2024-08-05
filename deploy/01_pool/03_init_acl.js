@@ -18,6 +18,7 @@ async function main() {
     // 2. Deploy ACLManager and setup administrators
     const ACLManager = await ethers.getContractFactory("ACLManager");
     const aclManager = await ACLManager.deploy(poolAddressesProvider.address)
+    console.log(`aclManager deployed to ${aclManager.address}`)
 
     // 3. Setup ACLManager at AddressesProviderInstance
     await poolAddressesProvider.setACLManager(aclManager.address)

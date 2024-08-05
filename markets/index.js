@@ -7,8 +7,8 @@ const config = {
     poolAddressesProviderRegistry_owner: "0x16703F774Bd7b2F2E6f39E7dCead924fa2080a0D",
     poolAddressesProvider_owner: "0x16703F774Bd7b2F2E6f39E7dCead924fa2080a0D",
     poolConfig: {
-        marketId: 1,
-        providerId: 2,
+        marketId: "HyperLend Arbitrum Market",
+        providerId: "1",
         isL2PoolSupported: false,
         flashLoanPremiums: {
             total: 5,
@@ -22,12 +22,16 @@ const config = {
     },
     oracle: {
         assets: [
-            "0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d", //usdc
-            "0x1dF462e2712496373A347f8ad10802a5E95f053D" //weth
+            "0xaf88d065e77c8cc2239327c5edb3a432268e5831", //usdc
+            "0x82af49447d8a07e3bd95bd0d56f35241523fbab1", //weth
+            "0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f", //wbtc
+            "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9" //usdt
         ],
         sources: [
-            "0x0153002d20B96532C639313c2d54c3dA09109309", //usdc/usd
-            "0xd30e2101a97dcbAeBCBC04F14C3f624E67A35165" //eth/usd
+            "0x50834F3163758fcC1Df9973b6e91f0F0F0434aD3", //usdc/usd
+            "0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612", //eth/usd
+            "0x6ce185860a4963106506C203335A2910413708e9", //wbtc/usd
+            "0x3f3f5dF88dC9F13eac63DF89EC16ef6e7E25DdE7" //usdt/usd
         ],
         fallbackOracleAddress: "0x0000000000000000000000000000000000000000",
         baseCurrencyUnit: "100000000"
@@ -48,8 +52,8 @@ const config = {
         optimalStableToTotalDebtRatio: ethers.utils.parseUnits("0.2", 27).toString(),
     }],
     tokenAddresses: {
-        USDC: "0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d",
-        WETH: "0x1dF462e2712496373A347f8ad10802a5E95f053D"
+        USDC: "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+        WETH: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1"
     },
     market: {
         MarketId: "Arbitrum Testnet Hyperlend Market",
@@ -102,6 +106,10 @@ const config = {
             arbitrumTestnet: {
                 USDC: "0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d",
                 WETH: "0x1dF462e2712496373A347f8ad10802a5E95f053D"
+            },
+            arbitrum: {
+                USDC: "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+                WETH: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1"
             }
         },
         EModes: {

@@ -7,8 +7,8 @@ async function main() {
     const PoolAddressesProvider = await ethers.getContractFactory("PoolAddressesProvider");
     const poolAddressesProvider = PoolAddressesProvider.attach(getDeployedContractAddress("poolAddressesProvider"));
 
-    const AaveOracle = await ethers.getContractFactory("AaveOracle");
-    const aaveOracle = await AaveOracle.deploy(
+    const Oracle = await ethers.getContractFactory("Oracle");
+    const oracle = await Oracle.deploy(
         poolAddressesProvider.address,
         config.oracle.assets,
         config.oracle.sources,
@@ -16,9 +16,9 @@ async function main() {
         config.ZERO_ADDRESS,
         config.oracle.baseCurrencyUnit
     )
-    console.log(`priceOracle deployed to ${aaveOracle.address}`)
+    console.log(`priceOracle deployed to ${oracle.address}`)
 
-    const configPriceOracle = aaveOracle.address;
+    const configPriceOracle = oracle.address;
     const statePriceOracle = await poolAddressesProvider.getPriceOracle();
     if (configPriceOracle == statePriceOracle) {
         console.log("[addresses-provider] Price oracle already set. Skipping tx.");
@@ -28,7 +28,7 @@ async function main() {
     }
     
     saveDeploymentInfo(path.basename(__filename), {
-        aaveOracle: aaveOracle.address
+        oracle: oracle.address
     })
 }
 

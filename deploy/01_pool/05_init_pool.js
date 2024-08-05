@@ -17,9 +17,6 @@ async function main() {
     const PoolAddressesProvider = await ethers.getContractFactory("PoolAddressesProvider");
     const poolAddressesProvider = PoolAddressesProvider.attach(getDeployedContractAddress("poolAddressesProvider"));
 
-    // const Proxy = await ethers.getContractFactory("InitializableImmutableAdminUpgradeabilityProxy");
-    // const proxy = await Proxy.deploy()
-
     const isPoolProxyPending = (await poolAddressesProvider.getPool()) === config.ZERO_ADDRESS;
     // Set Pool implementation to Addresses provider and save the proxy deployment artifact at disk
     if (isPoolProxyPending) {

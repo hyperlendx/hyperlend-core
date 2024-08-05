@@ -5,7 +5,7 @@ const path = require('path');
 
 const { config, saveDeploymentInfo, getDeployedContractAddress } = require("../../markets")
 
-const poolAddressesProvider = getDeployedContractAddress("poolAddressesProvider")
+const poolAddressesProviderAddress = getDeployedContractAddress("poolAddressesProvider")
 
 async function main() {
     const poolLibraries = await getPoolLibraries()
@@ -15,9 +15,9 @@ async function main() {
             ...poolLibraries,
         }
     });
-    const pool = await Pool.deploy(poolAddressesProvider);
+    const pool = await Pool.deploy(poolAddressesProviderAddress);
 
-    await pool.initialize(poolAddressesProvider)
+    await pool.initialize(poolAddressesProviderAddress)
     console.log(`pool deployed and initialized to ${pool.address}`)
 
     saveDeploymentInfo(path.basename(__filename), {
