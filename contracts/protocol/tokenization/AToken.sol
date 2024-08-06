@@ -44,7 +44,7 @@ contract AToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
      */
     constructor(
         IPool pool
-    ) ScaledBalanceTokenBase(pool, 'ATOKEN_IMPL', 'ATOKEN_IMPL', 0) EIP712Base() {
+    ) ScaledBalanceTokenBase(pool, 'HTOKEN_IMPL', 'HTOKEN_IMPL', 0) EIP712Base() {
         // Intentionally left blank
     }
 

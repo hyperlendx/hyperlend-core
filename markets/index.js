@@ -56,11 +56,11 @@ const config = {
         WETH: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1"
     },
     market: {
-        MarketId: "Arbitrum Testnet Hyperlend Market",
-        ATokenNamePrefix: "Arbitrum Testnet",
-        StableDebtTokenNamePrefix: "Arbitrum Testnet",
-        VariableDebtTokenNamePrefix: "Arbitrum Testnet",
-        SymbolPrefix: "ArbTst",
+        MarketId: "Arbitrum Hyperlend Market",
+        ATokenNamePrefix: "Arbitrum",
+        StableDebtTokenNamePrefix: "Arbitrum",
+        VariableDebtTokenNamePrefix: "Arbitrum",
+        SymbolPrefix: "Arb",
         ProviderId: 36,
         ReservesConfig: {
             USDC:  {

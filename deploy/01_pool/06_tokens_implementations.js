@@ -19,8 +19,8 @@ async function main() {
         config.ZERO_ADDRESS, // underlyingAsset
         config.ZERO_ADDRESS, // incentivesController
         0, // aTokenDecimals
-        "ATOKEN_IMPL", // aTokenName
-        "ATOKEN_IMPL", // aTokenSymbol
+        "HTOKEN_IMPL", // aTokenName
+        "HTOKEN_IMPL", // aTokenSymbol
         "0x00" // params
     )
 
@@ -34,8 +34,8 @@ async function main() {
         config.ZERO_ADDRESS, // underlyingAsset
         config.ZERO_ADDRESS, // incentivesController
         0, // aTokenDecimals
-        "DELEGATION_AWARE_ATOKEN_IMPL", // aTokenName
-        "DELEGATION_AWARE_ATOKEN_IMPL", // aTokenSymbol
+        "DELEGATION_AWARE_HTOKEN_IMPL", // aTokenName
+        "DELEGATION_AWARE_HTOKEN_IMPL", // aTokenSymbol
         "0x00" // params
     )
 

@@ -87,8 +87,11 @@ Arbitrum Mainnet:
 - /
 - Oracle: [0x8033AD4F1613253566aD11C66A51eF09Ac8166Cf](https://arbiscan.io/address/0x8033AD4F1613253566aD11C66A51eF09Ac8166Cf)
 - /
-- Pool (proxy): [0xAd3AAC48C09f955a8053804D8a272285Dfba4dD2][https://arbiscan.io/address/0xAd3AAC48C09f955a8053804D8a272285Dfba4dD2]
+- Pool (proxy): [0xAd3AAC48C09f955a8053804D8a272285Dfba4dD2](https://arbiscan.io/address/0xAd3AAC48C09f955a8053804D8a272285Dfba4dD2)
 - PoolConfigurator (proxy): [0x2B221eeb08491D45b9f4Eb7F2f067ebc864375fA](https://arbiscan.io/address/0x2B221eeb08491D45b9f4Eb7F2f067ebc864375fA)
-
-
+- /
+- HToken (implementation): [0xa0d5B18264F1Ec7a204e1B0688620e4d50a4B8c1](https://arbiscan.io/address/0xa0d5B18264F1Ec7a204e1B0688620e4d50a4B8c1)
+- DelegationAwareHToken: [0xecbD8482C698B7b2706807A32d7FDf4E9a55C6A1](https://arbiscan.io/address/0xecbD8482C698B7b2706807A32d7FDf4E9a55C6A1)
+- StableDebtToken: [0x7598447F0b39c4a3503e3D2676A7E0509E535372](https://arbiscan.io/address/0x7598447F0b39c4a3503e3D2676A7E0509E535372)
+- VariableDebtToken: [0x619dbb0B6A0726356444213E96130217E0e14e53](https://arbiscan.io/address/0x619dbb0B6A0726356444213E96130217E0e14e53)
 ```
