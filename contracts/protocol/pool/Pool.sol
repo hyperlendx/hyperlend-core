@@ -198,7 +198,7 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
         uint256 amount,
         address to
     ) public virtual override returns (uint256) {
-        return 
+        return
             SupplyLogic.executeWithdraw(
                 _reserves,
                 _reservesList,
@@ -382,43 +382,6 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
         );
     }
 
-    uint256[4] public flashLoanFeeDiscountLevels = [1000_000_00000000, 500_000_00000000, 100_000_00000000, 50_000_00000000];
-    function setFlashLoanFeeDiscount(uint256 index, uint256 value) external onlyPoolAdmin {
-        flashLoanFeeDiscountLevels[index] = value;
-    }
-
-    function getUserFlashLoanFeeDiscount(address user) public view returns (uint256){
-        //Variable flash loan fee, based on user's supplied assets
-        ( uint256 totalCollateralBase, uint256 totalDebtBase,,,, uint256 healthFactor ) = PoolLogic.executeGetUserAccountData(
-            _reserves,
-            _reservesList,
-            _eModeCategories,
-            DataTypes.CalculateUserAccountDataParams({
-                userConfig: _usersConfig[user],
-                reservesCount: _reservesCount,
-                user: user,
-                oracle: ADDRESSES_PROVIDER.getPriceOracle(),
-                userEModeCategory: _usersEModeCategory[user]
-            })
-        );
-
-        //total collateral and borrow of the user, in market’s base currency (USD, 8 decimals)
-        uint256 totalUserAmount = totalCollateralBase + totalDebtBase;
-
-        //starting base fee is 4 bps, >1M in total deposits/borrow -> 0 bps fee, >500k -> 1 bps, > 100k -> 2 bps, > 50k -> 3 bps
-        if (totalUserAmount >= flashLoanFeeDiscountLevels[0]){
-            return 4;
-        } else if (totalUserAmount >= flashLoanFeeDiscountLevels[1]){
-            return 3;
-        } else if (totalUserAmount >= flashLoanFeeDiscountLevels[2]){
-            return 2;
-        } else if (totalUserAmount >= flashLoanFeeDiscountLevels[3]){
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
     /// @inheritdoc IPool
     function flashLoan(
         address receiverAddress,
@@ -429,12 +392,6 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
         bytes calldata params,
         uint16 referralCode
     ) public virtual override {
-        uint256 feeDiscount = getUserFlashLoanFeeDiscount(onBehalfOf);
-        if (feeDiscount > _flashLoanPremiumToProtocol) feeDiscount = _flashLoanPremiumToProtocol;
-
-        uint256 newFlashLoanPremiumToProtocol = _flashLoanPremiumToProtocol - feeDiscount;
-        uint256 newFlashLoanPremiumTotal = _flashLoanPremiumTotal;
-
         DataTypes.FlashloanParams memory flashParams = DataTypes.FlashloanParams({
             receiverAddress: receiverAddress,
             assets: assets,
@@ -443,8 +400,8 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
             onBehalfOf: onBehalfOf,
             params: params,
             referralCode: referralCode,
-            flashLoanPremiumToProtocol: newFlashLoanPremiumToProtocol,
-            flashLoanPremiumTotal: newFlashLoanPremiumTotal,
+            flashLoanPremiumToProtocol: _flashLoanPremiumToProtocol,
+            flashLoanPremiumTotal: _flashLoanPremiumTotal,
             maxStableRateBorrowSizePercent: _maxStableRateBorrowSizePercent,
             reservesCount: _reservesCount,
             addressesProvider: address(ADDRESSES_PROVIDER),
@@ -471,20 +428,14 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
         bytes calldata params,
         uint16 referralCode
     ) public virtual override {
-        uint256 feeDiscount = getUserFlashLoanFeeDiscount(receiverAddress);
-        if (feeDiscount > _flashLoanPremiumToProtocol) feeDiscount = _flashLoanPremiumToProtocol;
-        
-        uint256 newFlashLoanPremiumToProtocol = _flashLoanPremiumToProtocol - feeDiscount;
-        uint256 newFlashLoanPremiumTotal = _flashLoanPremiumTotal;
-
         DataTypes.FlashloanSimpleParams memory flashParams = DataTypes.FlashloanSimpleParams({
             receiverAddress: receiverAddress,
             asset: asset,
             amount: amount,
             params: params,
             referralCode: referralCode,
-            flashLoanPremiumToProtocol: newFlashLoanPremiumToProtocol,
-            flashLoanPremiumTotal: newFlashLoanPremiumTotal
+            flashLoanPremiumToProtocol: _flashLoanPremiumToProtocol,
+            flashLoanPremiumTotal: _flashLoanPremiumTotal
         });
         FlashLoanLogic.executeFlashLoanSimple(_reserves[asset], flashParams);
     }
