@@ -119,6 +119,10 @@ Arbitrum Mainnet:
 - hUSDT: [0x90062a80148a9f368d6e40bfeb125dcf1daff5ab](https://arbiscan.io/address/0x90062a80148a9f368d6e40bfeb125dcf1daff5ab)
 - Stable Debt USDT (deprecated): [0xab61b66cB6eDa6fCD3C79B2c756dF1863E08d0f0](https://arbiscan.io/address/0xab61b66cB6eDa6fCD3C79B2c756dF1863E08d0f0)
 - Variable Debt USDT: [0xB5a36b6C87b9bdC093D005ca307381e9A1e09BAb](https://arbiscan.io/address/0xB5a36b6C87b9bdC093D005ca307381e9A1e09BAb)
+- /
+- UiPoolDataProviderV3: [0x0b3bF4D76C035E1CcedE18F9195De98c41c5dDf0](https://arbiscan.io/address/0x0b3bF4D76C035E1CcedE18F9195De98c41c5dDf0)
+- WalletBalanceProvider: [0xc159A250D1aF83daB32d202a6f1F65fEbA7981f5](https://arbiscan.io/address/0xc159A250D1aF83daB32d202a6f1F65fEbA7981f5)
+
 
 | Coin    | LTV | Liquidation Threshold | Supply Cap | Borrow Cap | Liquidation Bonus | Liquidation Protocol Fee | Reserve Factor |
 | -------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- |

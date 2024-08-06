@@ -10,13 +10,6 @@ import {GPv2SafeERC20} from '../../contracts/dependencies/gnosis/contracts/GPv2S
 import {ReserveConfiguration} from '../../contracts/protocol/libraries/configuration/ReserveConfiguration.sol';
 import {DataTypes} from '../../contracts/protocol/libraries/types/DataTypes.sol';
 
-/**
- * @title WalletBalanceProvider contract
- * @author Aave, influenced by https://github.com/wbobeirne/eth-balance-checker/blob/master/contracts/BalanceChecker.sol
- * @notice Implements a logic of getting multiple tokens balance for one user address
- * @dev NOTE: THIS CONTRACT IS NOT USED WITHIN THE AAVE PROTOCOL. It's an accessory contract used to reduce the number of calls
- * towards the blockchain from the Aave backend.
- **/
 contract WalletBalanceProvider {
     using Address for address payable;
     using Address for address;
