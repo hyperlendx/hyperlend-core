@@ -15,30 +15,6 @@ async function main() {
     }); 
     const pool = Pool.attach(poolAddress)
 
-    // Deploy Rate Strategies
-    let deployedIRStrategies = []
-    for (const strategy in config.rateStrategies) {
-        const strategyData = config.rateStrategies[strategy];
-        const args = [
-            poolAddressesProvider.address,
-            strategyData.optimalUsageRatio,
-            strategyData.baseVariableBorrowRate,
-            strategyData.variableRateSlope1,
-            strategyData.variableRateSlope2,
-            strategyData.stableRateSlope1,
-            strategyData.stableRateSlope2,
-            strategyData.baseStableRateOffset,
-            strategyData.stableRateExcessOffset,
-            strategyData.optimalStableToTotalDebtRatio,
-        ];
-
-        const DefaultReserveInterestRateStrategy = await ethers.getContractFactory("DefaultReserveInterestRateStrategy");
-        const defaultReserveInterestRateStrategy = await DefaultReserveInterestRateStrategy.deploy(...args) 
-        console.log(`Deployed defaultReserveInterestRateStrategy to ${defaultReserveInterestRateStrategy.address}`)
-        deployedIRStrategies.push(defaultReserveInterestRateStrategy.address)
-        setDeployedContractAddress(strategyData.name, defaultReserveInterestRateStrategy.address)
-    }
-
     // Deploy Reserves
     let initChunks = 3
     let initInputParams = []
@@ -104,11 +80,11 @@ async function main() {
             treasury: config.treasuryAddress,
             incentivesController: config.incentivesController,
             underlyingAssetName: reserveSymbols[i],
-            aTokenName: `Hyperlend ${config.market.ATokenNamePrefix} ${reserveSymbols[i]}`,
+            aTokenName: `HyperLend ${config.market.ATokenNamePrefix} ${reserveSymbols[i]}`,
             aTokenSymbol: `h${config.market.SymbolPrefix}${reserveSymbols[i]}`,
-            variableDebtTokenName: `Hyperlend ${config.market.VariableDebtTokenNamePrefix} Variable Debt ${reserveSymbols[i]}`,
+            variableDebtTokenName: `HyperLend ${config.market.VariableDebtTokenNamePrefix} Variable Debt ${reserveSymbols[i]}`,
             variableDebtTokenSymbol: `variableDebt${config.market.SymbolPrefix}${reserveSymbols[i]}`,
-            stableDebtTokenName: `Hyperlend ${config.market.StableDebtTokenNamePrefix} Stable Debt ${reserveSymbols[i]}`,
+            stableDebtTokenName: `HyperLend ${config.market.StableDebtTokenNamePrefix} Stable Debt ${reserveSymbols[i]}`,
             stableDebtTokenSymbol: `stableDebt${config.market.SymbolPrefix}${reserveSymbols[i]}`,
             params: "0x10",
         });

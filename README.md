@@ -78,7 +78,7 @@ Arbitrum Mainnet:
 - PoolAddressesProvider: [0xE65D4B4E740Ad55a04B7dc5Ba2f458215350cc32](https://arbiscan.io/address/0xE65D4B4E740Ad55a04B7dc5Ba2f458215350cc32)
 - ProtocolDataProvider: [0x824A4309686C74C3369Ab2273A6f2ced629422e2](https://arbiscan.io/address/0x824A4309686C74C3369Ab2273A6f2ced629422e2)
 - /
-- Pool (implementation): [0xC47B090f071c40758CC68afffE448eB523CDe54D](https://arbiscan.io/address/0xC47B090f071c40758CC68afffE448eB523CDe54D)
+- Pool (impl): [0x0A1650c5b7349D31B54bE510081a3eeFB7CFF119](https://arbiscan.io/address/0x0A1650c5b7349D31B54bE510081a3eeFB7CFF119)
 - /
 - PoolConfigurator: [0x9566cfCC8C286ef881CC0869E381D24E8A3877f2](https://arbiscan.io/address/0x9566cfCC8C286ef881CC0869E381D24E8A3877f2)
 - ReservesSetupHelper: [0x016af22B7Bc1930ecE1B09919FB1ec7657f0e456](https://arbiscan.io/address/0x016af22B7Bc1930ecE1B09919FB1ec7657f0e456)
@@ -94,4 +94,6 @@ Arbitrum Mainnet:
 - DelegationAwareHToken: [0xecbD8482C698B7b2706807A32d7FDf4E9a55C6A1](https://arbiscan.io/address/0xecbD8482C698B7b2706807A32d7FDf4E9a55C6A1)
 - StableDebtToken: [0x7598447F0b39c4a3503e3D2676A7E0509E535372](https://arbiscan.io/address/0x7598447F0b39c4a3503e3D2676A7E0509E535372)
 - VariableDebtToken: [0x619dbb0B6A0726356444213E96130217E0e14e53](https://arbiscan.io/address/0x619dbb0B6A0726356444213E96130217E0e14e53)
-```
+- /
+- rateStrategyVolatileOne: [0x7d028b7b61eA887FC942f1b5cb8245d6f1189582](https://arbiscan.io/address/0x7d028b7b61eA887FC942f1b5cb8245d6f1189582)
+- rateStrategyStableOne: [0xa18DE0E9fd605be95026130FDFb592431Fc7a9B7](https://arbiscan.io/address/0xa18de0e9fd605be95026130fdfb592431fc7a9b7)

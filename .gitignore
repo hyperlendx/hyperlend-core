@@ -11,3 +11,4 @@ artifacts
 
 deployments/
 markets/deployedContracts.json
+arguments.js

@@ -1,6 +1,7 @@
 const { ethers } = require("hardhat")
 const fs = require("fs")
 
+//Arbitrum Market Config
 const config = {
     ZERO_ADDRESS: "0x0000000000000000000000000000000000000000",
     ZERO_BYTES_32: "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -36,27 +37,40 @@ const config = {
         fallbackOracleAddress: "0x0000000000000000000000000000000000000000",
         baseCurrencyUnit: "100000000"
     },
-    treasuryAddress: "0x0000000000000000000000000000000000000000",
+    treasuryAddress: "0x76A99A03c44eEAe3f596017BBA48647A69A429c9",
     incentivesController: "0x0000000000000000000000000000000000000000",
     reservesAddresses: {},
     rateStrategies: [{
         name: "rateStrategyVolatileOne",
         optimalUsageRatio: ethers.utils.parseUnits("0.45", 27).toString(),
         baseVariableBorrowRate: "0",
-        variableRateSlope1: ethers.utils.parseUnits("0.07", 27).toString(),
+        variableRateSlope1: ethers.utils.parseUnits("0.04", 27).toString(),
         variableRateSlope2: ethers.utils.parseUnits("3", 27).toString(),
         stableRateSlope1: ethers.utils.parseUnits("0.07", 27).toString(),
         stableRateSlope2: ethers.utils.parseUnits("3", 27).toString(),
         baseStableRateOffset: ethers.utils.parseUnits("0.02", 27).toString(),
         stableRateExcessOffset: ethers.utils.parseUnits("0.05", 27).toString(),
         optimalStableToTotalDebtRatio: ethers.utils.parseUnits("0.2", 27).toString(),
+    }, {
+        name: "rateStrategyStableOne",
+        optimalUsageRatio: ethers.utils.parseUnits("0.80", 27).toString(),
+        baseVariableBorrowRate: "0",
+        variableRateSlope1: ethers.utils.parseUnits("0.04", 27).toString(),
+        variableRateSlope2: ethers.utils.parseUnits("0.75", 27).toString(),
+        stableRateSlope1: ethers.utils.parseUnits("0.005", 27).toString(),
+        stableRateSlope2: ethers.utils.parseUnits("0.75", 27).toString(),
+        baseStableRateOffset: ethers.utils.parseUnits("0.02", 27).toString(),
+        stableRateExcessOffset: ethers.utils.parseUnits("0.05", 27).toString(),
+        optimalStableToTotalDebtRatio: ethers.utils.parseUnits("0.2", 27).toString(),
     }],
     tokenAddresses: {
         USDC: "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
-        WETH: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1"
+        WETH: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        WBTC: "0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f", 
+        USDT: "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9" 
     },
     market: {
-        MarketId: "Arbitrum Hyperlend Market",
+        MarketId: "Arbitrum HyperLend Market",
         ATokenNamePrefix: "Arbitrum",
         StableDebtTokenNamePrefix: "Arbitrum",
         VariableDebtTokenNamePrefix: "Arbitrum",
@@ -65,27 +79,65 @@ const config = {
         ReservesConfig: {
             USDC:  {
                 strategy: {
-                    name: "rateStrategyVolatileOne"
+                    name: "rateStrategyStableOne"
                 },
-                baseLTVAsCollateral: "7500",
-                liquidationThreshold: "8000",
+                baseLTVAsCollateral: "8000",
+                liquidationThreshold: "8500",
                 liquidationBonus: "10500",
                 liquidationProtocolFee: "1000",
                 borrowingEnabled: true,
                 stableBorrowRateEnabled: true,
                 flashLoanEnabled: true,
-                reserveDecimals: "18",
+                reserveDecimals: "6",
                 aTokenImpl: "AToken",
                 reserveFactor: "1000",
                 supplyCap: "2000000000",
                 borrowCap: "0",
                 debtCeiling: "0",
-                borrowableIsolation: true,
+                borrowableIsolation: true
             },
             WETH: {
                 strategy: {
                     name: "rateStrategyVolatileOne"
                 },
+                baseLTVAsCollateral: "8000",
+                liquidationThreshold: "8250",
+                liquidationBonus: "10500",
+                liquidationProtocolFee: "1000",
+                borrowingEnabled: true,
+                stableBorrowRateEnabled: false,
+                flashLoanEnabled: true,
+                reserveDecimals: "18",
+                aTokenImpl: "AToken",
+                reserveFactor: "1000",
+                supplyCap: "0",
+                borrowCap: "0",
+                debtCeiling: "0",
+                borrowableIsolation: false
+            },
+            WBTC: {
+                strategy: {
+                    name: "rateStrategyVolatileOne"
+                },
+                baseLTVAsCollateral: "7000",
+                liquidationThreshold: "7500",
+                liquidationBonus: "11000",
+                liquidationProtocolFee: "1000",
+                borrowingEnabled: true,
+                stableBorrowRateEnabled: false,
+                flashLoanEnabled: true,
+                reserveDecimals: "8",
+                aTokenImpl: "AToken",
+                reserveFactor: "2000",
+                supplyCap: "0",
+                borrowCap: "0",
+                debtCeiling: "0",
+                borrowableIsolation: false,
+            },
+            USDT: {
+                strategy: {
+                    name: "rateStrategyStableOne"
+                },
                 baseLTVAsCollateral: "7500",
                 liquidationThreshold: "8000",
                 liquidationBonus: "10500",
@@ -93,12 +145,12 @@ const config = {
                 borrowingEnabled: true,
                 stableBorrowRateEnabled: true,
                 flashLoanEnabled: true,
-                reserveDecimals: "18",
+                reserveDecimals: "6",
                 aTokenImpl: "AToken",
                 reserveFactor: "1000",
                 supplyCap: "2000000000",
                 borrowCap: "0",
-                debtCeiling: "0",
+                debtCeiling: "500000000",
                 borrowableIsolation: true,
             }
         },
@@ -109,7 +161,9 @@ const config = {
             },
             arbitrum: {
                 USDC: "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
-                WETH: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1"
+                WETH: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+                WBTC: "0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f", 
+                USDT: "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9" 
             }
         },
         EModes: {
@@ -119,7 +173,7 @@ const config = {
                 liquidationThreshold: "9750",
                 liquidationBonus: "10100",
                 label: "Stablecoins",
-                assets: ["USDC", "USDT", "DAI", "EURS"],
+                assets: ["USDC", "USDT"],
             },
         },
         ChainlinkAggregator: {
