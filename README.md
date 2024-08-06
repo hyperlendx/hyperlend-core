@@ -98,7 +98,7 @@ Arbitrum Mainnet:
 - rateStrategyVolatileOne: [0x7d028b7b61eA887FC942f1b5cb8245d6f1189582](https://arbiscan.io/address/0x7d028b7b61eA887FC942f1b5cb8245d6f1189582)
 - rateStrategyStableOne: [0xa18DE0E9fd605be95026130FDFb592431Fc7a9B7](https://arbiscan.io/address/0xa18de0e9fd605be95026130fdfb592431fc7a9b7)
 - /
-- ReservesSetupHelper: [0x1FED226A86458A238d4299De0864972503fCB7ff](https://arbiscan.io/address/0x1FED226A86458A238d4299De0864972503fCB7ff)
+- ReservesSetupHelper: [0x7d04534cb84789f4DCf9F59b7ff06d642cCaffa4](https://arbiscan.io/address/0x7d04534cb84789f4DCf9F59b7ff06d642cCaffa4)
 - /
 - USDC: [0xaf88d065e77c8cC2239327C5EDb3A432268e5831](https://arbiscan.io/address/0xaf88d065e77c8cC2239327C5EDb3A432268e5831)
 - hUSDC: [0x4ed318353e3aB859F614aB41BFC33f98Cca8B3aE](https://arbiscan.io/address/0x4ed318353e3ab859f614ab41bfc33f98cca8b3ae)
@@ -119,4 +119,10 @@ Arbitrum Mainnet:
 - hUSDT: [0x90062a80148a9f368d6e40bfeb125dcf1daff5ab](https://arbiscan.io/address/0x90062a80148a9f368d6e40bfeb125dcf1daff5ab)
 - Stable Debt USDT (deprecated): [0xab61b66cB6eDa6fCD3C79B2c756dF1863E08d0f0](https://arbiscan.io/address/0xab61b66cB6eDa6fCD3C79B2c756dF1863E08d0f0)
 - Variable Debt USDT: [0xB5a36b6C87b9bdC093D005ca307381e9A1e09BAb](https://arbiscan.io/address/0xB5a36b6C87b9bdC093D005ca307381e9A1e09BAb)
--
+
+| Coin    | LTV | Liquidation Threshold | Supply Cap | Borrow Cap | Liquidation Bonus | Liquidation Protocol Fee | Reserve Factor |
+| -------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- |
+| USDC | 80%  | 85% | 10,000  | N/A | 10% | 20% | 20%
+| WETH | 75%  | 80% | 5       | N/A | 10% | 20% | 20%
+| WBTC | 75%  | 80% | 1       | N/A | 10% | 20% | 20%
+| USDT | 80%  | 85% | 10,000  | N/A | 10% | 20% | 20%

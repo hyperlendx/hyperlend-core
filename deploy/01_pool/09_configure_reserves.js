@@ -87,6 +87,7 @@ async function main() {
         seedAmounts.push(seedAmount)
     }
 
+    console.log(`reservesSetupHelper: ${reservesSetupHelper.address}`)
     console.log(inputParams)
     console.log(`seedAmounts`, seedAmounts)
     let isCorrect = await askForConfirmation()
@@ -97,10 +98,11 @@ async function main() {
 
     //approve seed amounts
     for (let i in seedAmounts){
-
+        const MintableERC20 = await ethers.getContractFactory("MintableERC20");
+        const erc20Token = MintableERC20.attach(tokens[i]);
+        await erc20Token.approve(reservesSetupHelper.address, seedAmounts[i]);
+        console.log(`approved ${tokens[i]}`)
     }
-    
-    return;
 
     if (tokens.length) {
         // Set aTokenAndRatesDeployer as temporal admin
@@ -118,7 +120,7 @@ async function main() {
             const tx = await reservesSetupHelper.configureReserves(
                 poolConfiguratorAddress,
                 chunkedInputParams[chunkIndex],
-                seedAmounts[chunkIndex],
+                chunkedSeedAmounts[chunkIndex],
                 (await poolAddressesProvider.getPool())
             )
             
@@ -131,10 +133,6 @@ async function main() {
         // Remove ReservesSetupHelper from risk admins
         await aclManager.removeRiskAdmin(reservesSetupHelper.address)
     }
-
-    saveDeploymentInfo(path.basename(__filename), {
-        protocolDataProvider: protocolDataProvider.address
-    })  
 
     console.log(`[Deployment] Configured all reserves`);
 }
