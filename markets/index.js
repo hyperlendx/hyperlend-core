@@ -75,7 +75,7 @@ const config = {
         StableDebtTokenNamePrefix: "Arbitrum",
         VariableDebtTokenNamePrefix: "Arbitrum",
         SymbolPrefix: "Arb",
-        ProviderId: 36,
+        ProviderId: "1",
         ReservesConfig: {
             USDC:  {
                 strategy: {
@@ -83,46 +83,48 @@ const config = {
                 },
                 baseLTVAsCollateral: "8000",
                 liquidationThreshold: "8500",
-                liquidationBonus: "10500",
-                liquidationProtocolFee: "1000",
+                liquidationBonus: "15000",
+                liquidationProtocolFee: "5000",
                 borrowingEnabled: true,
                 stableBorrowRateEnabled: true,
                 flashLoanEnabled: true,
                 reserveDecimals: "6",
                 aTokenImpl: "AToken",
-                reserveFactor: "1000",
+                reserveFactor: "2000",
                 supplyCap: "2000000000",
                 borrowCap: "0",
                 debtCeiling: "0",
-                borrowableIsolation: true
+                borrowableIsolation: true,
+                seedAmount: "1000000"
             },
             WETH: {
                 strategy: {
                     name: "rateStrategyVolatileOne"
                 },
-                baseLTVAsCollateral: "8000",
-                liquidationThreshold: "8250",
-                liquidationBonus: "10500",
-                liquidationProtocolFee: "1000",
+                baseLTVAsCollateral: "7500",
+                liquidationThreshold: "8000",
+                liquidationBonus: "15000",
+                liquidationProtocolFee: "5000",
                 borrowingEnabled: true,
                 stableBorrowRateEnabled: false,
                 flashLoanEnabled: true,
                 reserveDecimals: "18",
                 aTokenImpl: "AToken",
-                reserveFactor: "1000",
+                reserveFactor: "2000",
                 supplyCap: "0",
                 borrowCap: "0",
                 debtCeiling: "0",
-                borrowableIsolation: false
+                borrowableIsolation: false,
+                seedAmount: "500000000000000" //0.0005
             },
             WBTC: {
                 strategy: {
                     name: "rateStrategyVolatileOne"
                 },
-                baseLTVAsCollateral: "7000",
-                liquidationThreshold: "7500",
-                liquidationBonus: "11000",
-                liquidationProtocolFee: "1000",
+                baseLTVAsCollateral: "7500",
+                liquidationThreshold: "8000",
+                liquidationBonus: "15000",
+                liquidationProtocolFee: "5000",
                 borrowingEnabled: true,
                 stableBorrowRateEnabled: false,
                 flashLoanEnabled: true,
@@ -133,25 +135,27 @@ const config = {
                 borrowCap: "0",
                 debtCeiling: "0",
                 borrowableIsolation: false,
+                seedAmount: "2000" //0.00002
             },
             USDT: {
                 strategy: {
                     name: "rateStrategyStableOne"
                 },
-                baseLTVAsCollateral: "7500",
-                liquidationThreshold: "8000",
-                liquidationBonus: "10500",
-                liquidationProtocolFee: "1000",
+                baseLTVAsCollateral: "8000",
+                liquidationThreshold: "8500",
+                liquidationBonus: "15000",
+                liquidationProtocolFee: "5000",
                 borrowingEnabled: true,
                 stableBorrowRateEnabled: true,
                 flashLoanEnabled: true,
                 reserveDecimals: "6",
                 aTokenImpl: "AToken",
-                reserveFactor: "1000",
+                reserveFactor: "2000",
                 supplyCap: "2000000000",
                 borrowCap: "0",
                 debtCeiling: "500000000",
                 borrowableIsolation: true,
+                seedAmount: "1000000"
             }
         },
         ReserveAssets: {
@@ -169,9 +173,9 @@ const config = {
         EModes: {
             StableEMode: {
                 id: "1",
-                ltv: "9700",
-                liquidationThreshold: "9750",
-                liquidationBonus: "10100",
+                ltv: "9300",
+                liquidationThreshold: "9500",
+                liquidationBonus: "10000",
                 label: "Stablecoins",
                 assets: ["USDC", "USDT"],
             },

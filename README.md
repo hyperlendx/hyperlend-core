@@ -97,3 +97,26 @@ Arbitrum Mainnet:
 - /
 - rateStrategyVolatileOne: [0x7d028b7b61eA887FC942f1b5cb8245d6f1189582](https://arbiscan.io/address/0x7d028b7b61eA887FC942f1b5cb8245d6f1189582)
 - rateStrategyStableOne: [0xa18DE0E9fd605be95026130FDFb592431Fc7a9B7](https://arbiscan.io/address/0xa18de0e9fd605be95026130fdfb592431fc7a9b7)
+- /
+- ReservesSetupHelper: [0x1FED226A86458A238d4299De0864972503fCB7ff](https://arbiscan.io/address/0x1FED226A86458A238d4299De0864972503fCB7ff)
+- /
+- USDC: [0xaf88d065e77c8cC2239327C5EDb3A432268e5831](https://arbiscan.io/address/0xaf88d065e77c8cC2239327C5EDb3A432268e5831)
+- hUSDC: [0x4ed318353e3aB859F614aB41BFC33f98Cca8B3aE](https://arbiscan.io/address/0x4ed318353e3ab859f614ab41bfc33f98cca8b3ae)
+- Stable Debt USDC (deprecated): [0x6a970b349D8B60b57a335C0bdd16b8EEbD19Fa8F](https://arbiscan.io/address/0x6a970b349D8B60b57a335C0bdd16b8EEbD19Fa8F)
+- Variable Debt USDC: [0x82bf3C188d6397f2b9dE6D9F3834381C9C205585](https://arbiscan.io/address/0x82bf3C188d6397f2b9dE6D9F3834381C9C205585)
+- /
+- WETH: [0x82aF49447D8a07e3bd95BD0d56f35241523fBab1](https://arbiscan.io/address/0x82aF49447D8a07e3bd95BD0d56f35241523fBab1)
+- hWETH: [0xf03cec3e8167bb661aceb2fbe1076161ad2a1b14](https://arbiscan.io/address/0xf03cec3e8167bb661aceb2fbe1076161ad2a1b14)
+- Stable Debt WETH (deprecated): [0xf6fc13805d62477e3ab5bcde4290f45d29c98fb4](https://arbiscan.io/address/0xf6fc13805d62477e3ab5bcde4290f45d29c98fb4)
+- Variable Debt WETH: [0xa0138da10498a77e6b798107cbcabca54e9ab729](https://arbiscan.io/address/0xa0138da10498a77e6b798107cbcabca54e9ab729)
+- /
+- WBTC: [0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f](https://arbiscan.io/address/0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f)
+- hWBTC: [0x1acbf79a74ec29df4dcaf70663e6252966fba6a9](https://arbiscan.io/address/0x1acbf79a74ec29df4dcaf70663e6252966fba6a9)
+- Stable Debt WBTC (deprecated): [0xa0BB90E88dCD726Dc562e9d4B87E0123b0285498](https://arbiscan.io/address/0xa0BB90E88dCD726Dc562e9d4B87E0123b0285498)
+- Variable Debt WBTC: [0x33A2D49B3AdB11569110cDaE9ad085ebc5faC7e6](https://arbiscan.io/address/0x33A2D49B3AdB11569110cDaE9ad085ebc5faC7e6)
+- /
+- USDT: [0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9](https://arbiscan.io/address/0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9)
+- hUSDT: [0x90062a80148a9f368d6e40bfeb125dcf1daff5ab](https://arbiscan.io/address/0x90062a80148a9f368d6e40bfeb125dcf1daff5ab)
+- Stable Debt USDT (deprecated): [0xab61b66cB6eDa6fCD3C79B2c756dF1863E08d0f0](https://arbiscan.io/address/0xab61b66cB6eDa6fCD3C79B2c756dF1863E08d0f0)
+- Variable Debt USDT: [0xB5a36b6C87b9bdC093D005ca307381e9A1e09BAb](https://arbiscan.io/address/0xB5a36b6C87b9bdC093D005ca307381e9A1e09BAb)
+-

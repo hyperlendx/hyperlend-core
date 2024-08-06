@@ -1,5 +1,11 @@
 const { ethers } = require("hardhat");
 const path = require('path');
+const readline = require('node:readline');
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+});
 
 const { config, saveDeploymentInfo, getDeployedContractAddress, setDeployedContractAddress } = require("../../markets")
 
@@ -83,11 +89,18 @@ async function main() {
             aTokenName: `HyperLend ${config.market.ATokenNamePrefix} ${reserveSymbols[i]}`,
             aTokenSymbol: `h${config.market.SymbolPrefix}${reserveSymbols[i]}`,
             variableDebtTokenName: `HyperLend ${config.market.VariableDebtTokenNamePrefix} Variable Debt ${reserveSymbols[i]}`,
-            variableDebtTokenSymbol: `variableDebt${config.market.SymbolPrefix}${reserveSymbols[i]}`,
+            variableDebtTokenSymbol: `hVariableDebt${config.market.SymbolPrefix}${reserveSymbols[i]}`,
             stableDebtTokenName: `HyperLend ${config.market.StableDebtTokenNamePrefix} Stable Debt ${reserveSymbols[i]}`,
-            stableDebtTokenSymbol: `stableDebt${config.market.SymbolPrefix}${reserveSymbols[i]}`,
+            stableDebtTokenSymbol: `hStableDebt${config.market.SymbolPrefix}${reserveSymbols[i]}`,
             params: "0x10",
         });
+    }
+
+    console.log(initInputParams)
+    let isCorrect = await askForConfirmation()
+    if (!isCorrect){
+        console.log("Aborting...")
+        return;
     }
 
     // Deploy init reserves per chunks
@@ -111,105 +124,7 @@ async function main() {
         );
     }
 
-    //configure reserves
-    const ACLManagerArtifact = await ethers.getContractFactory("ACLManager");
-    const aclManager = ACLManagerArtifact.attach(await poolAddressesProvider.getACLManager());
-
-    const ReservesSetupHelper = await ethers.getContractFactory("ReservesSetupHelper");
-    const reservesSetupHelper = await ReservesSetupHelper.deploy()
-    console.log(`reservesSetupHelper deployed to ${reservesSetupHelper.address}`)
-
-    const AaveProtocolDataProvider = await ethers.getContractFactory("AaveProtocolDataProvider");
-    const protocolDataProvider = AaveProtocolDataProvider.attach(await poolAddressesProvider.getPoolDataProvider())
-
-    const tokens = [];
-    const symbols = [];
-    const inputParams = []
-
-    for (
-        const [
-            assetSymbol, 
-            {
-                baseLTVAsCollateral,
-                liquidationBonus,
-                liquidationThreshold,
-                reserveFactor,
-                borrowCap,
-                supplyCap,
-                stableBorrowRateEnabled,
-                borrowingEnabled,
-                flashLoanEnabled,
-            }
-        ] of Object.entries(config.market.ReservesConfig)
-    ) {
-        if (!config.tokenAddresses[assetSymbol]) {
-            console.log(`- Skipping init of ${assetSymbol} due token address is not set at markets config`);
-            continue;
-        }
-        if (baseLTVAsCollateral === "-1") continue;
-
-        const assetAddressIndex = Object.keys(config.tokenAddresses).findIndex(
-            (value) => value === assetSymbol
-        );
-        const [, tokenAddress] = (Object.entries(config.tokenAddresses))[assetAddressIndex];
-
-        const { usageAsCollateralEnabled: alreadyEnabled } = await protocolDataProvider.getReserveConfigurationData(tokenAddress);
-        if (alreadyEnabled) {
-            console.log(`- Reserve ${assetSymbol} is already enabled as collateral, skipping`);
-            continue;
-        }
-
-        inputParams.push({
-            asset: tokenAddress,
-            baseLTV: baseLTVAsCollateral,
-            liquidationThreshold,
-            liquidationBonus,
-            reserveFactor,
-            borrowCap,
-            supplyCap,
-            stableBorrowingEnabled: stableBorrowRateEnabled,
-            borrowingEnabled: borrowingEnabled,
-            flashLoanEnabled: flashLoanEnabled,
-        });
-    
-        tokens.push(tokenAddress);
-        symbols.push(assetSymbol);
-    }
-
-    if (tokens.length) {
-        // Set aTokenAndRatesDeployer as temporal admin
-        await aclManager.addRiskAdmin(reservesSetupHelper.address)
-
-        // Deploy init per chunks
-        const enableChunks = 20;
-        const chunkedSymbols = chunk(symbols, enableChunks);
-        const chunkedInputParams = chunk(inputParams, enableChunks);
-        const poolConfiguratorAddress = await poolAddressesProvider.getPoolConfigurator();
-        console.log(`- Configure reserves in ${chunkedInputParams.length} txs`);
-        
-        for (let chunkIndex = 0; chunkIndex < chunkedInputParams.length; chunkIndex++) {
-            const tx = await reservesSetupHelper.configureReserves(
-                poolConfiguratorAddress,
-                chunkedInputParams[chunkIndex]
-            )
-            
-            console.log(
-                `  - Init for: ${chunkedSymbols[chunkIndex].join(", ")}`,
-                `\n- Tx hash: ${tx.transactionHash}`
-            );
-        }
-
-        // Remove ReservesSetupHelper from risk admins
-        await aclManager.removeRiskAdmin(reservesSetupHelper.address)
-    }
-
-    saveDeploymentInfo(path.basename(__filename), {
-        defaultReserveInterestRateStrategy: deployedIRStrategies,
-        reservesSetupHelper: reservesSetupHelper.address,
-        protocolDataProvider: protocolDataProvider.address
-    })  
-
-    console.log(`[Deployment] Configured all reserves`);
+    console.log(`[Deployment] Initialized all reserves`);
 }
 
 function chunk(arr, chunkSize){
@@ -233,6 +148,19 @@ async function getPoolLibraries(){
         PoolLogic: getDeployedContractAddress("poolLogic"),
     };
 };
+
+async function askForConfirmation(){
+    return new Promise((resolve, reject) => {
+        rl.question(`Is this correct [y/n]?`, res => {
+            rl.close();
+            if (res.toLowerCase() == "y"){
+                resolve(true)
+            } else {
+                resolve(false)
+            }
+        });
+    })
+}
 
 
 main().catch((error) => {
