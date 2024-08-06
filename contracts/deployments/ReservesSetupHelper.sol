@@ -3,10 +3,12 @@ pragma solidity ^0.8.0;
 
 import {PoolConfigurator} from '../protocol/pool/PoolConfigurator.sol';
 import {Ownable} from '../dependencies/openzeppelin/contracts/Ownable.sol';
+import {IERC20} from '../dependencies/openzeppelin/contracts/IERC20.sol';
+import {IPool} from '../interfaces/IPool.sol';
 
 /**
  * @title ReservesSetupHelper
- * @author Aave
+ * @author Aave & HyperLend
  * @notice Deployment helper to setup the assets risk parameters at PoolConfigurator in batch.
  * @dev The ReservesSetupHelper is an Ownable contract, so only the deployer or future owners can call this contract.
  */
@@ -29,10 +31,14 @@ contract ReservesSetupHelper is Ownable {
      * @dev The Pool or Risk admin must transfer the ownership to ReservesSetupHelper before calling this function
      * @param configurator The address of PoolConfigurator contract
      * @param inputParams An array of ConfigureReserveInput struct that contains the assets and their risk parameters
+     * @param pool The address of the Pool
+     * @param seedAmounts Amount of the asset to supply
      */
     function configureReserves(
         PoolConfigurator configurator,
-        ConfigureReserveInput[] calldata inputParams
+        ConfigureReserveInput[] calldata inputParams,
+        uint256[] calldata seedAmounts,
+        address pool
     ) external onlyOwner {
         for (uint256 i = 0; i < inputParams.length; i++) {
             configurator.configureReserveAsCollateral(
@@ -54,6 +60,14 @@ contract ReservesSetupHelper is Ownable {
             configurator.setReserveFlashLoaning(inputParams[i].asset, inputParams[i].flashLoanEnabled);
             configurator.setSupplyCap(inputParams[i].asset, inputParams[i].supplyCap);
             configurator.setReserveFactor(inputParams[i].asset, inputParams[i].reserveFactor);
+
+            _seedPool(inputParams[i].asset, pool, seedAmounts[i]);
         }
+    }
+
+    function _seedPool(address token, address pool, uint256 amount) internal {
+        IERC20(token).transferFrom(owner(), address(this), amount);
+        IERC20(token).approve(pool, amount);
+        IPool(pool).supply(token, amount, owner(), 0);
     }
 }
