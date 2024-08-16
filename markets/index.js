@@ -132,7 +132,7 @@ const config = {
                 borrowCap: "0",
                 debtCeiling: "0",
                 borrowableIsolation: false,
-                seedAmount: "2000" //0.00002
+                seedAmount: "20000" //0.0002
             },
             USDT: {
                 strategy: {

@@ -66,6 +66,7 @@ contract ReservesSetupHelper is Ownable {
     }
 
     function _seedPool(address token, address pool, uint256 amount) internal {
+        require(amount >= 10000, "seed amount too low");
         IERC20(token).transferFrom(owner(), address(this), amount);
         IERC20(token).approve(pool, amount);
         IPool(pool).supply(token, amount, owner(), 0);
