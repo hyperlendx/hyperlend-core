@@ -98,6 +98,7 @@ async function main() {
 
     //approve seed amounts
     for (let i in seedAmounts){
+        if (seedAmounts[i] < 10000) throw new Error("SeedAmountTooLow");
         const MintableERC20 = await ethers.getContractFactory("MintableERC20");
         const erc20Token = MintableERC20.attach(tokens[i]);
         await erc20Token.approve(reservesSetupHelper.address, seedAmounts[i]);
