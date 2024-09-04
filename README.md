@@ -16,6 +16,8 @@ npx hardhat run deploy/01_pool/06_tokens_implementations.js --network localhost
 npx hardhat run deploy/01_pool/07_rate_strategies.js --network localhost
 npx hardhat run deploy/01_pool/08_init_reserves.js --network localhost
 npx hardhat run deploy/01_pool/09_configure_reserves.js --network localhost
+
+npx hardhat run deploy/02_periphery/00_ui_helpers.js --network localhost
 ```
 
 ---
@@ -27,6 +29,7 @@ HyperEVM testnet:
 - /
 - mockUSDC: 0xA8dC952187FAedA6C47F74586886507Da1C6F1f6
 - mockBTC: 0x453b63484b11bbF0b61fC7E854f8DAC7bdE7d458
+- mockETH: 0xBa331f80306b55318b788A0cC6025DE389b4f07B
 - /
 - PoolAddressesProviderRegistry: 0xF38A8A25DafdCFb5126008ed1f9f2333C3129c93
 - /
@@ -42,6 +45,7 @@ HyperEVM testnet:
 - HyperEvmOracleAggregator: 0x824A4309686C74C3369Ab2273A6f2ced629422e2
 - purrProvider: /
 - mockUsdcProvider: / 
+- mockEthProvider: 0x8fD6C8f776AfEB29237Be490DC39d0b2162c42B5 (not added to Oracle yet)
 - mockBtcProvider: 0x3437aE65ae0C2b80437E55c829fF6C895Eee061c
 - /
 - PoolAddressesProvider: 0xa1d0ca19d6877cE4Bf51496305393aa28607012d
@@ -71,8 +75,8 @@ HyperEVM testnet:
 - hMUSDC: 0xde72990638db12f8AA4cd9406bA6c648153A5cEA
 - Variable Debt MBTC: 0x742d75d7389E66f6C17898A0e19077E17F1C51d1
 - /
-- UiPoolDataProviderV3: 
-- WalletBalanceProvider: 
+- UiPoolDataProviderV3: 0x3B3E98B61AFB357b1AA7Ff8BD83BE5516906c659
+- WalletBalanceProvider: 0x99c06000a9c3311E8A46326332e6280Ca5029284
 
 ---
 

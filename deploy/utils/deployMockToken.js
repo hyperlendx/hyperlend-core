@@ -5,7 +5,7 @@ const { config, saveDeploymentInfo, getDeployedContractAddress, setDeployedContr
 
 async function main() {
     const MintableERC20 = await ethers.getContractFactory("MockERC20");
-    const mock1 = await MintableERC20.deploy("mockUSDC", "MUSDC", 6);
+    const mock1 = await MintableERC20.deploy("mockETH", "METH", 18);
     const mock2 = await MintableERC20.deploy("mockBTC", "MBTC", 8);
     console.log(mock1.address, mock2.address)
 }
