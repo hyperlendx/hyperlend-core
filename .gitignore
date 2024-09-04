@@ -10,5 +10,5 @@ cache
 artifacts
 
 deployments/
-markets/deployedContracts.json
+markets/deployedContracts*.json
 arguments.js

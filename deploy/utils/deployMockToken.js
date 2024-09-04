@@ -4,9 +4,9 @@ const path = require('path');
 const { config, saveDeploymentInfo, getDeployedContractAddress, setDeployedContractAddress } = require("../../markets")
 
 async function main() {
-    const MintableERC20 = await ethers.getContractFactory("MintableERC20");
-    const mock1 = await MintableERC20.deploy("MOCK1", "MOCK1", 6);
-    const mock2 = await MintableERC20.deploy("MOCK2", "MOCK2", 18);
+    const MintableERC20 = await ethers.getContractFactory("MockERC20");
+    const mock1 = await MintableERC20.deploy("mockUSDC", "MUSDC", 6);
+    const mock2 = await MintableERC20.deploy("mockBTC", "MBTC", 8);
     console.log(mock1.address, mock2.address)
 }
 

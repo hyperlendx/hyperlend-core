@@ -20,7 +20,8 @@ const chainIds = {
   "polygon-mainnet": 137,
   rinkeby: 4,
   arbitrum: 42161,
-  arbitrumTestnet: 421614
+  arbitrumTestnet: 421614,
+  hyperEvmTestnet: 998
 };
 
 function getRemappings() {
@@ -55,6 +56,11 @@ const config = {
       accounts: [process.env.PRIVATE_KEY],
       chainId: chainIds.arbitrumTestnet,
       url: process.env.ARBITRUM_TESTNET_URL,
+    },
+    hyperEvmTestnet: {
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: chainIds.hyperEvmTestnet,
+      url: 'https://api.hyperliquid-testnet.xyz/evm',
     }
   },
   paths: {

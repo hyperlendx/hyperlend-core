@@ -11,7 +11,7 @@ async function main() {
 
     const AToken = await ethers.getContractFactory("AToken");
     const aToken = await AToken.deploy(poolAddress)
-    console.log(`Deployed AToken to ${aToken.address}`)
+    console.log(`Deployed HToken to ${aToken.address}`)
 
     await aToken.initialize(
         poolAddress, // initializingPool

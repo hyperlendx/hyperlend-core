@@ -63,7 +63,7 @@ async function main() {
     await poolConfigurator.updateFlashloanPremiumToProtocol(config.poolConfig.flashLoanPremiums.protocol)
 
     saveDeploymentInfo(path.basename(__filename), {
-        // proxy: proxy.address,
+        poolProxy: poolProxyAddress,
         l2Encoder: l2Encoder ? l2Encoder.address : null,
         poolConfiguratorProxy: poolConfiguratorProxyAddress
     })  

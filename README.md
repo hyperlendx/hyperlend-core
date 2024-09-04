@@ -13,49 +13,66 @@ npx hardhat run deploy/01_pool/03_init_acl.js --network localhost
 npx hardhat run deploy/01_pool/04_deploy_oracles.js --network localhost
 npx hardhat run deploy/01_pool/05_init_pool.js --network localhost
 npx hardhat run deploy/01_pool/06_tokens_implementations.js --network localhost
-npx hardhat run deploy/01_pool/07_init_reserves.js --network localhost
+npx hardhat run deploy/01_pool/07_rate_strategies.js --network localhost
+npx hardhat run deploy/01_pool/08_init_reserves.js --network localhost
+npx hardhat run deploy/01_pool/09_configure_reserves.js --network localhost
 ```
 
 ---
 
-Arbitrum Sepolia: 
+HyperEVM testnet:
 
-```
-poolProxy: 0xAd3AAC48C09f955a8053804D8a272285Dfba4dD2
-poolConfiguratorProxy: 0x2B221eeb08491D45b9f4Eb7F2f067ebc864375fA
 
-Tokens:
-    USDC: 0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d
-    WETH: 0x1dF462e2712496373A347f8ad10802a5E95f053D
-
-PoolAddressesProviderRegistry deployed to 0xF38A8A25DafdCFb5126008ed1f9f2333C3129c93
-
-supplyLogic deployed to 0x22fDFC451e2DDb82d7084D08a50D04f60F2C47C8
-borrowLogic deployed to 0x59EA4F0b4Fdda3553E1530a15Ff96dCC126Be8Ce
-liquidationLogic deployed to 0x252BEE0B51965Da631d26136775547A3E48550E2
-eModeLogic deployed to 0x00a7095e063859D73F6154C945d7F47C42B4A3f2
-bridgeLogic deployed to 0x9E72BFA05F9857ab605594aDa74EC0be8bd6Ae81
-configuratorLogic deployed to 0xD67A1b90d0906f4A6B0A46A384f9aC4e19acBC86
-flashLoanLogic deployed to 0x326CE88B602C954C36864A8F031f5a45936a05eF
-poolLogic deployed to 0x49b922C05745B00a93297B1bd71Ade21f8CbDA10
-
-poolAddressesProvider deployed to 0xE65D4B4E740Ad55a04B7dc5Ba2f458215350cc32
-protocolDataProvider deployed to 0x714f694f56e9Ca68a149cC06eEe0492606281079
-
-pool deployed and initialized to 0x522050F45889eE78DEea539051b88154717FC3e1
-
-poolConfigurator deployed to 0xC47B090f071c40758CC68afffE448eB523CDe54D
-reservesSetupHelper deployed to 0x9566cfCC8C286ef881CC0869E381D24E8A3877f2
-
-priceOracle deployed to 0x06F7e3E10A3c140ff7e857A9C9fFAC4393456001
-
-HToken deployed to 0xaA5199c2cC7af47d3232fE1814EBE8429c3B6858
-delegationAwareHToken deployed to 0xC70e2E575c9F41338CeC9B28a0e85986Fa8e9eDF
-stableDebtToken deployed to 0x453b63484b11bbF0b61fC7E854f8DAC7bdE7d458
-variableDebtToken deployed to 0x53212125DE244C1D737f145Ee0947Fd589B66Cf6
-
-rateStrategyVolatileOne deployed to 0x52988EddD859b142b8AfbC3525852DE2B1b93F01
-```
+- Deployer: 0x16703F774Bd7b2F2E6f39E7dCead924fa2080a0D
+- /
+- mockUSDC: 0xA8dC952187FAedA6C47F74586886507Da1C6F1f6
+- mockBTC: 0x453b63484b11bbF0b61fC7E854f8DAC7bdE7d458
+- /
+- PoolAddressesProviderRegistry: 0xF38A8A25DafdCFb5126008ed1f9f2333C3129c93
+- /
+- SupplyLogic: 0x22fDFC451e2DDb82d7084D08a50D04f60F2C47C8
+- BorrowLogic: 0x59EA4F0b4Fdda3553E1530a15Ff96dCC126Be8Ce
+- LiquidationLogic: 0x252BEE0B51965Da631d26136775547A3E48550E2
+- EModeLogic: 0x00a7095e063859D73F6154C945d7F47C42B4A3f2
+- BridgeLogic: 0x9E72BFA05F9857ab605594aDa74EC0be8bd6Ae81
+- ConfiguratorLogic: 0xD67A1b90d0906f4A6B0A46A384f9aC4e19acBC86
+- FlashLoanLogic: 0x326CE88B602C954C36864A8F031f5a45936a05eF
+- PoolLogic: 0x49b922C05745B00a93297B1bd71Ade21f8CbDA10
+- /
+- HyperEvmOracleAggregator: 0x824A4309686C74C3369Ab2273A6f2ced629422e2
+- purrProvider: /
+- mockUsdcProvider: / 
+- mockBtcProvider: 0x3437aE65ae0C2b80437E55c829fF6C895Eee061c
+- /
+- PoolAddressesProvider: 0xa1d0ca19d6877cE4Bf51496305393aa28607012d
+- ProtocolDataProvider: 0x4b23ceb59670108A569Bb69eC35386449d77C815
+- /
+- Pool (impl): 0x06F7e3E10A3c140ff7e857A9C9fFAC4393456001
+- /
+- PoolConfigurator: 0x8033AD4F1613253566aD11C66A51eF09Ac8166Cf
+- ReservesSetupHelper: 0x9B8cc93e32339824D6e3C6e0794B757d647fd15a
+- /
+- ACLManager: 0x52988EddD859b142b8AfbC3525852DE2B1b93F01
+- /
+- Oracle: 0xecbD8482C698B7b2706807A32d7FDf4E9a55C6A1
+- /
+- Pool (proxy): 0x1e85CCDf0D098a9f55b82F3E35013Eda235C8BD8
+- PoolConfigurator (proxy): 0x99CCC54fF811D51887718C3D58B814d2A910A258
+- /
+- HToken (implementation): 0x7d028b7b61eA887FC942f1b5cb8245d6f1189582
+- DelegationAwareHToken: 0x2b363bf83d24f7D36aa75C05C79CaD0538046cfF
+- StableDebtToken: 0x0a78cBB3123782AD75F8fA1faB566bA7eba76fd5
+- VariableDebtToken: 0xF997DeA692C2D93359828321C5B711B791bBd46A
+- /
+- rateStrategyVolatileOne: 0xFf377dbB97c674Bfa201d8CdcAe597D1231317Ea
+- rateStrategyStableOne: 0xAEd164046AFB672EdD2350C974355d93a06142ad
+- /
+- mockBTC: 0x453b63484b11bbF0b61fC7E854f8DAC7bdE7d458
+- hMUSDC: 0xde72990638db12f8AA4cd9406bA6c648153A5cEA
+- Variable Debt MBTC: 0x742d75d7389E66f6C17898A0e19077E17F1C51d1
+- /
+- UiPoolDataProviderV3: 
+- WalletBalanceProvider: 
 
 ---
 

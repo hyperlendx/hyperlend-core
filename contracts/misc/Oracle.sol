@@ -14,7 +14,6 @@ import {IOracle} from '../interfaces/IOracle.sol';
  * @notice Contract to get asset prices, manage price sources and update the fallback oracle
  * - Use of Chainlink Aggregators as first source of price
  * - If the returned price by a Chainlink aggregator is <= 0, the call is forwarded to a fallback oracle
- * - Owned by the Aave governance
  */
 contract Oracle is IOracle {
     IPoolAddressesProvider public immutable ADDRESSES_PROVIDER;

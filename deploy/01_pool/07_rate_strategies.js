@@ -27,6 +27,7 @@ async function main() {
         const DefaultReserveInterestRateStrategy = await ethers.getContractFactory("DefaultReserveInterestRateStrategy");
         const defaultReserveInterestRateStrategy = await DefaultReserveInterestRateStrategy.deploy(...args) 
         console.log(`Deployed defaultReserveInterestRateStrategy to ${defaultReserveInterestRateStrategy.address}`)
+        console.log(`variableSlope1: ${strategyData.variableRateSlope1}, variableSlope2: ${strategyData.variableRateSlope2}`)
         deployedIRStrategies.push(defaultReserveInterestRateStrategy.address)
         setDeployedContractAddress(strategyData.name, defaultReserveInterestRateStrategy.address)
     }

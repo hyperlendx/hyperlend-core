@@ -14,6 +14,7 @@ async function main() {
         let source = await ethers.getContractAt("AggregatorInterface", sourceAddress);
 
         console.log(`Asset: ${await asset.symbol()}, price source: ${await source.description()}`)
+        console.log(`Price: ${await oracle.getAssetPrice(assetAddress)}, normalized: ${await oracle.getAssetPrice(assetAddress) / Math.pow(10, 8)}`)
     }
 }
 
