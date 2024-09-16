@@ -84,7 +84,7 @@ const config = {
                 reserveDecimals: "8",
                 aTokenImpl: "AToken",
                 reserveFactor: "2000",
-                supplyCap: "100",
+                supplyCap: "1000",
                 borrowCap: "0",
                 debtCeiling: "0",
                 borrowableIsolation: false,
