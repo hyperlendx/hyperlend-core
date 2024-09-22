@@ -116,13 +116,28 @@ async function main() {
         const chunkedSeedAmounts = chunk(seedAmounts, enableChunks)
         const poolConfiguratorAddress = await poolAddressesProvider.getPoolConfigurator();
         console.log(`configure reserves in ${chunkedInputParams.length} txs`);
+
+        const SeedAmountsHolder = await ethers.getContractFactory("SeedAmountsHolder");
+        const seedAmoundsHolderAddress = getDeployedContractAddress("seedAmountsHolder")
+        if (seedAmoundsHolderAddress){
+            let seedFundsHolder = SeedAmountsHolder.attach(seedAmoundsHolderAddress);
+            if (await seedFundsHolder.owner() != await ethers.getSigner()){
+                seedFundsHolder = await SeedAmountsHolder.deploy()
+                console.log(`deployed SeedAmountsHolder to ${seedFundsHolder.address}`)
+                setDeployedContractAddress("seedAmountsHolder", seedFundsHolder.address)
+                seedAmoundsHolderAddress = seedFundsHolder.address
+            } else {
+                console.log(`using SeedAmountsHolder ${seedAmoundsHolderAddress}`)
+            }
+        }
         
         for (let chunkIndex = 0; chunkIndex < chunkedInputParams.length; chunkIndex++) {
             const tx = await reservesSetupHelper.configureReserves(
                 poolConfiguratorAddress,
                 chunkedInputParams[chunkIndex],
                 chunkedSeedAmounts[chunkIndex],
-                (await poolAddressesProvider.getPool())
+                (await poolAddressesProvider.getPool()),
+                seedAmoundsHolderAddress || "0x0000000000000000000000000000000000000000"
             )
             
             console.log(
