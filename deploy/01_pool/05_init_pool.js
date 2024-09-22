@@ -22,23 +22,23 @@ async function main() {
     if (isPoolProxyPending) {
         const setPoolImplTx = await poolAddressesProvider.setPoolImpl(pool.address)
         const txPoolProxyAddress = await poolAddressesProvider.getPool();
-        console.log(`[Deployment] Attached Pool implementation and deployed proxy contract: `);
-        console.log("- Tx hash:", setPoolImplTx.transactionHash);
+        console.log(`attached Pool implementation and deployed proxy contract: `);
+        console.log("txHash:", setPoolImplTx.transactionHash);
     }
 
     const poolProxyAddress = await poolAddressesProvider.getPool();
-    console.log("- Deployed Pool Proxy:", poolProxyAddress);
+    console.log("deployed Pool Proxy:", poolProxyAddress);
 
     const isPoolConfiguratorProxyPending = (await poolAddressesProvider.getPoolConfigurator()) === config.ZERO_ADDRESS;
     // Set Pool Configurator to Addresses Provider proxy deployment 
     if (isPoolConfiguratorProxyPending) {
         const setPoolConfiguratorTx = await poolAddressesProvider.setPoolConfiguratorImpl(getDeployedContractAddress("poolConfigurator"))
-        console.log(`[Deployment] Attached PoolConfigurator implementation and deployed proxy `);
-        console.log("- Tx hash:", setPoolConfiguratorTx.transactionHash);
+        console.log(`attached PoolConfigurator implementation and deployed proxy `);
+        console.log("txHash:", setPoolConfiguratorTx.transactionHash);
     }
 
     const poolConfiguratorProxyAddress = await poolAddressesProvider.getPoolConfigurator();
-    console.log("- Deployed poolConfigurator Proxy:", poolConfiguratorProxyAddress);
+    console.log("deployed poolConfigurator Proxy:", poolConfiguratorProxyAddress);
 
     let l2Encoder;
     if (config.poolConfig.isL2PoolSupported) {

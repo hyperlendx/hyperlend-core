@@ -33,12 +33,13 @@ async function main() {
     const isPoolAdmin = await aclManager.isPoolAdmin(poolAdmin);
     const isEmergencyAdmin = await aclManager.isEmergencyAdmin(emergencyAdmin);
 
-    if (!isACLAdmin) throw "[ACL][ERROR] ACLAdmin is not setup correctly";
-    if (!isPoolAdmin) throw "[ACL][ERROR] PoolAdmin is not setup correctly";
-    if (!isEmergencyAdmin) throw "[ACL][ERROR] EmergencyAdmin is not setup correctly";
-    console.log("ACL Admin", aclAdmin);
-    console.log("Pool Admin", poolAdmin);
-    console.log("Emergency Admin", emergencyAdmin);
+    if (!isACLAdmin) throw "CLAdmin is not setup correctly";
+    if (!isPoolAdmin) throw "PoolAdmin is not setup correctly";
+    if (!isEmergencyAdmin) throw "EmergencyAdmin is not setup correctly";
+
+    console.log("ACL Admin:", aclAdmin);
+    console.log("Pool Admin:", poolAdmin);
+    console.log("Emergency Admin:", emergencyAdmin);
 
     saveDeploymentInfo(path.basename(__filename), {
         aclManager: aclManager.address

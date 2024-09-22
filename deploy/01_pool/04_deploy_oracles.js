@@ -21,10 +21,10 @@ async function main() {
     const configPriceOracle = oracle.address;
     const statePriceOracle = await poolAddressesProvider.getPriceOracle();
     if (configPriceOracle == statePriceOracle) {
-        console.log("[addresses-provider] Price oracle already set. Skipping tx.");
+        console.log("price oracle already set. Skipping tx.");
     } else {
         await poolAddressesProvider.setPriceOracle(configPriceOracle)
-        console.log(`[Deployment] Added PriceOracle ${configPriceOracle} to PoolAddressesProvider`);
+        console.log(`added PriceOracle ${configPriceOracle} to PoolAddressesProvider`);
     }
     
     saveDeploymentInfo(path.basename(__filename), {

@@ -11,7 +11,7 @@ async function main() {
 
     const AToken = await ethers.getContractFactory("AToken");
     const aToken = await AToken.deploy(poolAddress)
-    console.log(`Deployed HToken to ${aToken.address}`)
+    console.log(`HToken deployed to ${aToken.address}`)
 
     await aToken.initialize(
         poolAddress, // initializingPool
@@ -26,7 +26,7 @@ async function main() {
 
     const DelegationAwareAToken = await ethers.getContractFactory("DelegationAwareAToken");
     const delegationAwareAToken = await DelegationAwareAToken.deploy(poolAddress)
-    console.log(`Deployed delegationAwareAToken to ${delegationAwareAToken.address}`)
+    console.log(`delegationAwareAToken deployed to ${delegationAwareAToken.address}`)
 
     await delegationAwareAToken.initialize(
         poolAddress, // initializingPool
@@ -41,7 +41,7 @@ async function main() {
 
     const StableDebtToken = await ethers.getContractFactory("StableDebtToken");
     const stableDebtToken = await StableDebtToken.deploy(poolAddress)
-    console.log(`Deployed stableDebtToken to ${stableDebtToken.address}`)
+    console.log(`stableDebtToken deployed to ${stableDebtToken.address}`)
 
     await stableDebtToken.initialize(
         poolAddress, // initializingPool
@@ -55,7 +55,7 @@ async function main() {
 
     const VariableDebtToken = await ethers.getContractFactory("VariableDebtToken");
     const variableDebtToken = await VariableDebtToken.deploy(poolAddress)
-    console.log(`Deployed variableDebtToken to ${variableDebtToken.address}`)
+    console.log(`variableDebtToken deployed to ${variableDebtToken.address}`)
 
     await variableDebtToken.initialize(
         poolAddress, // initializingPool

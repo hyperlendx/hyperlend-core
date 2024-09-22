@@ -53,7 +53,7 @@ async function main() {
         ] of Object.entries(config.market.ReservesConfig)
     ) {
         if (!config.tokenAddresses[assetSymbol]) {
-            console.log(`- Skipping init of ${assetSymbol} due token address is not set at markets config`);
+            console.log(`skipping init of ${assetSymbol} due token address is not set at markets config`);
             continue;
         }
         if (baseLTVAsCollateral === "-1") continue;
@@ -65,7 +65,7 @@ async function main() {
 
         const { usageAsCollateralEnabled: alreadyEnabled } = await protocolDataProvider.getReserveConfigurationData(tokenAddress);
         if (alreadyEnabled) {
-            console.log(`- Reserve ${assetSymbol} is already enabled as collateral, skipping`);
+            console.log(`reserve ${assetSymbol} is already enabled as collateral, skipping`);
             continue;
         }
 
@@ -102,7 +102,7 @@ async function main() {
         const MintableERC20 = await ethers.getContractFactory("MintableERC20");
         const erc20Token = MintableERC20.attach(tokens[i]);
         await erc20Token.approve(reservesSetupHelper.address, seedAmounts[i]);
-        console.log(`approved ${tokens[i]}`)
+        console.log(`approved ${tokens[i]} for seed amounts`)
     }
 
     if (tokens.length) {
@@ -115,7 +115,7 @@ async function main() {
         const chunkedInputParams = chunk(inputParams, enableChunks);
         const chunkedSeedAmounts = chunk(seedAmounts, enableChunks)
         const poolConfiguratorAddress = await poolAddressesProvider.getPoolConfigurator();
-        console.log(`- Configure reserves in ${chunkedInputParams.length} txs`);
+        console.log(`configure reserves in ${chunkedInputParams.length} txs`);
         
         for (let chunkIndex = 0; chunkIndex < chunkedInputParams.length; chunkIndex++) {
             const tx = await reservesSetupHelper.configureReserves(
@@ -126,8 +126,8 @@ async function main() {
             )
             
             console.log(
-                `  - Init for: ${chunkedSymbols[chunkIndex].join(", ")}`,
-                `\n- Tx hash: ${tx.transactionHash}`
+                `init for: ${chunkedSymbols[chunkIndex].join(", ")}`,
+                `\ntxHash: ${tx.transactionHash}`
             );
         }
 
@@ -135,7 +135,7 @@ async function main() {
         await aclManager.removeRiskAdmin(reservesSetupHelper.address)
     }
 
-    console.log(`[Deployment] Configured all reserves`);
+    console.log(`[configured all reserves`);
 }
 
 function chunk(arr, chunkSize){

@@ -46,7 +46,7 @@ async function main() {
     for (let [symbol, params] of reserves) {
         const poolReserve = await pool.getReserveData(config.tokenAddresses[symbol]);
         if (poolReserve.aTokenAddress !== config.ZERO_ADDRESS) {
-            console.log(`- Skipping init of ${symbol} due is already initialized`);
+            console.log(`skipping init of ${symbol} due is already initialized`);
             continue;
         }
         const { strategy, aTokenImpl, reserveDecimals } = params;
@@ -55,7 +55,7 @@ async function main() {
             strategyAddresses[strategy.name] = getDeployedContractAddress(strategy.name)
         }
         strategyAddressPerAsset[symbol] = strategyAddresses[strategy.name];
-        console.log("Strategy address for asset %s: %s", symbol, strategyAddressPerAsset[symbol]);
+        console.log("strategy address for asset %s: %s", symbol, strategyAddressPerAsset[symbol]);
 
         if (aTokenImpl === "AToken") {
             aTokenType[symbol] = "generic";
@@ -114,17 +114,17 @@ async function main() {
     });
     const poolConfigurator = PoolConfigurator.attach(await poolAddressesProvider.getPoolConfigurator());
 
-    console.log(`- Reserves initialization in ${chunkedInitInputParams.length} txs`);
+    console.log(`reserves initialization in ${chunkedInitInputParams.length} txs`);
     for (let chunkIndex = 0; chunkIndex < chunkedInitInputParams.length; chunkIndex++) {
         const tx = await poolConfigurator.initReserves(chunkedInitInputParams[chunkIndex])
 
         console.log(
-            `  - Reserve ready for: ${chunkedSymbols[chunkIndex].join(", ")}`,
-            `\n    - Tx hash: ${tx.transactionHash}`
+            `reserve ready for: ${chunkedSymbols[chunkIndex].join(", ")}`,
+            `\ntxHash: ${tx.transactionHash}`
         );
     }
 
-    console.log(`[Deployment] Initialized all reserves`);
+    console.log(`initialized all reserves`);
 }
 
 function chunk(arr, chunkSize){
