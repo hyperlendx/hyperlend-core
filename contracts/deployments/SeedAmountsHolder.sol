@@ -14,8 +14,7 @@ contract SeedAmountsHolder is Ownable {
     //should only be called if the entire pool is deprecated
     function withdrawFunds(address pool, address asset, uint256 amount) external onlyOwner() {
         DataTypes.ReserveConfigurationMap memory configurationMap = IPool(pool).getConfiguration(asset);
-        bool isBorrowEnable = ((configurationMap.data >> 58) & 1) == 1;
-        require(!isBorrowEnable, "borrow must be disabled for reserve");
+        require(((configurationMap.data >> 58) & 1) == 0, "borrow must be disabled for reserve");
 
         IPool(pool).withdraw(asset, amount, owner());
         emit FundsWithdrawn(pool, asset, amount);
