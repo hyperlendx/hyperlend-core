@@ -93,7 +93,20 @@ const config = {
   etherscan: {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
-    apiKey: process.env.ETHERSCAN_API_KEY
+    apiKey: {
+        hyperEvmTestnet: 'empty',
+        arbitrum: process.env.ETHERSCAN_API_KEY
+    },
+    customChains: [
+        {
+          network: "hyperEvmTestnet",
+          chainId: 998,
+          urls: {
+            apiURL: "https://explorer.hyperlend.finance/api",
+            browserURL: "https://explorer.hyperlend.finance"
+          }
+        }
+      ]
   },
 };
 
