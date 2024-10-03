@@ -1,6 +1,8 @@
 const path = require("path");
 const fs = require("fs");
 
+console.log(__dirname)
+
 async function verify(address, args, libraries){
     const params = {
         address: address,
@@ -14,8 +16,8 @@ async function verify(address, args, libraries){
     try {
         console.log(`verifying ${address} with args: ${args}`);
         await storeVerificationData(
-            path.resolve(__dirname, `../../deployments/verifications`),
-            path.resolve(__dirname, `../../deployments/verifications/${address}.json`),
+            path.resolve(__dirname, `../markets/deployments/verifications`),
+            path.resolve(__dirname, `../markets/deployments/verifications/${address}.json`),
             JSON.stringify(params, null, 4)
         );
         await hre.run("verify:verify", params);

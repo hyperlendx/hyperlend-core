@@ -10,7 +10,6 @@ async function main() {
     console.log(mock1.address, mock2.address)
 }
 
-
 main().catch((error) => {
     console.error(error);
     process.exitCode = 1;

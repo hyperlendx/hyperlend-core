@@ -1,7 +1,7 @@
 const { ethers } = require("hardhat");
 const path = require('path');
 
-const { config, saveDeploymentInfo, getDeployedContractAddress, setDeployedContractAddress } = require("../../markets")
+const { config, saveDeploymentInfo, getDeployedContractAddress, setDeployedContractAddress } = require("../markets")
 
 async function main() {
     const PoolConfigurator = await ethers.getContractFactory("PoolConfigurator", {

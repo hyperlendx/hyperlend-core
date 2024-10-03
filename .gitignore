@@ -9,6 +9,6 @@ typechain-types
 cache
 artifacts
 
-scripts/deployments/*
+scripts/markets/deployments/*
 scripts/markets/deployedContracts*.json
 arguments.js
