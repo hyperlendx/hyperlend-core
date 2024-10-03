@@ -3,6 +3,7 @@ const fs = require("fs")
 
 //HyperEVM testnet Market Config
 const config = {
+    WETH: null,
     ZERO_ADDRESS: "0x0000000000000000000000000000000000000000",
     ZERO_BYTES_32: "0x0000000000000000000000000000000000000000000000000000000000000000",
     poolAddressesProviderRegistry_owner: "0x16703F774Bd7b2F2E6f39E7dCead924fa2080a0D",

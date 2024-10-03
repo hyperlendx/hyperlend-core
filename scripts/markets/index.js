@@ -17,7 +17,9 @@ function loadDeployedContracts(){
 }
 
 function getDeployedContractAddress(id){
-    return id ? deployedContracts[id] : deployedContracts;
+    return id ? 
+        deployedContracts[id] ? deployedContracts[id] : ""
+        : deployedContracts;
 }
 
 async function setDeployedContractAddress(id, address){

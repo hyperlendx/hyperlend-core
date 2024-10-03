@@ -4,13 +4,13 @@ const path = require('path');
 const { config, saveDeploymentInfo, getDeployedContractAddress, verify } = require("../../markets")
 
 async function main() {
-    const weth =  "" 
+    const weth = getDeployedContractAddress("weth") || config.WETH
     const pool = getDeployedContractAddress("poolProxy")
 
-    if (weth.length == 0){
+    if (!weth || weth.length == 0){
         throw new Error("missing WETH address")
     }
-    if (pool.length == 0){
+    if (!pool || pool.length == 0){
         throw new Error("missing pool address")
     }
 

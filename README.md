@@ -1,5 +1,11 @@
 ## HyperLend Core contracts
 
+---
+
+Before adding new assets, you MUST check https://github.com/hyperlendx/hyperlend-security/
+
+---
+
 Run deployments:
 
 ```
