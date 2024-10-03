@@ -4,8 +4,11 @@ const path = require('path');
 const { config, saveDeploymentInfo, getDeployedContractAddress } = require("../../markets")
 
 async function main() {
+    const poolAddressesProviderAddress = getDeployedContractAddress("poolAddressesProvider")
+    if (poolAddressesProviderAddress.length == 0) throw new Error(`missing poolAddressesProvider address`)
+    
     const PoolAddressesProvider = await ethers.getContractFactory("PoolAddressesProvider");
-    const poolAddressesProvider = PoolAddressesProvider.attach(getDeployedContractAddress("poolAddressesProvider"));
+    const poolAddressesProvider = PoolAddressesProvider.attach(poolAddressesProviderAddress);
 
     const Oracle = await ethers.getContractFactory("Oracle");
     const oracle = await Oracle.deploy(

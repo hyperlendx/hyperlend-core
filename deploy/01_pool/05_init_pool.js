@@ -6,13 +6,17 @@ const { config, saveDeploymentInfo, getDeployedContractAddress } = require("../.
 
 async function main() {
     const poolLibraries = await getPoolLibraries()
+    for (const [key, value] of Object.entries(poolLibraries)) {
+        if (value.length == 0) throw new Error(`missing ${key} library address`)
+    }
 
     const Pool = await ethers.getContractFactory("Pool", {
         libraries: {
             ...poolLibraries,
         }
     });
-    const pool = Pool.attach(getDeployedContractAddress("pool"));
+    const poolAddress = getDeployedContractAddress("pool")
+    const pool = Pool.attach(poolAddress);
 
     const PoolAddressesProvider = await ethers.getContractFactory("PoolAddressesProvider");
     const poolAddressesProvider = PoolAddressesProvider.attach(getDeployedContractAddress("poolAddressesProvider"));
