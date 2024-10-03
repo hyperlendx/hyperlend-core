@@ -18,6 +18,7 @@ npx hardhat run deploy/01_pool/08_init_reserves.js --network localhost
 npx hardhat run deploy/01_pool/09_configure_reserves.js --network localhost
 
 npx hardhat run deploy/02_periphery/00_ui_helpers.js --network localhost
+npx hardhat run deploy/02_periphery/01_wrapped_token_gateway.js --network localhost
 ```
 
 ---
