@@ -19,7 +19,7 @@ async function main() {
 
     const ReservesSetupHelper = await ethers.getContractFactory("ReservesSetupHelper");
     let reservesSetupHelper;
-    if (getDeployedContractAddress("reservesSetupHelper") == null){
+    if (getDeployedContractAddress("reservesSetupHelper").length == 0){
         reservesSetupHelper = await ReservesSetupHelper.deploy()
         setDeployedContractAddress("reservesSetupHelper", reservesSetupHelper.address)
         console.log(`reservesSetupHelper deployed to ${reservesSetupHelper.address}`)
@@ -118,11 +118,12 @@ async function main() {
         const poolConfiguratorAddress = await poolAddressesProvider.getPoolConfigurator();
         console.log(`configure reserves in ${chunkedInputParams.length} txs`);
 
-        const SeedAmountsHolder = await ethers.getContractFactory("SeedAmountsHolder");
-        const seedAmoundsHolderAddress = getDeployedContractAddress("seedAmountsHolder")
-        if (seedAmoundsHolderAddress){
-            let seedFundsHolder = SeedAmountsHolder.attach(seedAmoundsHolderAddress);
-            if (await seedFundsHolder.owner() != await ethers.getSigner()){
+        let SeedAmountsHolder = await ethers.getContractFactory("SeedAmountsHolder");
+        let seedAmoundsHolderAddress = getDeployedContractAddress("seedAmountsHolder")
+        let seedFundsHolder;
+        if (seedAmoundsHolderAddress.length != 0){
+            seedFundsHolder = SeedAmountsHolder.attach(seedAmoundsHolderAddress);
+            if (await seedFundsHolder.owner() != (await ethers.getSigner()).address){
                 seedFundsHolder = await SeedAmountsHolder.deploy()
                 console.log(`deployed SeedAmountsHolder to ${seedFundsHolder.address}`)
                 setDeployedContractAddress("seedAmountsHolder", seedFundsHolder.address)
@@ -131,21 +132,31 @@ async function main() {
             } else {
                 console.log(`using SeedAmountsHolder ${seedAmoundsHolderAddress}`)
             }
+        } else {
+            seedFundsHolder = await SeedAmountsHolder.deploy()
+            console.log(`deployed seedFundsHolder to ${seedFundsHolder.address}`)
+            setDeployedContractAddress("seedAmountsHolder", seedFundsHolder.address)
+            await verify(seedFundsHolder.address, [])
         }
         
         for (let chunkIndex = 0; chunkIndex < chunkedInputParams.length; chunkIndex++) {
-            const tx = await reservesSetupHelper.configureReserves(
-                poolConfiguratorAddress,
-                chunkedInputParams[chunkIndex],
-                chunkedSeedAmounts[chunkIndex],
-                (await poolAddressesProvider.getPool()),
-                seedAmoundsHolderAddress || "0x0000000000000000000000000000000000000000"
-            )
-            
-            console.log(
-                `init for: ${chunkedSymbols[chunkIndex].join(", ")}`,
-                `\ntxHash: ${tx.transactionHash}`
-            );
+            try {
+                const tx = await reservesSetupHelper.configureReserves(
+                    poolConfiguratorAddress,
+                    chunkedInputParams[chunkIndex],
+                    chunkedSeedAmounts[chunkIndex],
+                    (await poolAddressesProvider.getPool()),
+                    seedFundsHolder.address || "0x0000000000000000000000000000000000000000"
+                )
+
+                console.log(
+                    `init for: ${chunkedSymbols[chunkIndex].join(", ")}`,
+                    `\ntxHash: ${tx.transactionHash}`
+                );
+            } catch (e){
+                console.log(`tx failed`)
+                console.log(e)
+            }
         }
 
         // Remove ReservesSetupHelper from risk admins

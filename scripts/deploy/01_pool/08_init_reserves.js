@@ -76,6 +76,8 @@ async function main() {
             aTokenToUse = delegationAwareATokenImplementationAddress;
         }
 
+        //TODO verify underlying asset decimals
+
         initInputParams.push({
             aTokenImpl: aTokenToUse,
             stableDebtTokenImpl: stableDebtTokenImplementationAddress,

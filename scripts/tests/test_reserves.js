@@ -1,11 +1,11 @@
 const { ethers } = require("hardhat");
 const path = require('path');
 
-const { config, getDeployedContractAddress } = require("../../markets")
+const { config, getDeployedContractAddress } = require("../markets")
 
 async function main() {
     const poolAddress = '0x1e85CCDf0D098a9f55b82F3E35013Eda235C8BD8'    
-    const assetAddress = '0x453b63484b11bbF0b61fC7E854f8DAC7bdE7d458'
+    const assetAddress = '0xe0bdd7e8b7bf5b15dcDA6103FCbBA82a460ae2C7'
 
     const poolLibraries = await getPoolLibraries()
     const Pool = await ethers.getContractFactory("Pool", {

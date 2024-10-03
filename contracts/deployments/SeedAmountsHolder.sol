@@ -9,7 +9,7 @@ import { DataTypes } from '../protocol/libraries/types/DataTypes.sol';
 contract SeedAmountsHolder is Ownable {
     event FundsWithdrawn(address pool, address asset, uint256 amount);
 
-    constructor() Ownable() {}
+    constructor() {}
 
     //should only be called if the entire pool is deprecated
     function withdrawFunds(address pool, address asset, uint256 amount) external onlyOwner() {

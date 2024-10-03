@@ -63,6 +63,7 @@ const config = {
     ],
     tokenAddresses: {
         MBTC: "0x453b63484b11bbF0b61fC7E854f8DAC7bdE7d458", 
+        WETH: "0xe0bdd7e8b7bf5b15dcDA6103FCbBA82a460ae2C7"
     },
     market: {
         MarketId: "HyperEVM Testnet HyperLend Market",
@@ -90,6 +91,25 @@ const config = {
                 debtCeiling: "0",
                 borrowableIsolation: false,
                 seedAmount: "10000000" //0.1
+            },
+            WETH: {
+                strategy: {
+                    name: "rateStrategyVolatileOne"
+                },
+                baseLTVAsCollateral: "7500",
+                liquidationThreshold: "8000",
+                liquidationBonus: "11000",
+                borrowingEnabled: true,
+                stableBorrowRateEnabled: false,
+                flashLoanEnabled: true,
+                reserveDecimals: "18",
+                aTokenImpl: "AToken",
+                reserveFactor: "2000",
+                supplyCap: "1000",
+                borrowCap: "0",
+                debtCeiling: "0",
+                borrowableIsolation: false,
+                seedAmount: "100000000000000000" //0.1
             }
         }
     },

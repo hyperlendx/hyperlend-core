@@ -18,7 +18,7 @@ function loadDeployedContracts(){
 
 function getDeployedContractAddress(id){
     return id ? 
-        deployedContracts[id] ? deployedContracts[id] : ""
+        (deployedContracts[id] ? deployedContracts[id] : "")
         : deployedContracts;
 }
 
