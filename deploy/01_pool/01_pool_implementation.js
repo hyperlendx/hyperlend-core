@@ -1,15 +1,16 @@
 const { ethers } = require("hardhat");
-const hre = require("hardhat")
-const fs = require("fs")
 const path = require('path'); 
 
-const { config, saveDeploymentInfo, getDeployedContractAddress } = require("../../markets")
+const { saveDeploymentInfo, getDeployedContractAddress } = require("../../markets")
 
 const poolAddressesProviderAddress = getDeployedContractAddress("poolAddressesProvider")
 
 async function main() {
     const poolLibraries = await getPoolLibraries()
-    
+    for (const [key, value] of Object.entries(poolLibraries)) {
+        if (value.length == 0) throw new Error(`missing ${key} library address`)
+    }
+
     const Pool = await ethers.getContractFactory("Pool", {
         libraries: {
             ...poolLibraries,

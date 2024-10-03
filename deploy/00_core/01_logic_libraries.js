@@ -1,8 +1,7 @@
 const { ethers } = require("hardhat");
-const fs = require("fs")
 const path = require('path'); 
 
-const { config, saveDeploymentInfo } = require("../../markets")
+const { saveDeploymentInfo } = require("../../markets")
 
 async function main() {
     const SupplyLogic = await ethers.getContractFactory("SupplyLogic");

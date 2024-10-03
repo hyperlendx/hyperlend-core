@@ -1,19 +1,29 @@
 const { ethers } = require("hardhat");
 const path = require('path');
 
-const { config, saveDeploymentInfo, getDeployedContractAddress } = require("../../markets")
+const { saveDeploymentInfo, getDeployedContractAddress } = require("../../markets")
 
 async function main() {
+    const configuratorLogicAddress = getDeployedContractAddress("configuratorLogic")
+    if (configuratorLogicAddress.length == 0) throw new Error(`missing configuratorLogic address`)
+
+    //deploy pool configurator
     const PoolConfigurator = await ethers.getContractFactory("PoolConfigurator", {
         libraries: {
-            ConfiguratorLogic: getDeployedContractAddress("configuratorLogic"),
+            ConfiguratorLogic: configuratorLogicAddress,
         }
     });
     const poolConfigurator = await PoolConfigurator.deploy();
     console.log(`poolConfigurator deployed to ${poolConfigurator.address}`);
 
-    await poolConfigurator.initialize(getDeployedContractAddress("poolAddressesProvider"));
+    //initialize pool configurator
+    const poolAddressesProviderAddress = getDeployedContractAddress("poolAddressesProvider")
+    if (poolAddressesProviderAddress.length == 0) throw new Error(`missing poolAddressesProvider address`)
 
+    await poolConfigurator.initialize(poolAddressesProviderAddress);
+    console.log(`poolConfigurator initialized using ${poolAddressesProviderAddress} poolAddressesProvider`)
+
+    //deploy resevers setup helper
     const ReservesSetupHelper = await ethers.getContractFactory("ReservesSetupHelper");
     const reservesSetupHelper = await ReservesSetupHelper.deploy()
     console.log(`reservesSetupHelper deployed to ${reservesSetupHelper.address}`);

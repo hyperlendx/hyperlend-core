@@ -1,5 +1,4 @@
 const { ethers } = require("hardhat");
-const fs = require("fs")
 const path = require('path'); 
 
 const { config, saveDeploymentInfo, getDeployedContractAddress } = require("../../markets")
@@ -12,11 +11,14 @@ async function main() {
 
     // 2. Set the MarketId
     await poolAddressesProvider.setMarketId(config.poolConfig.marketId)
-    console.log(`poolAddressesProvider.setMarketId set`)
+    console.log(`poolAddressesProvider.setMarketId set to ${config.poolConfig.marketId}`)
 
     // 3. Add AddressesProvider to Registry
+    const poolAddressesProviderRegistryAddress = getDeployedContractAddress("poolAddressesProviderRegistry")
+    if (poolAddressesProviderRegistryAddress.length == 0) throw new Error("missing poolAddressesProviderRegistryAddress")
+
     const PoolAddressesProviderRegistry = await ethers.getContractFactory("PoolAddressesProviderRegistry");
-    const poolAddressesProviderRegistry = PoolAddressesProviderRegistry.attach(getDeployedContractAddress("poolAddressesProviderRegistry"));
+    const poolAddressesProviderRegistry = PoolAddressesProviderRegistry.attach(poolAddressesProviderRegistryAddress);
     await poolAddressesProviderRegistry.registerAddressesProvider(poolAddressesProvider.address, config.poolConfig.providerId)
 
     // 4. Deploy ProtocolDataProvider getters contract

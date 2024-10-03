@@ -1,5 +1,4 @@
 const { ethers } = require("hardhat");
-const fs = require("fs")
 const path = require('path');
 
 const { config, saveDeploymentInfo } = require("../../markets")
