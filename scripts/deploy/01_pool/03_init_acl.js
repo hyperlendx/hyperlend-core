@@ -1,7 +1,7 @@
 const { ethers } = require("hardhat");
 const path = require('path');
 
-const { config, saveDeploymentInfo, getDeployedContractAddress } = require("../../markets")
+const { config, saveDeploymentInfo, getDeployedContractAddress, verify } = require("../../markets")
 
 const aclAdmin = config.acl.aclAdmin
 const poolAdmin = config.acl.poolAdmin
@@ -22,6 +22,7 @@ async function main() {
     const ACLManager = await ethers.getContractFactory("ACLManager");
     const aclManager = await ACLManager.deploy(poolAddressesProvider.address)
     console.log(`aclManager deployed to ${aclManager.address}`)
+    await verify(aclManager.address, [poolAddressesProvider.address])
 
     // 3. Setup ACLManager at AddressesProviderInstance
     await poolAddressesProvider.setACLManager(aclManager.address)

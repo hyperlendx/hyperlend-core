@@ -1,7 +1,7 @@
 const { ethers } = require("hardhat");
 const path = require('path');
 
-const { config, saveDeploymentInfo, getDeployedContractAddress, setDeployedContractAddress } = require("../../markets")
+const { config, saveDeploymentInfo, getDeployedContractAddress, setDeployedContractAddress, verify } = require("../../markets")
 
 async function main() {
     const PoolAddressesProvider = await ethers.getContractFactory("PoolAddressesProvider");
@@ -28,6 +28,7 @@ async function main() {
         const defaultReserveInterestRateStrategy = await DefaultReserveInterestRateStrategy.deploy(...args) 
         console.log(`defaultReserveInterestRateStrategy deployed to ${defaultReserveInterestRateStrategy.address}`)
         console.log(`variableSlope1: ${strategyData.variableRateSlope1}, variableSlope2: ${strategyData.variableRateSlope2}`)
+        await verify(defaultReserveInterestRateStrategy.address, args)
         deployedIRStrategies.push(defaultReserveInterestRateStrategy.address)
         setDeployedContractAddress(strategyData.name, defaultReserveInterestRateStrategy.address)
     }

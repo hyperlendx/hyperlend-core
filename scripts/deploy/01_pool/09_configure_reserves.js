@@ -7,7 +7,7 @@ const rl = readline.createInterface({
     output: process.stdout,
 });
 
-const { config, saveDeploymentInfo, getDeployedContractAddress, setDeployedContractAddress } = require("../../markets")
+const { config, saveDeploymentInfo, getDeployedContractAddress, setDeployedContractAddress, verify } = require("../../markets")
 
 async function main() {
     const PoolAddressesProvider = await ethers.getContractFactory("PoolAddressesProvider");
@@ -23,6 +23,7 @@ async function main() {
         reservesSetupHelper = await ReservesSetupHelper.deploy()
         setDeployedContractAddress("reservesSetupHelper", reservesSetupHelper.address)
         console.log(`reservesSetupHelper deployed to ${reservesSetupHelper.address}`)
+        await verify(reservesSetupHelper.address, [])
     } else {
         reservesSetupHelper = ReservesSetupHelper.attach(getDeployedContractAddress("reservesSetupHelper"));
     }
@@ -126,6 +127,7 @@ async function main() {
                 console.log(`deployed SeedAmountsHolder to ${seedFundsHolder.address}`)
                 setDeployedContractAddress("seedAmountsHolder", seedFundsHolder.address)
                 seedAmoundsHolderAddress = seedFundsHolder.address
+                await verify(seedFundsHolder.address, [])
             } else {
                 console.log(`using SeedAmountsHolder ${seedAmoundsHolderAddress}`)
             }

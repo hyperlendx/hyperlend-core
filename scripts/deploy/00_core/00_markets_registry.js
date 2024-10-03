@@ -1,7 +1,7 @@
 const { ethers } = require("hardhat");
 const path = require('path');
 
-const { config, saveDeploymentInfo } = require("../../markets")
+const { config, saveDeploymentInfo, verify } = require("../../markets")
 
 async function main() {
     const PoolAddressesProviderRegistry = await ethers.getContractFactory("PoolAddressesProviderRegistry");
@@ -11,6 +11,8 @@ async function main() {
     saveDeploymentInfo(path.basename(__filename), {
         poolAddressesProviderRegistry: poolAddressesProviderRegistry.address
     })
+
+    await verify(poolAddressesProviderRegistry.address, [config.poolAddressesProviderRegistry_owner])
 }
 
 main().catch((error) => {

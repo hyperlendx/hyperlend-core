@@ -1,7 +1,7 @@
 const { ethers } = require("hardhat");
 const path = require('path');
 
-const { config, saveDeploymentInfo, getDeployedContractAddress } = require("../../markets")
+const { config, saveDeploymentInfo, getDeployedContractAddress, verify } = require("../../markets")
 
 async function main() {
     const weth =  "" 
@@ -17,6 +17,7 @@ async function main() {
     const WrappedTokenGateway = await ethers.getContractFactory("WrappedTokenGatewayV3");
     const wrappedTokenGateway = await WrappedTokenGateway.deploy(weth, config.poolAddressesProvider_owner, pool);
     console.log(`wrappedTokenGateway deployed to ${wrappedTokenGateway.address}, using ${weth} WETH and ${pool} pool`);
+    await verify(wrappedTokenGateway.address, [weth, config.poolAddressesProvider_owner, pool])
 
     saveDeploymentInfo(path.basename(__filename), {
         wrappedTokenGateway: wrappedTokenGateway.address,

@@ -1,7 +1,7 @@
 const { ethers } = require("hardhat");
 const path = require('path');
 
-const { saveDeploymentInfo, getDeployedContractAddress } = require("../../markets")
+const { saveDeploymentInfo, getDeployedContractAddress, verify } = require("../../markets")
 
 async function main() {
     const configuratorLogicAddress = getDeployedContractAddress("configuratorLogic")
@@ -15,6 +15,7 @@ async function main() {
     });
     const poolConfigurator = await PoolConfigurator.deploy();
     console.log(`poolConfigurator deployed to ${poolConfigurator.address}`);
+    await verify(poolConfigurator.address, [])
 
     //initialize pool configurator
     const poolAddressesProviderAddress = getDeployedContractAddress("poolAddressesProvider")
@@ -27,6 +28,7 @@ async function main() {
     const ReservesSetupHelper = await ethers.getContractFactory("ReservesSetupHelper");
     const reservesSetupHelper = await ReservesSetupHelper.deploy()
     console.log(`reservesSetupHelper deployed to ${reservesSetupHelper.address}`);
+    await verify(reservesSetupHelper.address, [])
 
     saveDeploymentInfo(path.basename(__filename), {
         poolConfigurator: poolConfigurator.address,

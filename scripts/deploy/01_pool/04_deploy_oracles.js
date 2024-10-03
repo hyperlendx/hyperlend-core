@@ -1,7 +1,7 @@
 const { ethers } = require("hardhat");
 const path = require('path');
 
-const { config, saveDeploymentInfo, getDeployedContractAddress } = require("../../markets")
+const { config, saveDeploymentInfo, getDeployedContractAddress, verify } = require("../../markets")
 
 async function main() {
     const poolAddressesProviderAddress = getDeployedContractAddress("poolAddressesProvider")
@@ -20,6 +20,14 @@ async function main() {
         config.oracle.baseCurrencyUnit
     )
     console.log(`priceOracle deployed to ${oracle.address}`)
+    await verify(oracle.address, [
+        poolAddressesProvider.address,
+        config.oracle.assets,
+        config.oracle.sources,
+        config.oracle.fallbackOracleAddress,
+        config.ZERO_ADDRESS,
+        config.oracle.baseCurrencyUnit
+    ])
 
     const configPriceOracle = oracle.address;
     const statePriceOracle = await poolAddressesProvider.getPriceOracle();

@@ -1,13 +1,14 @@
 const { ethers } = require("hardhat");
 const path = require('path'); 
 
-const { config, saveDeploymentInfo, getDeployedContractAddress } = require("../../markets")
+const { config, saveDeploymentInfo, getDeployedContractAddress, verify } = require("../../markets")
 
 async function main() {
     // 1. Deploy PoolAddressesProvider
     const PoolAddressesProvider = await ethers.getContractFactory("PoolAddressesProvider");
     const poolAddressesProvider = await PoolAddressesProvider.deploy(config.poolConfig.marketId, config.poolAddressesProvider_owner);
     console.log(`poolAddressesProvider deployed to ${poolAddressesProvider.address}`);
+    await verify(poolAddressesProvider.address, [config.poolConfig.marketId, config.poolAddressesProvider_owner])
 
     // 2. Set the MarketId
     await poolAddressesProvider.setMarketId(config.poolConfig.marketId)
@@ -25,6 +26,7 @@ async function main() {
     const ProtocolDataProvider = await ethers.getContractFactory("ProtocolDataProvider");
     const protocolDataProvider = await ProtocolDataProvider.deploy(poolAddressesProvider.address);
     console.log(`protocolDataProvider deployed to ${protocolDataProvider.address}`);
+    await verify(protocolDataProvider.address, [poolAddressesProvider.address])
 
     // Set the ProtocolDataProvider if is not already set at addresses provider
     const currentProtocolDataProvider = await poolAddressesProvider.getPoolDataProvider();

@@ -1,7 +1,7 @@
 const { ethers } = require("hardhat");
 const path = require('path'); 
 
-const { saveDeploymentInfo, getDeployedContractAddress } = require("../../markets")
+const { saveDeploymentInfo, getDeployedContractAddress, verify } = require("../../markets")
 
 const poolAddressesProviderAddress = getDeployedContractAddress("poolAddressesProvider")
 
@@ -20,6 +20,9 @@ async function main() {
 
     await pool.initialize(poolAddressesProviderAddress)
     console.log(`pool deployed and initialized to ${pool.address}`)
+    await verify(pool.address, [poolAddressesProviderAddress], {
+        ...poolLibraries,
+    })
 
     saveDeploymentInfo(path.basename(__filename), {
         pool: pool.address

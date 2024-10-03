@@ -2,7 +2,7 @@ const { ethers } = require("hardhat");
 const fs = require("fs")
 const path = require('path');
 
-const { config, saveDeploymentInfo, getDeployedContractAddress } = require("../../markets")
+const { config, saveDeploymentInfo, getDeployedContractAddress, verify } = require("../../markets")
 
 async function main() {
     const poolLibraries = await getPoolLibraries()
@@ -50,6 +50,7 @@ async function main() {
         const L2Encoder = ethers.getContractFactory("L2Encoder");
         l2Encoder = await L2Encoder.deploy(poolProxyAddress)
         console.log(`L2Encoder deployed to ${l2Encoder.address}`)
+        await verify(l2Encoder.address, [poolProxyAddress])
     }
 
     // Set Flash Loan premiums

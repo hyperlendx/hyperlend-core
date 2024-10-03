@@ -1,7 +1,7 @@
 const { ethers } = require("hardhat");
 const path = require('path');
 
-const { config, saveDeploymentInfo, getDeployedContractAddress } = require("../../markets")
+const { config, saveDeploymentInfo, getDeployedContractAddress, verify } = require("../../markets")
 
 async function main() {
     const PoolAddressesProvider = await ethers.getContractFactory("PoolAddressesProvider");
@@ -12,6 +12,7 @@ async function main() {
     const AToken = await ethers.getContractFactory("AToken");
     const aToken = await AToken.deploy(poolAddress)
     console.log(`HToken deployed to ${aToken.address}`)
+    await verify(aToken.address, [poolAddress])
 
     await aToken.initialize(
         poolAddress, // initializingPool
@@ -27,6 +28,7 @@ async function main() {
     const DelegationAwareAToken = await ethers.getContractFactory("DelegationAwareAToken");
     const delegationAwareAToken = await DelegationAwareAToken.deploy(poolAddress)
     console.log(`delegationAwareAToken deployed to ${delegationAwareAToken.address}`)
+    await verify(delegationAwareAToken.address, [poolAddress])
 
     await delegationAwareAToken.initialize(
         poolAddress, // initializingPool
@@ -42,6 +44,7 @@ async function main() {
     const StableDebtToken = await ethers.getContractFactory("StableDebtToken");
     const stableDebtToken = await StableDebtToken.deploy(poolAddress)
     console.log(`stableDebtToken deployed to ${stableDebtToken.address}`)
+    await verify(stableDebtToken.address, [poolAddress])
 
     await stableDebtToken.initialize(
         poolAddress, // initializingPool
@@ -56,6 +59,7 @@ async function main() {
     const VariableDebtToken = await ethers.getContractFactory("VariableDebtToken");
     const variableDebtToken = await VariableDebtToken.deploy(poolAddress)
     console.log(`variableDebtToken deployed to ${variableDebtToken.address}`)
+    await verify(variableDebtToken.address, [poolAddress])
 
     await variableDebtToken.initialize(
         poolAddress, // initializingPool

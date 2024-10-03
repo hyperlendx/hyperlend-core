@@ -1,38 +1,42 @@
-const fs = require("fs")
+const path = require("path");
+const fs = require("fs");
 
-const { config } = require("./config/hyperEvmTestnet")
+const { config } = require(path.resolve(__dirname, "config/hyperEvmTestnet"));
+
+const { verify } = require("../deploy/utils/verify")
 
 //TODO verify config
 
-let deployedContracts = JSON.parse(fs.readFileSync("./markets/deployedContracts.json"))
+let deployedContracts = JSON.parse(fs.readFileSync(path.resolve(__dirname, "deployedContracts.json")));
 
 function getDeployedContractAddress(id){
-    return deployedContracts[id]
+    return id ? deployedContracts[id] : deployedContracts;
 }
 
 async function setDeployedContractAddress(id, address){
-    deployedContracts[id] = address
-    deployedContractsChanged()
+    deployedContracts[id] = address;
+    deployedContractsChanged();
 }
 
 async function saveDeploymentInfo(name, data){
     //path.basename(__filename) + on = file.json
-    fs.writeFileSync(`./deployments/${name}on`, JSON.stringify(data))
+    fs.writeFileSync(path.resolve(__dirname, `../deployments/${name}on`), JSON.stringify(data));
 
     for (let [key, value] of Object.entries(data)){
-        deployedContracts[key] = value
+        deployedContracts[key] = value;
     }
 
-    deployedContractsChanged()
+    deployedContractsChanged();
 }
 
 function deployedContractsChanged(){
-    fs.writeFileSync("./markets/deployedContracts.json", JSON.stringify(deployedContracts, null, 4))
+    fs.writeFileSync(path.resolve(__dirname, "deployedContracts.json"), JSON.stringify(deployedContracts, null, 4));
 }
 
 module.exports = {
     config: config,
     getDeployedContractAddress: getDeployedContractAddress,
     setDeployedContractAddress: setDeployedContractAddress,
-    saveDeploymentInfo: saveDeploymentInfo
-}
+    saveDeploymentInfo: saveDeploymentInfo,
+    verify: verify
+};
