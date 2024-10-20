@@ -10,6 +10,8 @@ const rl = readline.createInterface({
 const { config, saveDeploymentInfo, getDeployedContractAddress, verify } = require("../markets")
 
 async function main() {
+    console.log(`ONLY USE DURING TESTING - NEVER USE HOT WALLETS IN PROD!`)
+    
     const oracleAddress = getDeployedContractAddress("oracle")
     if (oracleAddress.length == 0) throw new Error(`missing oracle address`)
     
