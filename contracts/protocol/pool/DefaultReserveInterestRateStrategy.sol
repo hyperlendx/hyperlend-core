@@ -197,9 +197,9 @@ contract DefaultReserveInterestRateStrategy is IDefaultInterestRateStrategy {
                 OPTIMAL_USAGE_RATIO
             );
 
-            vars.currentVariableBorrowRate += _variableRateSlope1.rayMul(vars.borrowUsageRatio).rayDiv(
-                OPTIMAL_USAGE_RATIO
-            );
+            vars.currentVariableBorrowRate += _variableRateSlope1
+                .rayMul(vars.borrowUsageRatio)
+                .rayDiv(OPTIMAL_USAGE_RATIO);
         }
 
         if (vars.stableToTotalDebtRatio > OPTIMAL_STABLE_TO_TOTAL_DEBT_RATIO) {
@@ -243,9 +243,13 @@ contract DefaultReserveInterestRateStrategy is IDefaultInterestRateStrategy {
 
         if (totalDebt == 0) return 0;
 
-        uint256 weightedVariableRate = totalVariableDebt.wadToRay().rayMul(currentVariableBorrowRate);
+        uint256 weightedVariableRate = totalVariableDebt.wadToRay().rayMul(
+            currentVariableBorrowRate
+        );
 
-        uint256 weightedStableRate = totalStableDebt.wadToRay().rayMul(currentAverageStableBorrowRate);
+        uint256 weightedStableRate = totalStableDebt.wadToRay().rayMul(
+            currentAverageStableBorrowRate
+        );
 
         uint256 overallBorrowRate = (weightedVariableRate + weightedStableRate).rayDiv(
             totalDebt.wadToRay()

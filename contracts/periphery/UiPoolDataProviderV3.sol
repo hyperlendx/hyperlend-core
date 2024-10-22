@@ -60,7 +60,9 @@ contract UiPoolDataProviderV3 is IUiPoolDataProviderV3 {
             reserveData.underlyingAsset = reserves[i];
 
             // reserve current state
-            DataTypes.ReserveData memory baseData = pool.getReserveData(reserveData.underlyingAsset);
+            DataTypes.ReserveData memory baseData = pool.getReserveData(
+                reserveData.underlyingAsset
+            );
             //the liquidity index. Expressed in ray
             reserveData.liquidityIndex = baseData.liquidityIndex;
             //variable borrow index. Expressed in ray
@@ -90,8 +92,9 @@ contract UiPoolDataProviderV3 is IUiPoolDataProviderV3 {
                 reserveData.averageStableRate,
                 reserveData.stableDebtLastUpdateTimestamp
             ) = IStableDebtToken(reserveData.stableDebtTokenAddress).getSupplyData();
-            reserveData.totalScaledVariableDebt = IVariableDebtToken(reserveData.variableDebtTokenAddress)
-                .scaledTotalSupply();
+            reserveData.totalScaledVariableDebt = IVariableDebtToken(
+                reserveData.variableDebtTokenAddress
+            ).scaledTotalSupply();
 
             // Due we take the symbol from underlying token we need a special case for $MKR as symbol() returns bytes32
             if (address(reserveData.underlyingAsset) == address(MKR_ADDRESS)) {
@@ -105,7 +108,8 @@ contract UiPoolDataProviderV3 is IUiPoolDataProviderV3 {
             }
 
             //stores the reserve configuration
-            DataTypes.ReserveConfigurationMap memory reserveConfigurationMap = baseData.configuration;
+            DataTypes.ReserveConfigurationMap memory reserveConfigurationMap = baseData
+                .configuration;
             uint256 eModeCategoryId;
             (
                 reserveData.baseLTVasCollateral,
@@ -239,20 +243,21 @@ contract UiPoolDataProviderV3 is IUiPoolDataProviderV3 {
 
             // user reserve data
             userReservesData[i].underlyingAsset = reserves[i];
-            userReservesData[i].scaledATokenBalance = IAToken(baseData.aTokenAddress).scaledBalanceOf(
-                user
-            );
+            userReservesData[i].scaledATokenBalance = IAToken(baseData.aTokenAddress)
+                .scaledBalanceOf(user);
             userReservesData[i].usageAsCollateralEnabledOnUser = userConfig.isUsingAsCollateral(i);
 
             if (userConfig.isBorrowing(i)) {
                 userReservesData[i].scaledVariableDebt = IVariableDebtToken(
                     baseData.variableDebtTokenAddress
                 ).scaledBalanceOf(user);
-                userReservesData[i].principalStableDebt = IStableDebtToken(baseData.stableDebtTokenAddress)
-                    .principalBalanceOf(user);
+                userReservesData[i].principalStableDebt = IStableDebtToken(
+                    baseData.stableDebtTokenAddress
+                ).principalBalanceOf(user);
                 if (userReservesData[i].principalStableDebt != 0) {
-                    userReservesData[i].stableBorrowRate = IStableDebtToken(baseData.stableDebtTokenAddress)
-                        .getUserStableRate(user);
+                    userReservesData[i].stableBorrowRate = IStableDebtToken(
+                        baseData.stableDebtTokenAddress
+                    ).getUserStableRate(user);
                     userReservesData[i].stableBorrowLastUpdateTimestamp = IStableDebtToken(
                         baseData.stableDebtTokenAddress
                     ).getUserLastUpdated(user);

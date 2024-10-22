@@ -23,7 +23,9 @@ abstract contract DebtTokenBase is
 
     // Credit Delegation Typehash
     bytes32 public constant DELEGATION_WITH_SIG_TYPEHASH =
-        keccak256('DelegationWithSig(address delegatee,uint256 value,uint256 nonce,uint256 deadline)');
+        keccak256(
+            'DelegationWithSig(address delegatee,uint256 value,uint256 nonce,uint256 deadline)'
+        );
 
     address internal _underlyingAsset;
 
@@ -58,7 +60,13 @@ abstract contract DebtTokenBase is
                 '\x19\x01',
                 DOMAIN_SEPARATOR(),
                 keccak256(
-                    abi.encode(DELEGATION_WITH_SIG_TYPEHASH, delegatee, value, currentValidNonce, deadline)
+                    abi.encode(
+                        DELEGATION_WITH_SIG_TYPEHASH,
+                        delegatee,
+                        value,
+                        currentValidNonce,
+                        deadline
+                    )
                 )
             )
         );
@@ -92,7 +100,11 @@ abstract contract DebtTokenBase is
      * @param delegatee The address receiving the delegated borrowing power
      * @param amount The amount to subtract from the current allowance
      */
-    function _decreaseBorrowAllowance(address delegator, address delegatee, uint256 amount) internal {
+    function _decreaseBorrowAllowance(
+        address delegator,
+        address delegatee,
+        uint256 amount
+    ) internal {
         uint256 newAllowance = _borrowAllowances[delegator][delegatee] - amount;
 
         _borrowAllowances[delegator][delegatee] = newAllowance;

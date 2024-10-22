@@ -1,7 +1,7 @@
 {
   "name": "hardhat-project",
   "scripts": {
-    "prettier": "npx prettier --write --plugin=prettier-plugin-solidity contracts/*"
+    "prettier": "npx prettier --write --plugin=prettier-plugin-solidity contracts/"
   },
   "dependencies": {
     "@nomiclabs/hardhat-waffle": "^2.0.6",

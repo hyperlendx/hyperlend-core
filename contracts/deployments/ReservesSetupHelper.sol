@@ -13,7 +13,7 @@ import {IPool} from '../interfaces/IPool.sol';
  * @dev The ReservesSetupHelper is an Ownable contract, so only the deployer or future owners can call this contract.
  */
 contract ReservesSetupHelper is Ownable {
-	struct ConfigureReserveInput {
+    struct ConfigureReserveInput {
         address asset;
         uint256 baseLTV;
         uint256 liquidationThreshold;
@@ -24,7 +24,7 @@ contract ReservesSetupHelper is Ownable {
         bool stableBorrowingEnabled;
         bool borrowingEnabled;
         bool flashLoanEnabled;
-	}
+    }
 
     /**
      * @notice External function called by the owner account to setup the assets risk parameters in batch.
@@ -58,7 +58,10 @@ contract ReservesSetupHelper is Ownable {
                     inputParams[i].stableBorrowingEnabled
                 );
             }
-            configurator.setReserveFlashLoaning(inputParams[i].asset, inputParams[i].flashLoanEnabled);
+            configurator.setReserveFlashLoaning(
+                inputParams[i].asset,
+                inputParams[i].flashLoanEnabled
+            );
             configurator.setSupplyCap(inputParams[i].asset, inputParams[i].supplyCap);
             configurator.setReserveFactor(inputParams[i].asset, inputParams[i].reserveFactor);
 
@@ -66,8 +69,13 @@ contract ReservesSetupHelper is Ownable {
         }
     }
 
-    function _seedPool(address token, address pool, uint256 amount, address seedAmountsHolder) internal {
-        require(amount >= 10000, "seed amount too low");
+    function _seedPool(
+        address token,
+        address pool,
+        uint256 amount,
+        address seedAmountsHolder
+    ) internal {
+        require(amount >= 10000, 'seed amount too low');
         IERC20(token).transferFrom(owner(), address(this), amount);
         IERC20(token).approve(pool, amount);
         IPool(pool).supply(token, amount, seedAmountsHolder, 0);

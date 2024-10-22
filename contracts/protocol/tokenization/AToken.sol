@@ -26,7 +26,9 @@ contract AToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
     using GPv2SafeERC20 for IERC20;
 
     bytes32 public constant PERMIT_TYPEHASH =
-        keccak256('Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)');
+        keccak256(
+            'Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)'
+        );
 
     uint256 public constant ATOKEN_REVISION = 0x1;
 
@@ -132,7 +134,13 @@ contract AToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
     }
 
     /// @inheritdoc IERC20
-    function totalSupply() public view virtual override(IncentivizedERC20, IERC20) returns (uint256) {
+    function totalSupply()
+        public
+        view
+        virtual
+        override(IncentivizedERC20, IERC20)
+        returns (uint256)
+    {
         uint256 currentSupplyScaled = super.totalSupply();
 
         if (currentSupplyScaled == 0) {
@@ -153,7 +161,10 @@ contract AToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
     }
 
     /// @inheritdoc IAToken
-    function transferUnderlyingTo(address target, uint256 amount) external virtual override onlyPool {
+    function transferUnderlyingTo(
+        address target,
+        uint256 amount
+    ) external virtual override onlyPool {
         IERC20(_underlyingAsset).safeTransfer(target, amount);
     }
 
@@ -184,7 +195,9 @@ contract AToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
             abi.encodePacked(
                 '\x19\x01',
                 DOMAIN_SEPARATOR(),
-                keccak256(abi.encode(PERMIT_TYPEHASH, owner, spender, value, currentValidNonce, deadline))
+                keccak256(
+                    abi.encode(PERMIT_TYPEHASH, owner, spender, value, currentValidNonce, deadline)
+                )
             )
         );
         require(owner == ecrecover(digest, v, r, s), Errors.INVALID_SIGNATURE);
@@ -211,7 +224,14 @@ contract AToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
         super._transfer(from, to, amount, index);
 
         if (validate) {
-            POOL.finalizeTransfer(underlyingAsset, from, to, amount, fromBalanceBefore, toBalanceBefore);
+            POOL.finalizeTransfer(
+                underlyingAsset,
+                from,
+                to,
+                amount,
+                fromBalanceBefore,
+                toBalanceBefore
+            );
         }
 
         emit BalanceTransfer(from, to, amount.rayDiv(index), index);
@@ -249,7 +269,11 @@ contract AToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, I
     }
 
     /// @inheritdoc IAToken
-    function rescueTokens(address token, address to, uint256 amount) external override onlyPoolAdmin {
+    function rescueTokens(
+        address token,
+        address to,
+        uint256 amount
+    ) external override onlyPoolAdmin {
         require(token != _underlyingAsset, Errors.UNDERLYING_CANNOT_BE_RESCUED);
         IERC20(token).safeTransfer(to, amount);
     }

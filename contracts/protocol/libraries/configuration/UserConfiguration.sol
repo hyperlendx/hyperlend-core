@@ -30,7 +30,10 @@ library UserConfiguration {
         bool borrowing
     ) internal {
         unchecked {
-            require(reserveIndex < ReserveConfiguration.MAX_RESERVES_COUNT, Errors.INVALID_RESERVE_INDEX);
+            require(
+                reserveIndex < ReserveConfiguration.MAX_RESERVES_COUNT,
+                Errors.INVALID_RESERVE_INDEX
+            );
             uint256 bit = 1 << (reserveIndex << 1);
             if (borrowing) {
                 self.data |= bit;
@@ -52,7 +55,10 @@ library UserConfiguration {
         bool usingAsCollateral
     ) internal {
         unchecked {
-            require(reserveIndex < ReserveConfiguration.MAX_RESERVES_COUNT, Errors.INVALID_RESERVE_INDEX);
+            require(
+                reserveIndex < ReserveConfiguration.MAX_RESERVES_COUNT,
+                Errors.INVALID_RESERVE_INDEX
+            );
             uint256 bit = 1 << ((reserveIndex << 1) + 1);
             if (usingAsCollateral) {
                 self.data |= bit;
@@ -73,7 +79,10 @@ library UserConfiguration {
         uint256 reserveIndex
     ) internal pure returns (bool) {
         unchecked {
-            require(reserveIndex < ReserveConfiguration.MAX_RESERVES_COUNT, Errors.INVALID_RESERVE_INDEX);
+            require(
+                reserveIndex < ReserveConfiguration.MAX_RESERVES_COUNT,
+                Errors.INVALID_RESERVE_INDEX
+            );
             return (self.data >> (reserveIndex << 1)) & 3 != 0;
         }
     }
@@ -89,7 +98,10 @@ library UserConfiguration {
         uint256 reserveIndex
     ) internal pure returns (bool) {
         unchecked {
-            require(reserveIndex < ReserveConfiguration.MAX_RESERVES_COUNT, Errors.INVALID_RESERVE_INDEX);
+            require(
+                reserveIndex < ReserveConfiguration.MAX_RESERVES_COUNT,
+                Errors.INVALID_RESERVE_INDEX
+            );
             return (self.data >> (reserveIndex << 1)) & 1 != 0;
         }
     }
@@ -105,7 +117,10 @@ library UserConfiguration {
         uint256 reserveIndex
     ) internal pure returns (bool) {
         unchecked {
-            require(reserveIndex < ReserveConfiguration.MAX_RESERVES_COUNT, Errors.INVALID_RESERVE_INDEX);
+            require(
+                reserveIndex < ReserveConfiguration.MAX_RESERVES_COUNT,
+                Errors.INVALID_RESERVE_INDEX
+            );
             return (self.data >> ((reserveIndex << 1) + 1)) & 1 != 0;
         }
     }
@@ -140,7 +155,9 @@ library UserConfiguration {
      * @param self The configuration object
      * @return True if the user has been supplying as collateral one reserve, false otherwise
      */
-    function isBorrowingOne(DataTypes.UserConfigurationMap memory self) internal pure returns (bool) {
+    function isBorrowingOne(
+        DataTypes.UserConfigurationMap memory self
+    ) internal pure returns (bool) {
         uint256 borrowingData = self.data & BORROWING_MASK;
         return borrowingData != 0 && (borrowingData & (borrowingData - 1) == 0);
     }
@@ -150,7 +167,9 @@ library UserConfiguration {
      * @param self The configuration object
      * @return True if the user has been borrowing any reserve, false otherwise
      */
-    function isBorrowingAny(DataTypes.UserConfigurationMap memory self) internal pure returns (bool) {
+    function isBorrowingAny(
+        DataTypes.UserConfigurationMap memory self
+    ) internal pure returns (bool) {
         return self.data & BORROWING_MASK != 0;
     }
 

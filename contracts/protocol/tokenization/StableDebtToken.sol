@@ -42,7 +42,10 @@ contract StableDebtToken is DebtTokenBase, IncentivizedERC20, IStableDebtToken {
      */
     constructor(
         IPool pool
-    ) DebtTokenBase() IncentivizedERC20(pool, 'STABLE_DEBT_TOKEN_IMPL', 'STABLE_DEBT_TOKEN_IMPL', 0) {
+    )
+        DebtTokenBase()
+        IncentivizedERC20(pool, 'STABLE_DEBT_TOKEN_IMPL', 'STABLE_DEBT_TOKEN_IMPL', 0)
+    {
         // Intentionally left blank
     }
 
@@ -194,7 +197,14 @@ contract StableDebtToken is DebtTokenBase, IncentivizedERC20, IStableDebtToken {
             uint256 amountToBurn = amount - balanceIncrease;
             _burn(from, amountToBurn, previousSupply);
             emit Transfer(from, address(0), amountToBurn);
-            emit Burn(from, amountToBurn, currentBalance, balanceIncrease, nextAvgStableRate, nextSupply);
+            emit Burn(
+                from,
+                amountToBurn,
+                currentBalance,
+                balanceIncrease,
+                nextAvgStableRate,
+                nextSupply
+            );
         }
 
         return (nextSupply, nextAvgStableRate);

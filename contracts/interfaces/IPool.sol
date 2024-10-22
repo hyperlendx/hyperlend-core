@@ -33,7 +33,12 @@ interface IPool {
      * @param amount The amount added as backing
      * @param fee The amount paid in fees
      */
-    event BackUnbacked(address indexed reserve, address indexed backer, uint256 amount, uint256 fee);
+    event BackUnbacked(
+        address indexed reserve,
+        address indexed backer,
+        uint256 amount,
+        uint256 fee
+    );
 
     /**
      * @dev Emitted on supply()
@@ -58,7 +63,12 @@ interface IPool {
      * @param to The address that will receive the underlying
      * @param amount The amount to be withdrawn
      */
-    event Withdraw(address indexed reserve, address indexed user, address indexed to, uint256 amount);
+    event Withdraw(
+        address indexed reserve,
+        address indexed user,
+        address indexed to,
+        uint256 amount
+    );
 
     /**
      * @dev Emitted on borrow() and flashLoan() when debt needs to be opened
@@ -245,7 +255,12 @@ interface IPool {
      * @param referralCode Code used to register the integrator originating the operation, for potential rewards.
      *     0 if the action is executed directly by the user, without any middle-man
      */
-    function supply(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) external;
+    function supply(
+        address asset,
+        uint256 amount,
+        address onBehalfOf,
+        uint16 referralCode
+    ) external;
 
     /**
      * @notice Supply with transfer approval of asset to be supplied done via permit function
@@ -740,5 +755,10 @@ interface IPool {
      * @param referralCode Code used to register the integrator originating the operation, for potential rewards.
      *     0 if the action is executed directly by the user, without any middle-man
      */
-    function deposit(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) external;
+    function deposit(
+        address asset,
+        uint256 amount,
+        address onBehalfOf,
+        uint16 referralCode
+    ) external;
 }

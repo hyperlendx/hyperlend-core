@@ -33,8 +33,13 @@ contract L2Pool is Pool, IL2Pool {
 
     /// @inheritdoc IL2Pool
     function supplyWithPermit(bytes32 args, bytes32 r, bytes32 s) external override {
-        (address asset, uint256 amount, uint16 referralCode, uint256 deadline, uint8 v) = CalldataLogic
-            .decodeSupplyWithPermitParams(_reservesList, args);
+        (
+            address asset,
+            uint256 amount,
+            uint16 referralCode,
+            uint256 deadline,
+            uint8 v
+        ) = CalldataLogic.decodeSupplyWithPermitParams(_reservesList, args);
 
         supplyWithPermit(asset, amount, msg.sender, referralCode, deadline, v, r, s);
     }
@@ -48,8 +53,12 @@ contract L2Pool is Pool, IL2Pool {
 
     /// @inheritdoc IL2Pool
     function borrow(bytes32 args) external override {
-        (address asset, uint256 amount, uint256 interestRateMode, uint16 referralCode) = CalldataLogic
-            .decodeBorrowParams(_reservesList, args);
+        (
+            address asset,
+            uint256 amount,
+            uint256 interestRateMode,
+            uint16 referralCode
+        ) = CalldataLogic.decodeBorrowParams(_reservesList, args);
 
         borrow(asset, amount, interestRateMode, referralCode, msg.sender);
     }
@@ -65,7 +74,11 @@ contract L2Pool is Pool, IL2Pool {
     }
 
     /// @inheritdoc IL2Pool
-    function repayWithPermit(bytes32 args, bytes32 r, bytes32 s) external override returns (uint256) {
+    function repayWithPermit(
+        bytes32 args,
+        bytes32 r,
+        bytes32 s
+    ) external override returns (uint256) {
         (
             address asset,
             uint256 amount,
@@ -107,10 +120,8 @@ contract L2Pool is Pool, IL2Pool {
 
     /// @inheritdoc IL2Pool
     function setUserUseReserveAsCollateral(bytes32 args) external override {
-        (address asset, bool useAsCollateral) = CalldataLogic.decodeSetUserUseReserveAsCollateralParams(
-            _reservesList,
-            args
-        );
+        (address asset, bool useAsCollateral) = CalldataLogic
+            .decodeSetUserUseReserveAsCollateralParams(_reservesList, args);
         setUserUseReserveAsCollateral(asset, useAsCollateral);
     }
 

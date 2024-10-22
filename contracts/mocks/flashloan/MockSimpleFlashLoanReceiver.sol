@@ -58,7 +58,10 @@ contract MockFlashLoanSimpleReceiver is FlashLoanSimpleReceiverBase {
         MintableERC20 token = MintableERC20(asset);
 
         //check the contract has the specified balance
-        require(amount <= IERC20(asset).balanceOf(address(this)), 'Invalid balance for the contract');
+        require(
+            amount <= IERC20(asset).balanceOf(address(this)),
+            'Invalid balance for the contract'
+        );
 
         uint256 amountToReturn = (_amountToApprove != 0) ? _amountToApprove : amount.add(premium);
         //execution does not fail - mint tokens and return them to the _destination

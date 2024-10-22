@@ -68,7 +68,12 @@ contract PoolAddressesProvider is Ownable, IPoolAddressesProvider {
         address proxyAddress = _addresses[id];
         address oldImplementationAddress = _getProxyImplementation(id);
         _updateImpl(id, newImplementationAddress);
-        emit AddressSetAsProxy(id, proxyAddress, oldImplementationAddress, newImplementationAddress);
+        emit AddressSetAsProxy(
+            id,
+            proxyAddress,
+            oldImplementationAddress,
+            newImplementationAddress
+        );
     }
 
     /// @inheritdoc IPoolAddressesProvider
@@ -203,7 +208,9 @@ contract PoolAddressesProvider is Ownable, IPoolAddressesProvider {
             return address(0);
         } else {
             address payable payableProxyAddress = payable(proxyAddress);
-            return InitializableImmutableAdminUpgradeabilityProxy(payableProxyAddress).implementation();
+            return
+                InitializableImmutableAdminUpgradeabilityProxy(payableProxyAddress)
+                    .implementation();
         }
     }
 }

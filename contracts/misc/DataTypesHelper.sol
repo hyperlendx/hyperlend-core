@@ -11,12 +11,12 @@ import {DataTypes} from '../protocol/libraries/types/DataTypes.sol';
  */
 library DataTypesHelper {
     /**
-    * @notice Fetches the user current stable and variable debt balances
-    * @param user The user address
-    * @param reserve The reserve data object
-    * @return The stable debt balance
-    * @return The variable debt balance
-    **/
+     * @notice Fetches the user current stable and variable debt balances
+     * @param user The user address
+     * @param reserve The reserve data object
+     * @return The stable debt balance
+     * @return The variable debt balance
+     **/
     function getUserCurrentDebt(
         address user,
         DataTypes.ReserveData memory reserve

@@ -141,7 +141,11 @@ interface IPoolConfigurator {
      * @param oldCategoryId The old eMode asset category
      * @param newCategoryId The new eMode asset category
      */
-    event EModeAssetCategoryChanged(address indexed asset, uint8 oldCategoryId, uint8 newCategoryId);
+    event EModeAssetCategoryChanged(
+        address indexed asset,
+        uint8 oldCategoryId,
+        uint8 newCategoryId
+    );
 
     /**
      * @dev Emitted when a new eMode category is added.

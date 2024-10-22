@@ -148,7 +148,13 @@ abstract contract ScaledBalanceTokenBase is MintableIncentivizedERC20, IScaledBa
 
         if (sender != recipient && recipientBalanceIncrease > 0) {
             emit Transfer(address(0), recipient, recipientBalanceIncrease);
-            emit Mint(_msgSender(), recipient, recipientBalanceIncrease, recipientBalanceIncrease, index);
+            emit Mint(
+                _msgSender(),
+                recipient,
+                recipientBalanceIncrease,
+                recipientBalanceIncrease,
+                index
+            );
         }
 
         emit Transfer(sender, recipient, amount);

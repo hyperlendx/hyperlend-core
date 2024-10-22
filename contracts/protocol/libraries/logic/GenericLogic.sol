@@ -225,9 +225,8 @@ library GenericLogic {
         uint256 assetUnit
     ) private view returns (uint256) {
         // fetching variable debt
-        uint256 userTotalDebt = IScaledBalanceToken(reserve.variableDebtTokenAddress).scaledBalanceOf(
-            user
-        );
+        uint256 userTotalDebt = IScaledBalanceToken(reserve.variableDebtTokenAddress)
+            .scaledBalanceOf(user);
         if (userTotalDebt != 0) {
             userTotalDebt = userTotalDebt.rayMul(reserve.getNormalizedDebt());
         }
@@ -259,7 +258,9 @@ library GenericLogic {
     ) private view returns (uint256) {
         uint256 normalizedIncome = reserve.getNormalizedIncome();
         uint256 balance = (
-            IScaledBalanceToken(reserve.aTokenAddress).scaledBalanceOf(user).rayMul(normalizedIncome)
+            IScaledBalanceToken(reserve.aTokenAddress).scaledBalanceOf(user).rayMul(
+                normalizedIncome
+            )
         ) * assetPrice;
 
         unchecked {

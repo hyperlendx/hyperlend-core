@@ -44,7 +44,12 @@ interface IAToken is IERC20, IScaledBalanceToken, IInitializableAToken {
      * @param amount The amount being burned
      * @param index The next liquidity index of the reserve
      */
-    function burn(address from, address receiverOfUnderlying, uint256 amount, uint256 index) external;
+    function burn(
+        address from,
+        address receiverOfUnderlying,
+        uint256 amount,
+        uint256 index
+    ) external;
 
     /**
      * @notice Mints aTokens to the reserve treasury

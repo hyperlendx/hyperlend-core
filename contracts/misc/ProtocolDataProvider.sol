@@ -99,7 +99,8 @@ contract ProtocolDataProvider is IPoolDataProvider {
         (ltv, liquidationThreshold, liquidationBonus, decimals, reserveFactor, ) = configuration
             .getParams();
 
-        (isActive, isFrozen, borrowingEnabled, stableBorrowRateEnabled, ) = configuration.getFlags();
+        (isActive, isFrozen, borrowingEnabled, stableBorrowRateEnabled, ) = configuration
+            .getFlags();
 
         usageAsCollateralEnabled = liquidationThreshold != 0;
     }
@@ -115,7 +116,9 @@ contract ProtocolDataProvider is IPoolDataProvider {
     function getReserveCaps(
         address asset
     ) external view override returns (uint256 borrowCap, uint256 supplyCap) {
-        (borrowCap, supplyCap) = IPool(ADDRESSES_PROVIDER.getPool()).getConfiguration(asset).getCaps();
+        (borrowCap, supplyCap) = IPool(ADDRESSES_PROVIDER.getPool())
+            .getConfiguration(asset)
+            .getCaps();
     }
 
     /// @inheritdoc IPoolDataProvider
@@ -130,7 +133,8 @@ contract ProtocolDataProvider is IPoolDataProvider {
 
     /// @inheritdoc IPoolDataProvider
     function getLiquidationProtocolFee(address asset) external view override returns (uint256) {
-        return IPool(ADDRESSES_PROVIDER.getPool()).getConfiguration(asset).getLiquidationProtocolFee();
+        return
+            IPool(ADDRESSES_PROVIDER.getPool()).getConfiguration(asset).getLiquidationProtocolFee();
     }
 
     /// @inheritdoc IPoolDataProvider
@@ -238,8 +242,12 @@ contract ProtocolDataProvider is IPoolDataProvider {
         currentATokenBalance = IERC20Detailed(reserve.aTokenAddress).balanceOf(user);
         currentVariableDebt = IERC20Detailed(reserve.variableDebtTokenAddress).balanceOf(user);
         currentStableDebt = IERC20Detailed(reserve.stableDebtTokenAddress).balanceOf(user);
-        principalStableDebt = IStableDebtToken(reserve.stableDebtTokenAddress).principalBalanceOf(user);
-        scaledVariableDebt = IVariableDebtToken(reserve.variableDebtTokenAddress).scaledBalanceOf(user);
+        principalStableDebt = IStableDebtToken(reserve.stableDebtTokenAddress).principalBalanceOf(
+            user
+        );
+        scaledVariableDebt = IVariableDebtToken(reserve.variableDebtTokenAddress).scaledBalanceOf(
+            user
+        );
         liquidityRate = reserve.currentLiquidityRate;
         stableBorrowRate = IStableDebtToken(reserve.stableDebtTokenAddress).getUserStableRate(user);
         stableRateLastUpdated = IStableDebtToken(reserve.stableDebtTokenAddress).getUserLastUpdated(

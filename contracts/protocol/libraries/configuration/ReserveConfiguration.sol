@@ -109,7 +109,8 @@ library ReserveConfiguration {
     function getLiquidationThreshold(
         DataTypes.ReserveConfigurationMap memory self
     ) internal pure returns (uint256) {
-        return (self.data & ~LIQUIDATION_THRESHOLD_MASK) >> LIQUIDATION_THRESHOLD_START_BIT_POSITION;
+        return
+            (self.data & ~LIQUIDATION_THRESHOLD_MASK) >> LIQUIDATION_THRESHOLD_START_BIT_POSITION;
     }
 
     /**
@@ -464,7 +465,8 @@ library ReserveConfiguration {
         DataTypes.ReserveConfigurationMap memory self
     ) internal pure returns (uint256) {
         return
-            (self.data & ~LIQUIDATION_PROTOCOL_FEE_MASK) >> LIQUIDATION_PROTOCOL_FEE_START_BIT_POSITION;
+            (self.data & ~LIQUIDATION_PROTOCOL_FEE_MASK) >>
+            LIQUIDATION_PROTOCOL_FEE_START_BIT_POSITION;
     }
 
     /**
@@ -505,7 +507,9 @@ library ReserveConfiguration {
     ) internal pure {
         require(category <= MAX_VALID_EMODE_CATEGORY, Errors.INVALID_EMODE_CATEGORY);
 
-        self.data = (self.data & EMODE_CATEGORY_MASK) | (category << EMODE_CATEGORY_START_BIT_POSITION);
+        self.data =
+            (self.data & EMODE_CATEGORY_MASK) |
+            (category << EMODE_CATEGORY_START_BIT_POSITION);
     }
 
     /**

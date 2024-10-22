@@ -102,7 +102,9 @@ library ConfiguratorLogic {
             input.interestRateStrategyAddress
         );
 
-        DataTypes.ReserveConfigurationMap memory currentConfig = DataTypes.ReserveConfigurationMap(0);
+        DataTypes.ReserveConfigurationMap memory currentConfig = DataTypes.ReserveConfigurationMap(
+            0
+        );
 
         currentConfig.setDecimals(input.underlyingAssetDecimals);
 

@@ -157,7 +157,10 @@ abstract contract IncentivizedERC20 is Context, IERC20Detailed {
      * @param addedValue The amount being added to the allowance
      * @return `true`
      */
-    function increaseAllowance(address spender, uint256 addedValue) external virtual returns (bool) {
+    function increaseAllowance(
+        address spender,
+        uint256 addedValue
+    ) external virtual returns (bool) {
         _approve(_msgSender(), spender, _allowances[_msgSender()][spender] + addedValue);
         return true;
     }
@@ -193,7 +196,11 @@ abstract contract IncentivizedERC20 is Context, IERC20Detailed {
             uint256 currentTotalSupply = _totalSupply;
             incentivesControllerLocal.handleAction(sender, currentTotalSupply, oldSenderBalance);
             if (sender != recipient) {
-                incentivesControllerLocal.handleAction(recipient, currentTotalSupply, oldRecipientBalance);
+                incentivesControllerLocal.handleAction(
+                    recipient,
+                    currentTotalSupply,
+                    oldRecipientBalance
+                );
             }
         }
     }

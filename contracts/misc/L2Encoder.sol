@@ -104,7 +104,9 @@ contract L2Encoder {
         DataTypes.ReserveData memory data = POOL.getReserveData(asset);
 
         uint16 assetId = data.id;
-        uint128 shortenedAmount = amount == type(uint256).max ? type(uint128).max : amount.toUint128();
+        uint128 shortenedAmount = amount == type(uint256).max
+            ? type(uint128).max
+            : amount.toUint128();
 
         bytes32 res;
         assembly {
@@ -164,7 +166,9 @@ contract L2Encoder {
         DataTypes.ReserveData memory data = POOL.getReserveData(asset);
 
         uint16 assetId = data.id;
-        uint128 shortenedAmount = amount == type(uint256).max ? type(uint128).max : amount.toUint128();
+        uint128 shortenedAmount = amount == type(uint256).max
+            ? type(uint128).max
+            : amount.toUint128();
         uint8 shortenedInterestRateMode = interestRateMode.toUint8();
 
         bytes32 res;
@@ -201,7 +205,9 @@ contract L2Encoder {
         DataTypes.ReserveData memory data = POOL.getReserveData(asset);
 
         uint16 assetId = data.id;
-        uint128 shortenedAmount = amount == type(uint256).max ? type(uint128).max : amount.toUint128();
+        uint128 shortenedAmount = amount == type(uint256).max
+            ? type(uint128).max
+            : amount.toUint128();
         uint8 shortenedInterestRateMode = interestRateMode.toUint8();
         uint32 shortenedDeadline = deadline.toUint32();
 

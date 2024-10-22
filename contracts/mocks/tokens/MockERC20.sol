@@ -53,7 +53,7 @@ contract MockERC20 is Context, IERC20 {
         _name = name;
         _symbol = symbol;
         _decimals = decimals;
-        _mint(msg.sender, 1_000_000_000 * 10**decimals);
+        _mint(msg.sender, 1_000_000_000 * 10 ** decimals);
     }
 
     /**
@@ -158,7 +158,10 @@ contract MockERC20 is Context, IERC20 {
         _approve(
             sender,
             _msgSender(),
-            _allowances[sender][_msgSender()].sub(amount, 'ERC20: transfer amount exceeds allowance')
+            _allowances[sender][_msgSender()].sub(
+                amount,
+                'ERC20: transfer amount exceeds allowance'
+            )
         );
         return true;
     }

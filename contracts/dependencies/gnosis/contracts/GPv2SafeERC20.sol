@@ -20,8 +20,8 @@ library GPv2SafeERC20 {
             mstore(add(freeMemoryPointer, 36), value)
 
             if iszero(call(gas(), token, 0, freeMemoryPointer, 68, 0, 0)) {
-            returndatacopy(0, 0, returndatasize())
-            revert(0, returndatasize())
+                returndatacopy(0, 0, returndatasize())
+                revert(0, returndatasize())
             }
         }
 
@@ -42,8 +42,8 @@ library GPv2SafeERC20 {
             mstore(add(freeMemoryPointer, 68), value)
 
             if iszero(call(gas(), token, 0, freeMemoryPointer, 100, 0, 0)) {
-            returndatacopy(0, 0, returndatasize())
-            revert(0, returndatasize())
+                returndatacopy(0, 0, returndatasize())
+                revert(0, returndatasize())
             }
         }
 
@@ -85,7 +85,7 @@ library GPv2SafeERC20 {
             switch returndatasize()
             // Non-standard ERC20 transfer without return.
             case 0 {
-            // NOTE: When the return data size is 0, verify that there
+                // NOTE: When the return data size is 0, verify that there
                 // is code at the address. This is done in order to maintain
                 // compatibility with Solidity calling conventions.
                 // <https://docs.soliditylang.org/en/v0.7.6/control-structures.html#external-function-calls>

@@ -136,7 +136,13 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
         uint256 fee
     ) external virtual override onlyBridge returns (uint256) {
         return
-            BridgeLogic.executeBackUnbacked(_reserves[asset], asset, amount, fee, _bridgeProtocolFee);
+            BridgeLogic.executeBackUnbacked(
+                _reserves[asset],
+                asset,
+                amount,
+                fee,
+                _bridgeProtocolFee
+            );
     }
 
     /// @inheritdoc IPool
@@ -297,7 +303,13 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
                 onBehalfOf: onBehalfOf,
                 useATokens: false
             });
-            return BorrowLogic.executeRepay(_reserves, _reservesList, _usersConfig[onBehalfOf], params);
+            return
+                BorrowLogic.executeRepay(
+                    _reserves,
+                    _reservesList,
+                    _usersConfig[onBehalfOf],
+                    params
+                );
         }
     }
 
@@ -407,9 +419,8 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
             addressesProvider: address(ADDRESSES_PROVIDER),
             pool: address(this),
             userEModeCategory: _usersEModeCategory[onBehalfOf],
-            isAuthorizedFlashBorrower: IACLManager(ADDRESSES_PROVIDER.getACLManager()).isFlashBorrower(
-                msg.sender
-            )
+            isAuthorizedFlashBorrower: IACLManager(ADDRESSES_PROVIDER.getACLManager())
+                .isFlashBorrower(msg.sender)
         });
 
         FlashLoanLogic.executeFlashLoan(

@@ -118,7 +118,10 @@ library PoolLogic {
         mapping(address => DataTypes.ReserveData) storage reservesData,
         address asset
     ) external {
-        require(reservesData[asset].configuration.getDebtCeiling() == 0, Errors.DEBT_CEILING_NOT_ZERO);
+        require(
+            reservesData[asset].configuration.getDebtCeiling() == 0,
+            Errors.DEBT_CEILING_NOT_ZERO
+        );
         reservesData[asset].isolationModeTotalDebt = 0;
         emit IsolationModeTotalDebtUpdated(asset, 0);
     }
@@ -177,7 +180,12 @@ library PoolLogic {
             currentLiquidationThreshold,
             healthFactor,
 
-        ) = GenericLogic.calculateUserAccountData(reservesData, reservesList, eModeCategories, params);
+        ) = GenericLogic.calculateUserAccountData(
+            reservesData,
+            reservesList,
+            eModeCategories,
+            params
+        );
 
         availableBorrowsBase = GenericLogic.calculateAvailableBorrows(
             totalCollateralBase,

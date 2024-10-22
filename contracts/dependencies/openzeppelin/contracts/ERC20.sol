@@ -162,7 +162,10 @@ contract ERC20 is Context, IERC20 {
         _approve(
             sender,
             _msgSender(),
-            _allowances[sender][_msgSender()].sub(amount, 'ERC20: transfer amount exceeds allowance')
+            _allowances[sender][_msgSender()].sub(
+                amount,
+                'ERC20: transfer amount exceeds allowance'
+            )
         );
         return true;
     }

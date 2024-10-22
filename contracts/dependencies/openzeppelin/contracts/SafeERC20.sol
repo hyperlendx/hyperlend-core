@@ -78,7 +78,10 @@ library SafeERC20 {
         // we're implementing it ourselves. We use {Address.functionCall} to perform this call, which verifies that
         // the target address contains contract code and also asserts for success in the low-level call.
 
-        bytes memory returndata = address(token).functionCall(data, 'SafeERC20: low-level call failed');
+        bytes memory returndata = address(token).functionCall(
+            data,
+            'SafeERC20: low-level call failed'
+        );
         if (returndata.length > 0) {
             // Return data is optional
             require(abi.decode(returndata, (bool)), 'SafeERC20: ERC20 operation did not succeed');
