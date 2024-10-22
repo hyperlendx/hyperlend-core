@@ -5,13 +5,13 @@ const path = require('path');
 const { config, saveDeploymentInfo, verify } = require("../../markets")
 
 async function main() {
-    const _networkBaseTokenPriceInUsdProxyAggregator =  "0x8fD6C8f776AfEB29237Be490DC39d0b2162c42B5"//"0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612" //ETH / USD chainlink
-    const _marketReferenceCurrencyPriceInUsdProxyAggregator = "0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612" //ETH/USD
+    const networkBaseTokenPriceInUsdProxyAggregator = config.networkBaseTokenPriceInUsdProxyAggregator
+    const marketReferenceCurrencyPriceInUsdProxyAggregator = config.marketReferenceCurrencyPriceInUsdProxyAggregator
 
     const UiPoolDataProviderV3 = await ethers.getContractFactory("UiPoolDataProviderV3");
-    const uiPoolDataProviderV3 = await UiPoolDataProviderV3.deploy(_networkBaseTokenPriceInUsdProxyAggregator, _marketReferenceCurrencyPriceInUsdProxyAggregator);
+    const uiPoolDataProviderV3 = await UiPoolDataProviderV3.deploy(networkBaseTokenPriceInUsdProxyAggregator, marketReferenceCurrencyPriceInUsdProxyAggregator);
     console.log(`uiPoolDataProviderV3 deployed to ${uiPoolDataProviderV3.address}`);
-    await verify(uiPoolDataProviderV3.address, [_networkBaseTokenPriceInUsdProxyAggregator, _marketReferenceCurrencyPriceInUsdProxyAggregator])
+    await verify(uiPoolDataProviderV3.address, [networkBaseTokenPriceInUsdProxyAggregator, marketReferenceCurrencyPriceInUsdProxyAggregator])
 
     const WalletBalanceProvider = await ethers.getContractFactory("WalletBalanceProvider");
     const walletBalanceProvider = await WalletBalanceProvider.deploy();

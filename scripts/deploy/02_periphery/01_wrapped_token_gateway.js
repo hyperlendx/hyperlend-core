@@ -4,7 +4,7 @@ const path = require('path');
 const { config, saveDeploymentInfo, getDeployedContractAddress, verify } = require("../../markets")
 
 async function main() {
-    const weth = getDeployedContractAddress("weth") || config.WETH
+    const weth = config.WETH || getDeployedContractAddress("weth")
     const pool = getDeployedContractAddress("poolProxy")
 
     if (!weth || weth.length == 0){

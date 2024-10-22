@@ -22,7 +22,7 @@ async function main() {
     const pool = Pool.attach(poolAddress)
 
     // Deploy Reserves
-    let initChunks = 3
+    let initChunks = 4
     let initInputParams = []
     let reserveTokens = [];
     let reserveInitDecimals = [];
@@ -49,6 +49,7 @@ async function main() {
             console.log(`skipping init of ${symbol} due is already initialized`);
             continue;
         }
+
         const { strategy, aTokenImpl, reserveDecimals } = params;
         if (!config.strategyAddresses[strategy.name]) {
             // Strategy does not exist, load it
@@ -76,7 +77,14 @@ async function main() {
             aTokenToUse = delegationAwareATokenImplementationAddress;
         }
 
-        //TODO verify underlying asset decimals
+        //verify underlying asset decimals
+        const UnderlyingERC20 = await ethers.getContractFactory("MockERC20");
+        const underlyingAsset = UnderlyingERC20.attach(reserveTokens[i]);
+        const underlyingSymbol = await underlyingAsset.symbol();
+        const underlyingDecimals = await underlyingAsset.decimals();
+
+        if (underlyingSymbol != reserveSymbols[i]) throw new Error(`underlying asset symbol mismatch: ${underlyingSymbol} != ${reserveSymbols[i]}`)
+        if (underlyingDecimals != reserveInitDecimals[i]) throw new Error(`underlying decimals mismatch for ${underlyingSymbol}: ${underlyingDecimals} != ${reserveInitDecimals[i]}`)
 
         initInputParams.push({
             aTokenImpl: aTokenToUse,

@@ -107,7 +107,7 @@ async function main() {
     }
 
     if (tokens.length) {
-        // Set aTokenAndRatesDeployer as temporal admin
+        // Set aTokenAndRatesDeployer as temporary admin
         await aclManager.addRiskAdmin(reservesSetupHelper.address)
 
         // Deploy init per chunks

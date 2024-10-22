@@ -26,7 +26,7 @@ async function main() {
     if (isPoolProxyPending) {
         const setPoolImplTx = await poolAddressesProvider.setPoolImpl(pool.address)
         const txPoolProxyAddress = await poolAddressesProvider.getPool();
-        console.log(`attached Pool implementation and deployed proxy contract: `);
+        console.log(`attached Pool implementation and deployed proxy contract: ${txPoolProxyAddress}`);
         console.log("txHash:", setPoolImplTx.transactionHash);
     }
 
@@ -63,9 +63,11 @@ async function main() {
 
     // Set total Flash Loan Premium
     await poolConfigurator.updateFlashloanPremiumTotal(config.poolConfig.flashLoanPremiums.total)
+    console.log(`total flash loan premium set to ${config.poolConfig.flashLoanPremiums.total}`)
 
     // Set protocol Flash Loan Premium
     await poolConfigurator.updateFlashloanPremiumToProtocol(config.poolConfig.flashLoanPremiums.protocol)
+    console.log(`flash loan premium to protocol set to ${config.poolConfig.flashLoanPremiums.protocol}`)
 
     saveDeploymentInfo(path.basename(__filename), {
         poolProxy: poolProxyAddress,
