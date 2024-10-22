@@ -17,7 +17,7 @@ import {EIP712Base} from './base/EIP712Base.sol';
 
 /**
  * @title Hyperlend ERC20 HToken
- * @author Aave and Hyperlend developers
+ * @author Aave
  * @notice Implementation of the interest bearing token for the Hyperlend protocol
  */
 contract AToken is VersionedInitializable, ScaledBalanceTokenBase, EIP712Base, IAToken {

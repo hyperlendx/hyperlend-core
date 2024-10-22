@@ -274,7 +274,7 @@ library ValidationLogic {
          * Following conditions need to be met if the user is borrowing at a stable rate:
          * 1. Reserve must be enabled for stable rate borrowing
          * 2. Users cannot borrow from the reserve if their collateral is (mostly) the same currency
-         *        they are borrowing, to prevent abuses.
+         *    they are borrowing, to prevent abuses.
          * 3. Users will be able to borrow only a portion of the total available liquidity
          */
 

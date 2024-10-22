@@ -29,7 +29,7 @@ contract L2Encoder {
      * @param asset The address of the underlying asset to supply
      * @param amount The amount to be supplied
      * @param referralCode referralCode Code used to register the integrator originating the operation, for potential rewards.
-     *     0 if the action is executed directly by the user, without any middle-man
+     *   0 if the action is executed directly by the user, without any middle-man
      * @return compact representation of supply parameters
      */
     function encodeSupplyParams(
@@ -55,7 +55,7 @@ contract L2Encoder {
      * @param asset The address of the underlying asset to supply
      * @param amount The amount to be supplied
      * @param referralCode referralCode Code used to register the integrator originating the operation, for potential rewards.
-     *     0 if the action is executed directly by the user, without any middle-man
+     *   0 if the action is executed directly by the user, without any middle-man
      * @param deadline The deadline timestamp that the permit is valid
      * @param permitV The V parameter of ERC712 permit sig
      * @param permitR The R parameter of ERC712 permit sig
@@ -122,7 +122,7 @@ contract L2Encoder {
      * @param amount The amount to be borrowed
      * @param interestRateMode The interest rate mode at which the user wants to borrow: 1 for Stable, 2 for Variable
      * @param referralCode The code used to register the integrator originating the operation, for potential rewards.
-     *     0 if the action is executed directly by the user, without any middle-man
+     *   0 if the action is executed directly by the user, without any middle-man
      * @return compact representation of withdraw parameters
      */
     function encodeBorrowParams(

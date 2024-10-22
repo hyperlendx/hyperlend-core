@@ -250,7 +250,7 @@ library LiquidationLogic {
 
     /**
      * @notice Burns the collateral aTokens and transfers the underlying to the liquidator.
-     * @dev     The function also updates the state and the interest rate of the collateral reserve.
+     * @dev   The function also updates the state and the interest rate of the collateral reserve.
      * @param collateralReserve The data of the collateral reserve
      * @param params The additional parameters needed to execute the liquidation function
      * @param vars The executeLiquidationCall() function local vars
@@ -280,8 +280,8 @@ library LiquidationLogic {
 
     /**
      * @notice Liquidates the user aTokens by transferring them to the liquidator.
-     * @dev     The function also checks the state of the liquidator and activates the aToken as collateral
-     *                as in standard transfers if the isolation mode constraints are respected.
+     * @dev   The function also checks the state of the liquidator and activates the aToken as collateral
+     *        as in standard transfers if the isolation mode constraints are respected.
      * @param reservesData The state of all the reserves
      * @param reservesList The addresses of all the active reserves
      * @param usersConfig The users configuration mapping that track the supplied/borrowed assets
@@ -464,7 +464,7 @@ library LiquidationLogic {
      * @notice Calculates how much of a specific collateral can be liquidated, given
      * a certain amount of debt asset.
      * @dev This function needs to be called after all the checks to validate the liquidation have been performed,
-     *     otherwise it might fail.
+     *   otherwise it might fail.
      * @param collateralReserve The data of the collateral reserve
      * @param debtReserveCache The cached data of the debt reserve
      * @param collateralAsset The address of the underlying asset used as collateral, to receive as result of the liquidation

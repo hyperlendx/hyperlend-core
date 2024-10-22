@@ -14,7 +14,7 @@ interface IFlashLoanReceiver {
     /**
      * @notice Executes an operation after receiving the flash-borrowed assets
      * @dev Ensure that the contract can return the debt + premium, e.g., has
-     *            enough funds to repay and has approved the Pool to pull the total amount
+     *      enough funds to repay and has approved the Pool to pull the total amount
      * @param assets The addresses of the flash-borrowed assets
      * @param amounts The amounts of the flash-borrowed assets
      * @param premiums The fee of each flash-borrowed asset

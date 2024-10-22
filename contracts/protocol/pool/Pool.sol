@@ -24,17 +24,17 @@ import {PoolStorage} from './PoolStorage.sol';
  * @author Aave
  * @notice Main point of interaction with an Aave protocol's market
  * - Users can:
- *     # Supply
- *     # Withdraw
- *     # Borrow
- *     # Repay
- *     # Swap their loans between variable and stable rate
- *     # Enable/disable their supplied assets as collateral rebalance stable rate borrow positions
- *     # Liquidate positions
- *     # Execute Flash Loans
+ *   # Supply
+ *   # Withdraw
+ *   # Borrow
+ *   # Repay
+ *   # Swap their loans between variable and stable rate
+ *   # Enable/disable their supplied assets as collateral rebalance stable rate borrow positions
+ *   # Liquidate positions
+ *   # Execute Flash Loans
  * @dev To be covered by a proxy contract, owned by the PoolAddressesProvider of the specific market
  * @dev All admin functions are callable by the PoolConfigurator contract defined also in the
- *     PoolAddressesProvider
+ *   PoolAddressesProvider
  */
 contract Pool is VersionedInitializable, PoolStorage, IPool {
     using ReserveLogic for DataTypes.ReserveData;

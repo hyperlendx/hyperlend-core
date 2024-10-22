@@ -163,9 +163,9 @@ contract PoolAddressesProvider is Ownable, IPoolAddressesProvider {
     /**
      * @notice Internal function to update the implementation of a specific proxied component of the protocol.
      * @dev If there is no proxy registered with the given identifier, it creates the proxy setting `newAddress`
-     *     as implementation and calls the initialize() function on the proxy
+     *   as implementation and calls the initialize() function on the proxy
      * @dev If there is already a proxy registered, it just updates the implementation to `newAddress` and
-     *     calls the initialize() function via upgradeToAndCall() in the proxy
+     *   calls the initialize() function via upgradeToAndCall() in the proxy
      * @param id The id of the proxy to be updated
      * @param newAddress The address of the new implementation
      */

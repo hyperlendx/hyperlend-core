@@ -32,8 +32,8 @@ interface IAccessControl {
      * @dev Emitted when `account` is revoked `role`.
      *
      * `sender` is the account that originated the contract call:
-     *     - if using `revokeRole`, it is the admin role bearer
-     *     - if using `renounceRole`, it is the role bearer (i.e. `account`)
+     *   - if using `revokeRole`, it is the admin role bearer
+     *   - if using `renounceRole`, it is the role bearer (i.e. `account`)
      */
     event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender);
 

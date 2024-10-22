@@ -187,7 +187,7 @@ interface IPoolDataProvider {
      * @return liquidityRate The liquidity rate of the reserve
      * @return stableRateLastUpdated The timestamp of the last update of the user stable rate
      * @return usageAsCollateralEnabled True if the user is using the asset as collateral, false
-     *                 otherwise
+     *         otherwise
      */
     function getUserReserveData(
         address asset,

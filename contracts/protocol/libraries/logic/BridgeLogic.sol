@@ -52,7 +52,7 @@ library BridgeLogic {
      * @param amount The amount to mint
      * @param onBehalfOf The address that will receive the aTokens
      * @param referralCode Code used to register the integrator originating the operation, for potential rewards.
-     *     0 if the action is executed directly by the user, without any middle-man
+     *   0 if the action is executed directly by the user, without any middle-man
      */
     function executeMintUnbacked(
         mapping(address => DataTypes.ReserveData) storage reservesData,

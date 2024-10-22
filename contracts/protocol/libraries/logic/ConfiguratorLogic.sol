@@ -254,7 +254,7 @@ library ConfiguratorLogic {
      * @dev The call is used to initialize the new implementation.
      * @param proxyAddress The address of the proxy
      * @param implementation The address of the new implementation
-     * @param    initParams The parameters to the call after the upgrade
+     * @param  initParams The parameters to the call after the upgrade
      */
     function _upgradeTokenImplementation(
         address proxyAddress,

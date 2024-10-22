@@ -29,6 +29,8 @@ interface IFlashLoanSimpleReceiver {
         address initiator,
         bytes calldata params
     ) external returns (bool);
+
     function ADDRESSES_PROVIDER() external view returns (IPoolAddressesProvider);
+
     function POOL() external view returns (IPool);
 }
