@@ -1,14 +1,19 @@
 {
-    "name": "hardhat-project",
-    "dependencies": {
-        "@nomiclabs/hardhat-waffle": "^2.0.6",
-        "@nomiclabs/hardhat-web3": "^2.0.0",
-        "hardhat": "^2.22.6",
-        "hardhat-gas-reporter": "^2.2.0",
-        "hardhat-preprocessor": "^0.1.5",
-        "solidity-coverage": "^0.8.12"
-    },
-    "devDependencies": {
-        "@nomicfoundation/hardhat-verify": "^2.0.9"
-    }
+  "name": "hardhat-project",
+  "scripts": {
+    "prettier": "npx prettier --write --plugin=prettier-plugin-solidity contracts/*"
+  },
+  "dependencies": {
+    "@nomiclabs/hardhat-waffle": "^2.0.6",
+    "@nomiclabs/hardhat-web3": "^2.0.0",
+    "hardhat": "^2.22.6",
+    "hardhat-gas-reporter": "^2.2.0",
+    "hardhat-preprocessor": "^0.1.5",
+    "solidity-coverage": "^0.8.12"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-verify": "^2.0.9",
+    "prettier": "^3.3.3",
+    "prettier-plugin-solidity": "^1.4.1"
+  }
 }
