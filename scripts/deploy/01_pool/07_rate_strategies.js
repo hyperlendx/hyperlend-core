@@ -1,9 +1,7 @@
 const { ethers } = require("hardhat");
 const path = require('path');
 
-const { config, saveDeploymentInfo, getDeployedContractAddress, setDeployedContractAddress, verify } = require("../../markets")
-
-async function main() {
+async function main({ config, saveDeploymentInfo, getDeployedContractAddress, setDeployedContractAddress, verify }) {
     const PoolAddressesProvider = await ethers.getContractFactory("PoolAddressesProvider");
     const poolAddressesProvider = PoolAddressesProvider.attach(getDeployedContractAddress("poolAddressesProvider"));
 
@@ -12,7 +10,7 @@ async function main() {
     for (const strategy in config.rateStrategies) {
         const strategyData = config.rateStrategies[strategy];
         const args = [
-            poolAddressesProvider.address,
+            poolAddressesProvider.target,
             strategyData.optimalUsageRatio,
             strategyData.baseVariableBorrowRate,
             strategyData.variableRateSlope1,
@@ -26,11 +24,11 @@ async function main() {
 
         const DefaultReserveInterestRateStrategy = await ethers.getContractFactory("DefaultReserveInterestRateStrategy");
         const defaultReserveInterestRateStrategy = await DefaultReserveInterestRateStrategy.deploy(...args) 
-        console.log(`defaultReserveInterestRateStrategy deployed to ${defaultReserveInterestRateStrategy.address}`)
+        console.log(`defaultReserveInterestRateStrategy deployed to ${defaultReserveInterestRateStrategy.target}`)
         console.log(`variableSlope1: ${strategyData.variableRateSlope1}, variableSlope2: ${strategyData.variableRateSlope2}`)
-        await verify(defaultReserveInterestRateStrategy.address, args)
-        deployedIRStrategies.push(defaultReserveInterestRateStrategy.address)
-        setDeployedContractAddress(strategyData.name, defaultReserveInterestRateStrategy.address)
+        await verify(defaultReserveInterestRateStrategy.target, args)
+        deployedIRStrategies.push(defaultReserveInterestRateStrategy.target)
+        setDeployedContractAddress(strategyData.name, defaultReserveInterestRateStrategy.target)
     }
 
     saveDeploymentInfo(path.basename(__filename), {
@@ -38,7 +36,4 @@ async function main() {
     })  
 }
 
-main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-});
+module.exports = main

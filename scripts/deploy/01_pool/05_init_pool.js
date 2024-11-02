@@ -2,10 +2,8 @@ const { ethers } = require("hardhat");
 const fs = require("fs")
 const path = require('path');
 
-const { config, saveDeploymentInfo, getDeployedContractAddress, verify } = require("../../markets")
-
-async function main() {
-    const poolLibraries = await getPoolLibraries()
+async function main({ config, saveDeploymentInfo, getDeployedContractAddress, verify }) {
+    const poolLibraries = await getPoolLibraries(getDeployedContractAddress)
     for (const [key, value] of Object.entries(poolLibraries)) {
         if (value.length == 0) throw new Error(`missing ${key} library address`)
     }
@@ -24,10 +22,9 @@ async function main() {
     const isPoolProxyPending = (await poolAddressesProvider.getPool()) === config.ZERO_ADDRESS;
     // Set Pool implementation to Addresses provider and save the proxy deployment artifact at disk
     if (isPoolProxyPending) {
-        const setPoolImplTx = await poolAddressesProvider.setPoolImpl(pool.address)
+        const setPoolImplTx = await poolAddressesProvider.setPoolImpl(pool.target)
         const txPoolProxyAddress = await poolAddressesProvider.getPool();
         console.log(`attached Pool implementation and deployed proxy contract: ${txPoolProxyAddress}`);
-        console.log("txHash:", setPoolImplTx.transactionHash);
     }
 
     const poolProxyAddress = await poolAddressesProvider.getPool();
@@ -38,7 +35,6 @@ async function main() {
     if (isPoolConfiguratorProxyPending) {
         const setPoolConfiguratorTx = await poolAddressesProvider.setPoolConfiguratorImpl(getDeployedContractAddress("poolConfigurator"))
         console.log(`attached PoolConfigurator implementation and deployed proxy `);
-        console.log("txHash:", setPoolConfiguratorTx.transactionHash);
     }
 
     const poolConfiguratorProxyAddress = await poolAddressesProvider.getPoolConfigurator();
@@ -49,8 +45,8 @@ async function main() {
         // Deploy L2 Encoder
         const L2Encoder = ethers.getContractFactory("L2Encoder");
         l2Encoder = await L2Encoder.deploy(poolProxyAddress)
-        console.log(`L2Encoder deployed to ${l2Encoder.address}`)
-        await verify(l2Encoder.address, [poolProxyAddress])
+        console.log(`L2Encoder deployed to ${l2Encoder.target}`)
+        await verify(l2Encoder.target, [poolProxyAddress])
     }
 
     // Set Flash Loan premiums
@@ -71,12 +67,12 @@ async function main() {
 
     saveDeploymentInfo(path.basename(__filename), {
         poolProxy: poolProxyAddress,
-        l2Encoder: l2Encoder ? l2Encoder.address : null,
+        l2Encoder: l2Encoder ? l2Encoder.target : null,
         poolConfiguratorProxy: poolConfiguratorProxyAddress
     })  
 }
 
-async function getPoolLibraries(){
+async function getPoolLibraries(getDeployedContractAddress){
     return {
         LiquidationLogic: getDeployedContractAddress("liquidationLogic"),
         SupplyLogic: getDeployedContractAddress("supplyLogic"),
@@ -88,8 +84,4 @@ async function getPoolLibraries(){
     };
 };
 
-
-main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-});
+module.exports = main

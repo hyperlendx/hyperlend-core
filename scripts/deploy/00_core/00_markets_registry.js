@@ -1,21 +1,16 @@
 const { ethers } = require("hardhat");
 const path = require('path');
 
-const { config, saveDeploymentInfo, verify } = require("../../markets")
-
-async function main() {
+async function main({ config, saveDeploymentInfo, verify }) {
     const PoolAddressesProviderRegistry = await ethers.getContractFactory("PoolAddressesProviderRegistry");
     const poolAddressesProviderRegistry = await PoolAddressesProviderRegistry.deploy(config.poolAddressesProviderRegistry_owner);
-    console.log(`PoolAddressesProviderRegistry deployed to ${poolAddressesProviderRegistry.address}`);
+    console.log(`PoolAddressesProviderRegistry deployed to ${poolAddressesProviderRegistry.target}`);
 
     saveDeploymentInfo(path.basename(__filename), {
-        poolAddressesProviderRegistry: poolAddressesProviderRegistry.address
+        poolAddressesProviderRegistry: poolAddressesProviderRegistry.target
     })
 
-    await verify(poolAddressesProviderRegistry.address, [config.poolAddressesProviderRegistry_owner])
+    await verify(poolAddressesProviderRegistry.target, [config.poolAddressesProviderRegistry_owner])
 }
 
-main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-});
+module.exports = main

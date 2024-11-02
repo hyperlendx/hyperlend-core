@@ -6,11 +6,11 @@ const { saveDeploymentInfo, verify } = require("../../markets")
 async function main() {
     const WETH = await ethers.getContractFactory("WETH9");
     const weth = await WETH.deploy();
-    console.log(`WETH deployed to ${weth.address}`)
-    await verify(weth.address, [])
+    console.log(`WETH deployed to ${weth.target}`)
+    await verify(weth.target, [])
 
     saveDeploymentInfo(path.basename(__filename), {
-        weth: weth.address,
+        WETH9: weth.target,
     })
 }
 

@@ -2,12 +2,9 @@ const fs = require("fs");
 const { HardhatUserConfig }  = require("hardhat/config");
 require("dotenv").config();
 
-require("hardhat-gas-reporter");
+require("@nomicfoundation/hardhat-toolbox");
 require("hardhat-preprocessor");
 require("solidity-coverage");
-
-require("@nomiclabs/hardhat-web3");
-require("@nomiclabs/hardhat-waffle");
 require("@nomicfoundation/hardhat-verify");
 
 // Ensure that we have all the environment variables we need.
@@ -33,12 +30,12 @@ function getRemappings() {
 
 const config = {
   defaultNetwork: "hardhat",
-  gasReporter: {
-    currency: "USD",
-    enabled: true,
-    excludeContracts: [],
-    src: "./contracts",
-  },
+//   gasReporter: {
+//     currency: "USD",
+//     enabled: true,
+//     excludeContracts: [],
+//     src: "./contracts",
+//   },
   networks: {
     hardhat: {
       gas: "auto",

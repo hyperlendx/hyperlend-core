@@ -1,16 +1,11 @@
 const { ethers } = require("hardhat");
-const path = require('path');
 
-const { config, saveDeploymentInfo, getDeployedContractAddress, setDeployedContractAddress } = require("../../markets")
-
-async function main() {
+async function main({ setDeployedContractAddress }) {
     const MintableERC20 = await ethers.getContractFactory("MockERC20");
-    const mock1 = await MintableERC20.deploy("mockETH", "METH", 18);
-    const mock2 = await MintableERC20.deploy("mockBTC", "MBTC", 8);
-    console.log(mock1.address, mock2.address)
+    const mock = await MintableERC20.deploy("MockToken", "MOCK", 18);
+    console.log(`mockERC20 deployed to ${mock.target}`)
+
+    setDeployedContractAddress("mockERC20", mock.target)
 }
 
-main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-});
+module.exports = main

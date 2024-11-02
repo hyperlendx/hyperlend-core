@@ -1,5 +1,4 @@
 const { ethers } = require("hardhat");
-const path = require('path');
 const readline = require('node:readline');
 
 const rl = readline.createInterface({
@@ -7,13 +6,11 @@ const rl = readline.createInterface({
     output: process.stdout,
 });
 
-const { config, saveDeploymentInfo, getDeployedContractAddress, setDeployedContractAddress } = require("../../markets")
-
-async function main() {
+async function main({ config, saveDeploymentInfo, getDeployedContractAddress, setDeployedContractAddress }) {
     const PoolAddressesProvider = await ethers.getContractFactory("PoolAddressesProvider");
     const poolAddressesProvider = PoolAddressesProvider.attach(getDeployedContractAddress("poolAddressesProvider"));
     const poolAddress = await poolAddressesProvider.getPool();
-    const poolLibraries = await getPoolLibraries()
+    const poolLibraries = await getPoolLibraries(getDeployedContractAddress)
     const Pool = await ethers.getContractFactory("Pool", {
         libraries: {
             ...poolLibraries,
@@ -106,11 +103,13 @@ async function main() {
         });
     }
 
-    console.log(initInputParams)
-    let isCorrect = await askForConfirmation()
-    if (!isCorrect){
-        console.log("Aborting...")
-        return;
+    if (!config.isTestEnv){
+        console.log(initInputParams)
+        let isCorrect = await askForConfirmation()
+        if (!isCorrect){
+            console.log("Aborting...")
+            return;
+        }
     }
 
     // Deploy init reserves per chunks
@@ -128,10 +127,7 @@ async function main() {
     for (let chunkIndex = 0; chunkIndex < chunkedInitInputParams.length; chunkIndex++) {
         const tx = await poolConfigurator.initReserves(chunkedInitInputParams[chunkIndex])
 
-        console.log(
-            `reserve ready for: ${chunkedSymbols[chunkIndex].join(", ")}`,
-            `\ntxHash: ${tx.transactionHash}`
-        );
+        console.log(`reserve initialized for: ${chunkedSymbols[chunkIndex].join(", ")}`);
     }
 
     console.log(`initialized all reserves`);
@@ -147,7 +143,7 @@ function chunk(arr, chunkSize){
     );
 };
 
-async function getPoolLibraries(){
+async function getPoolLibraries(getDeployedContractAddress){
     return {
         LiquidationLogic: getDeployedContractAddress("liquidationLogic"),
         SupplyLogic: getDeployedContractAddress("supplyLogic"),
@@ -173,7 +169,4 @@ async function askForConfirmation(){
 }
 
 
-main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-});
+module.exports = main

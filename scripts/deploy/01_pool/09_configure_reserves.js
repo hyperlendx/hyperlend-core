@@ -7,9 +7,7 @@ const rl = readline.createInterface({
     output: process.stdout,
 });
 
-const { config, saveDeploymentInfo, getDeployedContractAddress, setDeployedContractAddress, verify } = require("../../markets")
-
-async function main() {
+async function main({ config, saveDeploymentInfo, getDeployedContractAddress, setDeployedContractAddress, verify }) {
     const PoolAddressesProvider = await ethers.getContractFactory("PoolAddressesProvider");
     const poolAddressesProvider = PoolAddressesProvider.attach(getDeployedContractAddress("poolAddressesProvider"));
 
@@ -21,9 +19,9 @@ async function main() {
     let reservesSetupHelper;
     if (getDeployedContractAddress("reservesSetupHelper").length == 0){
         reservesSetupHelper = await ReservesSetupHelper.deploy()
-        setDeployedContractAddress("reservesSetupHelper", reservesSetupHelper.address)
-        console.log(`reservesSetupHelper deployed to ${reservesSetupHelper.address}`)
-        await verify(reservesSetupHelper.address, [])
+        setDeployedContractAddress("reservesSetupHelper", reservesSetupHelper.target)
+        console.log(`reservesSetupHelper deployed to ${reservesSetupHelper.target}`)
+        await verify(reservesSetupHelper.target, [])
     } else {
         reservesSetupHelper = ReservesSetupHelper.attach(getDeployedContractAddress("reservesSetupHelper"));
     }
@@ -87,14 +85,16 @@ async function main() {
         symbols.push(assetSymbol);
         seedAmounts.push(seedAmount)
     }
+    console.log(`using reservesSetupHelper: ${reservesSetupHelper.target}`)
 
-    console.log(`reservesSetupHelper: ${reservesSetupHelper.address}`)
-    console.log(inputParams)
-    console.log(`seedAmounts`, seedAmounts)
-    let isCorrect = await askForConfirmation()
-    if (!isCorrect){
-        console.log("Aborting...")
-        return;
+    if (!config.isTestEnv){
+        console.log(inputParams)
+        console.log(`seedAmounts`, seedAmounts)
+        let isCorrect = await askForConfirmation()
+        if (!isCorrect){
+            console.log("Aborting...")
+            return;
+        }
     }
 
     //approve seed amounts
@@ -102,13 +102,13 @@ async function main() {
         if (seedAmounts[i] < 10000) throw new Error("SeedAmountTooLow");
         const MintableERC20 = await ethers.getContractFactory("MintableERC20");
         const erc20Token = MintableERC20.attach(tokens[i]);
-        await erc20Token.approve(reservesSetupHelper.address, seedAmounts[i]);
+        await erc20Token.approve(reservesSetupHelper.target, seedAmounts[i]);
         console.log(`approved ${tokens[i]} for seed amounts`)
     }
 
     if (tokens.length) {
         // Set aTokenAndRatesDeployer as temporary admin
-        await aclManager.addRiskAdmin(reservesSetupHelper.address)
+        await aclManager.addRiskAdmin(reservesSetupHelper.target)
 
         // Deploy init per chunks
         const enableChunks = 20;
@@ -125,18 +125,18 @@ async function main() {
             seedFundsHolder = SeedAmountsHolder.attach(seedAmoundsHolderAddress);
             if (await seedFundsHolder.owner() != (await ethers.getSigner()).address){
                 seedFundsHolder = await SeedAmountsHolder.deploy()
-                console.log(`deployed SeedAmountsHolder to ${seedFundsHolder.address}`)
-                setDeployedContractAddress("seedAmountsHolder", seedFundsHolder.address)
-                seedAmoundsHolderAddress = seedFundsHolder.address
-                await verify(seedFundsHolder.address, [])
+                console.log(`deployed SeedAmountsHolder to ${seedFundsHolder.target}`)
+                setDeployedContractAddress("seedAmountsHolder", seedFundsHolder.target)
+                seedAmoundsHolderAddress = seedFundsHolder.target
+                await verify(seedFundsHolder.target, [])
             } else {
                 console.log(`using SeedAmountsHolder ${seedAmoundsHolderAddress}`)
             }
         } else {
             seedFundsHolder = await SeedAmountsHolder.deploy()
-            console.log(`deployed seedFundsHolder to ${seedFundsHolder.address}`)
-            setDeployedContractAddress("seedAmountsHolder", seedFundsHolder.address)
-            await verify(seedFundsHolder.address, [])
+            console.log(`deployed seedFundsHolder to ${seedFundsHolder.target}`)
+            setDeployedContractAddress("seedAmountsHolder", seedFundsHolder.target)
+            await verify(seedFundsHolder.target, [])
         }
         
         for (let chunkIndex = 0; chunkIndex < chunkedInputParams.length; chunkIndex++) {
@@ -146,24 +146,21 @@ async function main() {
                     chunkedInputParams[chunkIndex],
                     chunkedSeedAmounts[chunkIndex],
                     (await poolAddressesProvider.getPool()),
-                    seedFundsHolder.address || "0x0000000000000000000000000000000000000000"
+                    seedFundsHolder.target || "0x0000000000000000000000000000000000000000"
                 )
 
-                console.log(
-                    `init for: ${chunkedSymbols[chunkIndex].join(", ")}`,
-                    `\ntxHash: ${tx.transactionHash}`
-                );
+                console.log(`configured reserves for: ${chunkedSymbols[chunkIndex].join(", ")}`);
             } catch (e){
-                console.log(`tx failed`)
+                console.log(`reserves configuration tx failed`)
                 console.log(e)
             }
         }
 
         // Remove ReservesSetupHelper from risk admins
-        await aclManager.removeRiskAdmin(reservesSetupHelper.address)
+        await aclManager.removeRiskAdmin(reservesSetupHelper.target)
     }
 
-    console.log(`[configured all reserves`);
+    console.log(`configured all reserves`);
 }
 
 function chunk(arr, chunkSize){
@@ -189,8 +186,4 @@ async function askForConfirmation(){
     })
 }
 
-
-main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-});
+module.exports = main

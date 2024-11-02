@@ -1,16 +1,13 @@
 const { ethers } = require("hardhat");
 const path = require('path'); 
 
-const { saveDeploymentInfo, getDeployedContractAddress, verify } = require("../../markets")
-
-const poolAddressesProviderAddress = getDeployedContractAddress("poolAddressesProvider")
-
-async function main() {
-    const poolLibraries = await getPoolLibraries()
+async function main({ config, saveDeploymentInfo, getDeployedContractAddress, verify }) {
+    const poolLibraries = await getPoolLibraries(getDeployedContractAddress)
     for (const [key, value] of Object.entries(poolLibraries)) {
         if (value.length == 0) throw new Error(`missing ${key} library address`)
     }
 
+    const poolAddressesProviderAddress = getDeployedContractAddress("poolAddressesProvider")
     const Pool = await ethers.getContractFactory("Pool", {
         libraries: {
             ...poolLibraries,
@@ -19,17 +16,17 @@ async function main() {
     const pool = await Pool.deploy(poolAddressesProviderAddress);
 
     await pool.initialize(poolAddressesProviderAddress)
-    console.log(`pool deployed and initialized to ${pool.address}`)
-    await verify(pool.address, [poolAddressesProviderAddress], {
+    console.log(`pool implementation deployed and initialized to ${pool.target}`)
+    await verify(pool.target, [poolAddressesProviderAddress], {
         ...poolLibraries,
     })
 
     saveDeploymentInfo(path.basename(__filename), {
-        pool: pool.address
+        pool: pool.target
     })
 }
 
-async function getPoolLibraries(){
+async function getPoolLibraries(getDeployedContractAddress){
     return {
         LiquidationLogic: getDeployedContractAddress("liquidationLogic"),
         SupplyLogic: getDeployedContractAddress("supplyLogic"),
@@ -41,7 +38,4 @@ async function getPoolLibraries(){
     };
 };
 
-main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-});
+module.exports = main

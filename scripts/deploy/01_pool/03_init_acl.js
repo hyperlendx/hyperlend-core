@@ -1,13 +1,11 @@
 const { ethers } = require("hardhat");
 const path = require('path');
 
-const { config, saveDeploymentInfo, getDeployedContractAddress, verify } = require("../../markets")
+async function main({ config, saveDeploymentInfo, getDeployedContractAddress, verify }) {
+    const aclAdmin = config.acl.aclAdmin
+    const poolAdmin = config.acl.poolAdmin
+    const emergencyAdmin = config.acl.emergencyAdmin
 
-const aclAdmin = config.acl.aclAdmin
-const poolAdmin = config.acl.poolAdmin
-const emergencyAdmin = config.acl.emergencyAdmin
-
-async function main() {
     const poolAddressesProviderAddress = getDeployedContractAddress("poolAddressesProvider")
     if (poolAddressesProviderAddress.length == 0) throw new Error(`missing poolAddressesProvider address`)
       
@@ -20,13 +18,13 @@ async function main() {
 
     // 2. Deploy ACLManager and setup administrators
     const ACLManager = await ethers.getContractFactory("ACLManager");
-    const aclManager = await ACLManager.deploy(poolAddressesProvider.address)
-    console.log(`aclManager deployed to ${aclManager.address}`)
-    await verify(aclManager.address, [poolAddressesProvider.address])
+    const aclManager = await ACLManager.deploy(poolAddressesProvider.target)
+    console.log(`aclManager deployed to ${aclManager.target}`)
+    await verify(aclManager.target, [poolAddressesProvider.target])
 
     // 3. Setup ACLManager at AddressesProviderInstance
-    await poolAddressesProvider.setACLManager(aclManager.address)
-    console.log(`ACLManager set at poolAddressesProvider to ${aclManager.address}`)
+    await poolAddressesProvider.setACLManager(aclManager.target)
+    console.log(`ACLManager set at poolAddressesProvider to ${aclManager.target}`)
 
     // 4. Add PoolAdmin to ACLManager contract
     await aclManager.addPoolAdmin(poolAdmin)
@@ -37,7 +35,7 @@ async function main() {
     console.log(`EmergencyAdmin set to ${emergencyAdmin}`)
 
     saveDeploymentInfo(path.basename(__filename), {
-        aclManager: aclManager.address
+        aclManager: aclManager.target
     })
 
     const isACLAdmin = await aclManager.hasRole(config.ZERO_BYTES_32, aclAdmin);
@@ -49,7 +47,4 @@ async function main() {
     if (!isEmergencyAdmin) throw "EmergencyAdmin is not setup correctly";
 }
 
-main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-});
+module.exports = main
