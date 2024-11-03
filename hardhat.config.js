@@ -7,17 +7,8 @@ require("hardhat-preprocessor");
 require("solidity-coverage");
 require("@nomicfoundation/hardhat-verify");
 
-// Ensure that we have all the environment variables we need.
-const mnemonic = process.env.MNEMONIC;
-const arbitrumUrl = process.env.ARBITRUM_URL;
-
 const chainIds = {
   hardhat: 1337,
-  mainnet: 1,
-  "polygon-mainnet": 137,
-  rinkeby: 4,
-  arbitrum: 42161,
-  arbitrumTestnet: 421614,
   hyperEvmTestnet: 998
 };
 
@@ -43,16 +34,6 @@ const config = {
         mnemonic,
       },
       chainId: chainIds.hardhat,
-    },
-    arbitrum: {
-        accounts: [process.env.PRIVATE_KEY],
-        chainId: chainIds.arbitrum,
-        url: arbitrumUrl,
-    },
-    arbitrumTestnet: {
-      accounts: [process.env.PRIVATE_KEY],
-      chainId: chainIds.arbitrumTestnet,
-      url: process.env.ARBITRUM_TESTNET_URL,
     },
     hyperEvmTestnet: {
       accounts: [process.env.PRIVATE_KEY],
@@ -92,7 +73,6 @@ const config = {
     // Obtain one at https://etherscan.io/
     apiKey: {
         hyperEvmTestnet: 'empty',
-        arbitrum: process.env.ETHERSCAN_API_KEY
     },
     customChains: [
         {
