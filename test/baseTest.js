@@ -57,6 +57,6 @@ describe("HyperLendCore", function () {
         let aToken = await getATokenInstance(aTokenAddress)
 
         expect(await poolProxy.getReservesList()).to.deep.equal([mockToken.target])
-        expect(await aToken.balanceOf(user.address)).to.equal("1000000")
+        expect(Number(await aToken.balanceOf(user.address))).to.equal(1000000)
     });
 });

@@ -19,6 +19,8 @@ function getRemappings() {
     .map((line) => line.trim().split("="));
 }
 
+const mnemonic = process.env.MNEMONIC;
+
 const config = {
   defaultNetwork: "hardhat",
 //   gasReporter: {

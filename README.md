@@ -23,7 +23,7 @@ Changes:
 
 This project uses HardHat.
 
-Rename `.env.example` to `.env` and add the private key.
+Rename `.env.example` to `.env` and enter required details.
 
 ```
 npm i
