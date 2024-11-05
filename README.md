@@ -2,7 +2,7 @@
 
 ---
 
-### General Info
+### About
 
 HyperLend Core code is a fork of [Aave v3.0.2](https://github.com/aave/aave-v3-core), see [diffs](https://gist.github.com/fbslo/ce4d5e6ece9287ce73296c78f5804b6c) (generated using [this script](https://github.com/hyperlendx/code-diff-check/))
 
