@@ -21,83 +21,90 @@ const deployRateStrategies = require("../../scripts/deploy/01_pool/07_rate_strat
 const initReserves = require("../../scripts/deploy/01_pool/08_init_reserves")
 const configureReserves = require("../../scripts/deploy/01_pool/09_configure_reserves")
 
-let testEnv = {
-    getDeployedContractAddress: getDeployedContractAddress,
-    setDeployedContractAddress: setDeployedContractAddress,
-    saveDeploymentInfo: saveDeploymentInfo,
-    verify: verify
-}
-
-async function setupEnv(){
-    console.log(`--------- test environment setup started ---------`)
-
-    //misc contracts
-    await deployMockToken(testEnv)
-    const mockTokenAddress = getDeployedContractAddress("mockERC20")
-    const mockTokenPrice = "100000000" // 1 USD
-    await deployMockOracleProxy(testEnv, mockTokenAddress, mockTokenPrice)
+async function prepareEnv(){
+    let testEnv = {
+        getDeployedContractAddress: getDeployedContractAddress,
+        setDeployedContractAddress: setDeployedContractAddress,
+        saveDeploymentInfo: saveDeploymentInfo,
+        verify: verify
+    }
     
-    //make deployment config
-    testEnv.config = await makeConfig(testEnv)
-
-    //core contracts
-    await deployMarketRegistry(testEnv)
-    await deployLogicLibraries(testEnv)
-
-    //pool specific contracts
-    await deployAddressesProvider(testEnv)
-    await deployPoolImplementation(testEnv)
-    await deployPoolConfigurator(testEnv)
-    await initAcl(testEnv)
-    await deployOracle(testEnv)
-    await initPool(testEnv)
-    await deployTokensImplementations(testEnv)
-    await deployRateStrategies(testEnv)
-    await initReserves(testEnv)
-    await configureReserves(testEnv)
-
-    console.log(`--------- test environment setup completed ---------`)
-}
-
-async function getContractInstanceById(name){
-    let address = testEnv.getDeployedContractAddress(name)
-    let contractFactoryType = String(name).charAt(0).toUpperCase() + String(name).slice(1);
-    if (!address) return null;
-
-    if (contractFactoryType == "PoolProxy") contractFactoryType = "Pool" //use Pool implementation for proxy address
-
-    let ContractFactory;
-    if (contractFactoryType == "Pool"){
-        ContractFactory = await ethers.getContractFactory(contractFactoryType, {
-            libraries: {
-                LiquidationLogic: getDeployedContractAddress("liquidationLogic"),
-                SupplyLogic: getDeployedContractAddress("supplyLogic"),
-                EModeLogic: getDeployedContractAddress("eModeLogic"),
-                FlashLoanLogic: getDeployedContractAddress("flashLoanLogic"),
-                BorrowLogic: getDeployedContractAddress("borrowLogic"),
-                BridgeLogic: getDeployedContractAddress("bridgeLogic"),
-                PoolLogic: getDeployedContractAddress("poolLogic"),
-            }
-        });
-    } else {
-        ContractFactory = await ethers.getContractFactory(contractFactoryType);
+    async function setupEnv(){
+        console.log(`--------- test environment setup started ---------`)
+    
+        //misc contracts
+        await deployMockToken(testEnv)
+        const mockTokenAddress = getDeployedContractAddress("mockERC20")
+        const mockTokenPrice = "100000000" // 1 USD
+        await deployMockOracleProxy(testEnv, mockTokenAddress, mockTokenPrice)
+        
+        //make deployment config
+        testEnv.config = await makeConfig(testEnv)
+    
+        //core contracts
+        await deployMarketRegistry(testEnv)
+        await deployLogicLibraries(testEnv)
+    
+        //pool specific contracts
+        await deployAddressesProvider(testEnv)
+        await deployPoolImplementation(testEnv)
+        await deployPoolConfigurator(testEnv)
+        await initAcl(testEnv)
+        await deployOracle(testEnv)
+        await initPool(testEnv)
+        await deployTokensImplementations(testEnv)
+        await deployRateStrategies(testEnv)
+        await initReserves(testEnv)
+        await configureReserves(testEnv)
+    
+        console.log(`--------- test environment setup completed ---------`)
+    }
+    
+    async function getContractInstanceById(name){
+        let address = testEnv.getDeployedContractAddress(name)
+        let contractFactoryType = String(name).charAt(0).toUpperCase() + String(name).slice(1);
+        if (!address) return null;
+    
+        if (contractFactoryType == "PoolProxy") contractFactoryType = "Pool" //use Pool implementation for proxy address
+    
+        let ContractFactory;
+        if (contractFactoryType == "Pool"){
+            ContractFactory = await ethers.getContractFactory(contractFactoryType, {
+                libraries: {
+                    LiquidationLogic: getDeployedContractAddress("liquidationLogic"),
+                    SupplyLogic: getDeployedContractAddress("supplyLogic"),
+                    EModeLogic: getDeployedContractAddress("eModeLogic"),
+                    FlashLoanLogic: getDeployedContractAddress("flashLoanLogic"),
+                    BorrowLogic: getDeployedContractAddress("borrowLogic"),
+                    BridgeLogic: getDeployedContractAddress("bridgeLogic"),
+                    PoolLogic: getDeployedContractAddress("poolLogic"),
+                }
+            });
+        } else {
+            ContractFactory = await ethers.getContractFactory(contractFactoryType);
+        }
+    
+        return ContractFactory.attach(address);
+    }
+    
+    async function getATokenInstance(address){
+        let ContractFactory = await ethers.getContractFactory("AToken");
+        return ContractFactory.attach(address);
+    }
+    
+    function getAvailableContracts(){
+        return testEnv.getDeployedContractAddress()
     }
 
-    return ContractFactory.attach(address);
+    return {
+        setupEnv,
+        getContractInstanceById,
+        getAvailableContracts,
+        getATokenInstance
+    }
 }
 
-async function getATokenInstance(address){
-    let ContractFactory = await ethers.getContractFactory("AToken");
-    return ContractFactory.attach(address);
-}
-
-function getAvailableContracts(){
-    return testEnv.getDeployedContractAddress()
-}
 
 module.exports = {
-    setupEnv: setupEnv,
-    getContractInstanceById: getContractInstanceById,
-    getAvailableContracts: getAvailableContracts,
-    getATokenInstance: getATokenInstance
+    prepareEnv
 }
