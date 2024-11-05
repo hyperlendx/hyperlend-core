@@ -18,13 +18,17 @@ contract MockHyperEvmOracleProxy {
         return price; //return mock price
     }
 
-    function latestRoundData() external view returns (
-        uint80 roundId,
-        int256 answer,
-        uint256 startedAt,
-        uint256 updatedAt,
-        uint80 answeredInRound
-    ){
+    function latestRoundData()
+        external
+        view
+        returns (
+            uint80 roundId,
+            int256 answer,
+            uint256 startedAt,
+            uint256 updatedAt,
+            uint80 answeredInRound
+        )
+    {
         roundId = 0;
         answer = int256(price);
         startedAt = block.timestamp;
