@@ -9,6 +9,8 @@ typechain-types
 cache
 artifacts
 
-scripts/markets/deployments/*
-scripts/markets/deployedContracts*.json
+scripts/testnet-deploy/deployments/
+scripts/testnet-deploy/verifications/
 arguments.js
+scripts/mainnet-deploy/deployments/
+scripts/mainnet-deploy/verifications/

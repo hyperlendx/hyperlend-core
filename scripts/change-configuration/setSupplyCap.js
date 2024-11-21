@@ -13,8 +13,8 @@ async function main() {
     });    
     const poolConfigurator = PoolConfigurator.attach(getDeployedContractAddress("poolConfiguratorProxy"));
 
-    const asset = '0x453b63484b11bbF0b61fC7E854f8DAC7bdE7d458'
-    const newCap = '1000' //in full asset amount, e.g. 100 BTC = 100, NOT 100 * 10**decimals
+    const asset = '0xe0bdd7e8b7bf5b15dcDA6103FCbBA82a460ae2C7'
+    const newCap = '6000' //in full asset amount, e.g. 100 BTC = 100, NOT 100 * 10**decimals
 
     await poolConfigurator.setSupplyCap(asset, newCap);
     console.log(`Supply cap set to ${newCap}`)

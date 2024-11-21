@@ -89,12 +89,8 @@ async function main({ config, saveDeploymentInfo, getDeployedContractAddress, se
 
     if (!config.isTestEnv){
         console.log(inputParams)
-        console.log(`seedAmounts`, seedAmounts)
-        let isCorrect = await askForConfirmation()
-        if (!isCorrect){
-            console.log("Aborting...")
-            return;
-        }
+        console.log(`waiting for 10s, cancel if config is not correct`)
+        await new Promise(r => setTimeout(r, 10000));
     }
 
     //approve seed amounts
