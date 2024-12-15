@@ -18,14 +18,14 @@ async function main() {
     const Oracle = await ethers.getContractFactory("Oracle");
     const oracle = Oracle.attach(oracleAddress);
     
-    const assets = ["0xe0bdd7e8b7bf5b15dcDA6103FCbBA82a460ae2C7"]
-    const sources = ["0xc88F13B22443E6dDe99bc702F0130A8edee45174"]
+    const assets = ["0xe2FbC9cB335A65201FcDE55323aE0F4E8A96A616"]
+    const sources = ["0x2bd27d573d12D5843E983F716224C2b8e5aa0C5F"]
 
     for (let i in assets){
         let asset = await ethers.getContractAt("MintableERC20", assets[i])
         let source = await ethers.getContractAt("AggregatorInterface", sources[i]);
 
-        console.log(`Asset: ${await asset.symbol()}, price source: ${await source.description()}`)
+        console.log(`Asset: ${await asset.symbol()}, source price: ${await source.latestAnswer()}`)
     }
 
     let isCorrect = await askForConfirmation()
