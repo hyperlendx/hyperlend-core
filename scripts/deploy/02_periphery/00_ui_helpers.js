@@ -1,10 +1,7 @@
 const { ethers } = require("hardhat");
-const fs = require("fs")
 const path = require('path');
 
-const { config, saveDeploymentInfo, verify } = require("../../markets")
-
-async function main() {
+async function main({ config, saveDeploymentInfo, verify }) {
     const networkBaseTokenPriceInUsdProxyAggregator = config.networkBaseTokenPriceInUsdProxyAggregator
     const marketReferenceCurrencyPriceInUsdProxyAggregator = config.marketReferenceCurrencyPriceInUsdProxyAggregator
 

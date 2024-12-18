@@ -1,9 +1,7 @@
 const { ethers } = require("hardhat");
 const path = require('path');
 
-const { saveDeploymentInfo, verify } = require("../../markets")
-
-async function main() {
+async function main({ saveDeploymentInfo, verify }) {
     const WETH = await ethers.getContractFactory("WETH9");
     const weth = await WETH.deploy();
     console.log(`WETH deployed to ${weth.target}`)

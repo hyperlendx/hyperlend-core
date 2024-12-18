@@ -1,9 +1,7 @@
 const { ethers } = require("hardhat");
 const path = require('path');
 
-const { config, saveDeploymentInfo, getDeployedContractAddress, verify } = require("../../markets")
-
-async function main() {
+async function main({ config, saveDeploymentInfo, getDeployedContractAddress, verify }) {
     const weth = config.WETH || getDeployedContractAddress("weth")
     const pool = getDeployedContractAddress("poolProxy")
 
