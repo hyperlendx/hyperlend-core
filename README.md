@@ -12,6 +12,9 @@ Changes:
 - [StableDebtToken.sol](https://github.com/hyperlendx/hyperlend-core/blob/master/contracts/protocol/tokenization/StableDebtToken.sol#L133) - removed the minting of StableDebt tokens (see [Aave v2/v3 security incident 04/11/2023](https://governance.aave.com/t/aave-v2-v3-security-incident-04-11-2023/15335))
 - [FlashLoanLogic.sol](https://github.com/hyperlendx/hyperlend-core/blob/d6bd9cb6ef68a3fb5b63e6737c888f0e3470a444/contracts/protocol/libraries/logic/FlashLoanLogic.sol#L151) - read `maxStableRateBorrowSizePercent`, `reservesCount` and `userEModeCategory` from `Pool` instead of params - [commit](https://github.com/hyperlendx/hyperlend-core/commit/d6bd9cb6ef68a3fb5b63e6737c888f0e3470a444)
 - [PriceOracleSentinel.sol](https://github.com/hyperlendx/hyperlend-core/blob/master/contracts/protocol/configuration/PriceOracleSentinel.sol#L72), updated to use `startAt` instead of `lastUpdateTimestamp` - [commit](https://github.com/hyperlendx/hyperlend-core/commit/d6bd9cb6ef68a3fb5b63e6737c888f0e3470a444)
+- Wrap Permit in try/catch to prevent frontrunning grifting - [commit](https://github.com/hyperlendx/hyperlend-core/commit/9034facb1f04498b3774a19d967797a7f579d558), [commit](https://github.com/hyperlendx/hyperlend-core/commit/00285b664a7ffbbab720f79b762c84c9a727007a)
+- State synchronization after reserve factor and interest rate strategyes updates - [commit](https://github.com/hyperlendx/hyperlend-core/commit/00285b664a7ffbbab720f79b762c84c9a727007a)
+- Fix removing an asset from Efficiency mode bug - [commit](https://github.com/hyperlendx/hyperlend-core/commit/5cc5efe1c91230dd2aaef1b5a330b8bef63fea83)
 
 ---
 
