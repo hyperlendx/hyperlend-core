@@ -249,11 +249,16 @@ contract PoolConfigurator is VersionedInitializable, IPoolConfigurator {
             newReserveFactor <= PercentageMath.PERCENTAGE_FACTOR,
             Errors.INVALID_RESERVE_FACTOR
         );
+
+        _pool.syncIndexesState(asset);
+
         DataTypes.ReserveConfigurationMap memory currentConfig = _pool.getConfiguration(asset);
         uint256 oldReserveFactor = currentConfig.getReserveFactor();
         currentConfig.setReserveFactor(newReserveFactor);
         _pool.setConfiguration(asset, currentConfig);
         emit ReserveFactorChanged(asset, oldReserveFactor, newReserveFactor);
+
+        _pool.syncRatesState(asset);
     }
 
     /// @inheritdoc IPoolConfigurator
@@ -436,6 +441,8 @@ contract PoolConfigurator is VersionedInitializable, IPoolConfigurator {
         address asset,
         address newRateStrategyAddress
     ) external override onlyRiskOrPoolAdmins {
+        _pool.syncIndexesState(asset);
+
         DataTypes.ReserveData memory reserve = _pool.getReserveData(asset);
         address oldRateStrategyAddress = reserve.interestRateStrategyAddress;
         _pool.setReserveInterestRateStrategyAddress(asset, newRateStrategyAddress);
@@ -444,6 +451,8 @@ contract PoolConfigurator is VersionedInitializable, IPoolConfigurator {
             oldRateStrategyAddress,
             newRateStrategyAddress
         );
+
+        _pool.syncRatesState(asset);
     }
 
     /// @inheritdoc IPoolConfigurator

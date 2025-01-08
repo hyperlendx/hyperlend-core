@@ -744,6 +744,22 @@ interface IPool {
     function rescueTokens(address token, address to, uint256 amount) external;
 
     /**
+     * @notice Accumulates interest to all indexes of the reserve
+     * @dev Only callable by the PoolConfigurator contract
+     * @dev To be used when required by the configurator, for example when updating interest rates strategy data
+     * @param asset The address of the underlying asset of the reserve
+     */
+    function syncIndexesState(address asset) external;
+
+   /**
+     * @notice Updates interest rates on the reserve data
+     * @dev Only callable by the PoolConfigurator contract
+     * @dev To be used when required by the configurator, for example when updating interest rates strategy data
+     * @param asset The address of the underlying asset of the reserve
+     */
+    function syncRatesState(address asset) external;
+
+    /**
      * @notice Supplies an `amount` of underlying asset into the reserve, receiving in return overlying aTokens.
      * - E.g. User supplies 100 USDC and gets in return 100 aUSDC
      * @dev Deprecated: Use the `supply` function instead

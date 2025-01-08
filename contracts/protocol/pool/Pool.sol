@@ -176,7 +176,7 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
         bytes32 permitR,
         bytes32 permitS
     ) public virtual override {
-        IERC20WithPermit(asset).permit(
+        try IERC20WithPermit(asset).permit(
             msg.sender,
             address(this),
             amount,
@@ -184,7 +184,7 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
             permitV,
             permitR,
             permitS
-        );
+        ) { } catch { }
         SupplyLogic.executeSupply(
             _reserves,
             _reservesList,
@@ -285,7 +285,7 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
         bytes32 permitS
     ) public virtual override returns (uint256) {
         {
-            IERC20WithPermit(asset).permit(
+            try IERC20WithPermit(asset).permit(
                 msg.sender,
                 address(this),
                 amount,
@@ -293,7 +293,7 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
                 permitV,
                 permitR,
                 permitS
-            );
+            ) { } catch { }
         }
         {
             DataTypes.ExecuteRepayParams memory params = DataTypes.ExecuteRepayParams({
@@ -729,6 +729,22 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
         uint256 amount
     ) external virtual override onlyPoolAdmin {
         PoolLogic.executeRescueTokens(token, to, amount);
+    }
+
+    /// @inheritdoc IPool
+    function syncIndexesState(address asset) external virtual override onlyPoolConfigurator {
+        DataTypes.ReserveData storage reserve = _reserves[asset];
+        DataTypes.ReserveCache memory reserveCache = reserve.cache();
+
+        reserve.updateState(reserveCache);
+    }
+
+    /// @inheritdoc IPool
+    function syncRatesState(address asset) external onlyPoolConfigurator {
+        DataTypes.ReserveData storage reserve = _reserves[asset];
+        DataTypes.ReserveCache memory reserveCache = reserve.cache();
+
+        ReserveLogic.updateInterestRates(reserve, reserveCache, asset, 0, 0);
     }
 
     /// @inheritdoc IPool
