@@ -143,7 +143,7 @@ library LiquidationLogic {
             vars.collateralPriceSource,
             vars.debtPriceSource,
             vars.liquidationBonus
-        ) = _getConfigurationData(eModeCategories, collateralReserve, params);
+        ) = _getConfigurationData(eModeCategories, collateralReserve, params, debtReserve);
 
         vars.userCollateralBalance = vars.collateralAToken.balanceOf(params.user);
 
@@ -403,6 +403,7 @@ library LiquidationLogic {
      * @param eModeCategories The configuration of all the efficiency mode categories
      * @param collateralReserve The data of the collateral reserve
      * @param params The additional parameters needed to execute the liquidation function
+     * @param debtReserve The data of the debt reserve
      * @return The collateral aToken
      * @return The address to use as price source for the collateral
      * @return The address to use as price source for the debt
@@ -411,7 +412,8 @@ library LiquidationLogic {
     function _getConfigurationData(
         mapping(uint8 => DataTypes.EModeCategory) storage eModeCategories,
         DataTypes.ReserveData storage collateralReserve,
-        DataTypes.ExecuteLiquidationCallParams memory params
+        DataTypes.ExecuteLiquidationCallParams memory params,
+        DataTypes.ReserveData storage debtReserve
     ) internal view returns (IAToken, address, address, uint256) {
         IAToken collateralAToken = IAToken(collateralReserve.aTokenAddress);
         uint256 liquidationBonus = collateralReserve.configuration.getLiquidationBonus();
@@ -435,9 +437,15 @@ library LiquidationLogic {
                 }
             }
 
-            // when in eMode, debt will always be in the same eMode category, can skip matching category check
-            if (eModePriceSource != address(0)) {
-                debtPriceSource = eModePriceSource;
+            if (
+                EModeLogic.isInEModeCategory(
+                    params.userEModeCategory,
+                    debtReserve.configuration.getEModeCategory()
+                )
+            ) {
+                if (eModePriceSource != address(0)) {
+                    debtPriceSource = eModePriceSource;
+                }
             }
         }
 
