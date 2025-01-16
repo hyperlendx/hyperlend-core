@@ -18,6 +18,11 @@ async function main({ config, saveDeploymentInfo, getDeployedContractAddress, se
     }); 
     const pool = Pool.attach(poolAddress)
 
+    if (Object.key(config.market.ReservesConfig).length == 0){
+        console.log(`no reserves to initialize, skipping...`)
+        return;
+    }
+
     // Deploy Reserves
     let initChunks = 4
     let initInputParams = []
