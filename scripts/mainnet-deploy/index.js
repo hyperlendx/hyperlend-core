@@ -46,6 +46,8 @@ async function deployMarket(){
     await initPool(env)
     await deployTokensImplementations(env)
     await deployRateStrategies(env)
+    
+    //reserve specific
     await initReserves(env)
     await configureReserves(env)
 

@@ -5,7 +5,7 @@ const verificationScript = require("../utils/verify")
 
 const deployedContracts = {};
 
-const RUN_VERIFICATION_LIVE = false;
+const RUN_VERIFICATION_LIVE = true;
 
 async function makeConfig(){
     let config = {
@@ -32,10 +32,10 @@ async function makeConfig(){
         },
         oracle: {
             assets: [
-                "0xADcb2f358Eae6492F61A5F87eb8893d09391d160"
+                // "0xADcb2f358Eae6492F61A5F87eb8893d09391d160"
             ],
             sources: [
-                "0x062eAE387007b15723af7b876A88d77dFF96EE63"
+                // "0x062eAE387007b15723af7b876A88d77dFF96EE63"
             ],
             fallbackOracleAddress: "0x0000000000000000000000000000000000000000",
             baseCurrencyUnit: "100000000"
@@ -78,30 +78,30 @@ async function makeConfig(){
             SymbolPrefix: "HyperEvm",
             ProviderId: "1",
             ReservesConfig: {
-                WETH: {
-                    strategy: {
-                        name: "rateStrategyVolatileOne"
-                    },
-                    baseLTVAsCollateral: "7500",
-                    liquidationThreshold: "8000",
-                    liquidationBonus: "11000",
-                    borrowingEnabled: true,
-                    stableBorrowRateEnabled: false,
-                    flashLoanEnabled: true,
-                    reserveDecimals: "18",
-                    aTokenImpl: "AToken",
-                    reserveFactor: "2000",
-                    supplyCap: "1000",
-                    borrowCap: "0",
-                    debtCeiling: "0",
-                    borrowableIsolation: false,
-                    seedAmount: "100000000000000000" //0.1
-                }
+                // WETH: {
+                //     strategy: {
+                //         name: "rateStrategyVolatileOne"
+                //     },
+                //     baseLTVAsCollateral: "7500",
+                //     liquidationThreshold: "8000",
+                //     liquidationBonus: "11000",
+                //     borrowingEnabled: true,
+                //     stableBorrowRateEnabled: false,
+                //     flashLoanEnabled: true,
+                //     reserveDecimals: "18",
+                //     aTokenImpl: "AToken",
+                //     reserveFactor: "2000",
+                //     supplyCap: "1000",
+                //     borrowCap: "0",
+                //     debtCeiling: "0",
+                //     borrowableIsolation: false,
+                //     seedAmount: "100000000000000000" //0.1
+                // }
             }
         },
         strategyAddresses: { },
-        _networkBaseTokenPriceInUsdProxyAggregator: "0x062eAE387007b15723af7b876A88d77dFF96EE63", //ETH / USD chainlink
-        _marketReferenceCurrencyPriceInUsdProxyAggregator: "0x062eAE387007b15723af7b876A88d77dFF96EE63" //ETH/USD
+        _networkBaseTokenPriceInUsdProxyAggregator: "0xC3346631E0A9720582fB9CAbdBEA22BC2F57741b", //HYPE / USD redstone
+        _marketReferenceCurrencyPriceInUsdProxyAggregator: "0xC3346631E0A9720582fB9CAbdBEA22BC2F57741b" //HYPE/USD
     }
 
     return config;

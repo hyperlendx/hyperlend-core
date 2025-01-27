@@ -69,9 +69,9 @@ const config = {
     },
     sourcify: {
         enabled: true,
-        apiUrl: "https://sourcify.parsec.finance/verify",
-        browserUrl: "https://testnet.purrsec.com/",
-    }
+        apiUrl: "https://sourcify.parsec.finance",
+        browserUrl: "https://sourcify.parsec.finance/",
+    },
 };
 
 module.exports = config
