@@ -5,6 +5,7 @@ import {PoolConfigurator} from '../protocol/pool/PoolConfigurator.sol';
 import {Ownable} from '../dependencies/openzeppelin/contracts/Ownable.sol';
 import {IERC20} from '../dependencies/openzeppelin/contracts/IERC20.sol';
 import {IPool} from '../interfaces/IPool.sol';
+import {SafeERC20} from '../dependencies/openzeppelin/contracts/SafeERC20.sol';
 
 /**
  * @title ReservesSetupHelper
@@ -13,6 +14,8 @@ import {IPool} from '../interfaces/IPool.sol';
  * @dev The ReservesSetupHelper is an Ownable contract, so only the deployer or future owners can call this contract.
  */
 contract ReservesSetupHelper is Ownable {
+    using SafeERC20 for IERC20;
+
     struct ConfigureReserveInput {
         address asset;
         uint256 baseLTV;
@@ -76,8 +79,8 @@ contract ReservesSetupHelper is Ownable {
         address seedAmountsHolder
     ) internal {
         require(amount >= 10000, 'seed amount too low');
-        IERC20(token).transferFrom(owner(), address(this), amount);
-        IERC20(token).approve(pool, amount);
+        IERC20(token).safeTransferFrom(owner(), address(this), amount);
+        IERC20(token).safeIncreaseAllowance(pool, amount);
         IPool(pool).supply(token, amount, seedAmountsHolder, 0);
     }
 }
