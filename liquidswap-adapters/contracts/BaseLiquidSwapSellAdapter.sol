@@ -30,7 +30,7 @@ abstract contract BaseLiquidSwapSellAdapter is BaseLiquidSwapAdapter {
 
   /**
    * @dev Swaps a token for another using LiquidSwap
-   * @param liquidswapData Encoded data containing buyCalldata and multiHopRouter address for the MultiHopRouter
+   * @param liquidswapData Encoded data containing sellCalldata and multiHopRouter address for the MultiHopRouter
    * @param assetToSwapFrom Address of the asset to be swapped from
    * @param assetToSwapTo Address of the asset to be swapped to
    * @param amountToSwap Amount to be swapped
@@ -44,7 +44,7 @@ abstract contract BaseLiquidSwapSellAdapter is BaseLiquidSwapAdapter {
     uint256 amountToSwap,
     uint256 minAmountToReceive
   ) internal returns (uint256 amountReceived) {
-    (bytes memory buyCalldata, address multiHopRouter) = abi.decode(liquidswapData, (bytes, address));
+    (bytes memory sellCalldata, address multiHopRouter) = abi.decode(liquidswapData, (bytes, address));
 
     require(multiHopRouter == address(MULTIHOP_ROUTER), 'INVALID_MULTIHOP_ROUTER');
 
@@ -56,7 +56,7 @@ abstract contract BaseLiquidSwapSellAdapter is BaseLiquidSwapAdapter {
     assetToSwapFrom.safeApprove(multiHopRouter, amountToSwap);
 
     // Execute the multi-hop swap
-    (bool success, ) = multiHopRouter.call(buyCalldata);
+    (bool success, ) = multiHopRouter.call(sellCalldata);
     if (!success) {
       // Copy revert reason from call
       assembly {

@@ -102,6 +102,7 @@ contract LiquidSwapRepayAdapter is BaseLiquidSwapBuyAdapter, ReentrancyGuard {
     bytes calldata liquidswapData,
     PermitSignature calldata permitSignature
   ) external nonReentrant {
+
     debtRepayAmount = getDebtRepayAmount(
       debtAsset,
       debtRateMode,
@@ -112,6 +113,7 @@ contract LiquidSwapRepayAdapter is BaseLiquidSwapBuyAdapter, ReentrancyGuard {
 
     // Pull aTokens from user
     _pullATokenAndWithdraw(address(collateralAsset), msg.sender, collateralAmount, permitSignature);
+
     //buy debt asset using collateral asset
     (uint256 amountSold, uint256 amountBought) = _buyOnLiquidSwap(
       liquidswapData,
@@ -125,11 +127,11 @@ contract LiquidSwapRepayAdapter is BaseLiquidSwapBuyAdapter, ReentrancyGuard {
 
     //deposit collateral back in the pool, if left after the swap(buy)
     if (collateralBalanceLeft > 0) {
+
       IERC20(collateralAsset).safeApprove(address(POOL), collateralBalanceLeft);
       POOL.deposit(address(collateralAsset), collateralBalanceLeft, msg.sender, 0);
       IERC20(collateralAsset).safeApprove(address(POOL), 0);
     }
-
     // Repay debt. Approves 0 first to comply with tokens that implement the anti frontrunning approval fix
     IERC20(debtAsset).safeApprove(address(POOL), debtRepayAmount);
     POOL.repay(address(debtAsset), debtRepayAmount, debtRateMode, msg.sender);
@@ -219,11 +221,14 @@ contract LiquidSwapRepayAdapter is BaseLiquidSwapBuyAdapter, ReentrancyGuard {
     uint256 debtRepayAmount,
     address initiator
   ) private view returns (uint256) {
+
     require(
       DataTypes.InterestRateMode(rateMode) == DataTypes.InterestRateMode.VARIABLE,
       'INVALID_RATE_MODE'
     );
-    address variableDebtTokenAddress = POOL.getReserveVariableDebtToken(address(debtAsset));
+
+
+    address variableDebtTokenAddress = POOL.getReserveData(address(debtAsset)).variableDebtTokenAddress;
 
     uint256 currentDebt = IERC20(variableDebtTokenAddress).balanceOf(initiator);
 

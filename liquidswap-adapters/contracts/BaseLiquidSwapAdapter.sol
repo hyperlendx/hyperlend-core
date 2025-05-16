@@ -15,7 +15,6 @@ import {Ownable} from 'hyperlend-core/src/contracts/dependencies/openzeppelin/co
 /**
  * @title BaseLiquidSwapAdapter
  * @notice Utility functions for adapters using LiquidSwap
- * @author Kristjan Bajuk
  */
 abstract contract BaseLiquidSwapAdapter is FlashLoanSimpleReceiverBase, Ownable {
   using SafeMath for uint256;
@@ -81,7 +80,7 @@ abstract contract BaseLiquidSwapAdapter is FlashLoanSimpleReceiverBase, Ownable 
     uint256 amount,
     PermitSignature memory permitSignature
   ) internal {
-    IERC20WithPermit reserveAToken = IERC20WithPermit(POOL.getReserveAToken(reserve));
+    IERC20WithPermit reserveAToken = IERC20WithPermit(POOL.getReserveData(reserve).aTokenAddress);
     _pullATokenAndWithdraw(reserve, reserveAToken, user, amount, permitSignature);
   }
 

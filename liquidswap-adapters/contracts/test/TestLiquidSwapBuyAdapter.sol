@@ -9,6 +9,8 @@ import {ILiquidSwapMultiHopRouter} from '../interfaces/ILiquidSwapMultiHopRouter
 import {BaseLiquidSwapBuyAdapter} from '../BaseLiquidSwapBuyAdapter.sol';
 import {ReentrancyGuard} from 'hyperlend-core/src/contracts/dependencies/openzeppelin/ReentrancyGuard.sol';
 
+import {console} from "hardhat/console.sol";
+
 /**
  * @title TestLiquidSwapBuyAdapter
  * @notice Test contract that implements BaseLiquidSwapBuyAdapter and exposes the _buyOnLiquidSwap function
@@ -53,7 +55,9 @@ contract TestLiquidSwapBuyAdapter is BaseLiquidSwapBuyAdapter, ReentrancyGuard {
       maxAmountToSwap,
       amountToReceive
     );
-
+    console.log("amountSold %s", amountSold);
+    console.log("amountBought %s", amountBought);
+    console.log("msg.sender %s", msg.sender);
     // Transfer the bought assets back to the caller
     assetToSwapTo.safeTransfer(msg.sender, amountBought);
 

@@ -21,7 +21,6 @@ module.exports = {
     hardhat: {
       forking: {
         url: "https://rpc.hyperliquid.xyz/evm",
-        blockNumber: 3692395,
       },
       chainId: 999, // Match HyperEVM's chainId
     },
