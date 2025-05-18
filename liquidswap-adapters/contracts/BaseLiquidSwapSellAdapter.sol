@@ -12,7 +12,6 @@ import {BaseLiquidSwapAdapter} from './BaseLiquidSwapAdapter.sol';
 /**
  * @title BaseLiquidSwapSellAdapter.sol
  * @notice Implements the logic for selling tokens on LiquidSwap
- * @author Jason Raymond Bell
  */
 abstract contract BaseLiquidSwapSellAdapter is BaseLiquidSwapAdapter {
   using PercentageMath for uint256;

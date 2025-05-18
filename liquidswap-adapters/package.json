@@ -3,21 +3,9 @@
   "packageManager": "yarn@4.5.1",
   "scripts": {
     "compile": "hardhat compile",
-    "test": "hardhat test",
-    "deploy": "hardhat run scripts/deploy/base-liquid-swap-buy-adapter.js",
-    "deploy:testnet": "hardhat run scripts/deploy/base-liquid-swap-buy-adapter.js --network hyperEVMTestnet",
-    "deploy:mainnet": "hardhat run scripts/deploy/base-liquid-swap-buy-adapter.js --network hyperEVM",
-    "deploy:simplified": "hardhat run scripts/deploy-simplified.js",
-    "deploy:simplified:testnet": "hardhat run scripts/deploy-simplified.js --network hyperEVMTestnet",
-    "deploy:factory": "hardhat run scripts/deploy-factory.js",
-    "deploy:factory:testnet": "hardhat run scripts/deploy-factory.js --network hyperEVMTestnet",
-    "deploy:with-config": "hardhat run scripts/deploy-with-config.js",
-    "deploy:all": "hardhat run scripts/deploy-all-adapters.js",
-    "deploy:repay": "hardhat run scripts/deploy-liquidswap-repay-adapter.js",
-    "deploy:with-config:testnet": "hardhat run scripts/deploy-with-config.js --network hyperEVMTestnet",
-    "deploy:with-config:mainnet": "hardhat run scripts/deploy-with-config.js --network hyperEVM",
-    "deploy:all:testnet": "hardhat run scripts/deploy-all-adapters.js --network hyperEVMTestnet",
-    "deploy:all:mainnet": "hardhat run scripts/deploy-all-adapters.js --network hyperEVM",
+    "test": "hardhat test --network hyperEVM",
+    "deploy": "hardhat run scripts/deploy/liquid-swap-repay-adapter.js --network hyperEVM",
+    "call-repay-adapter": "hardhat run scripts/call-repay-adapter.js --network hyperEVM",
     "verify": "hardhat verify",
     "clean": "hardhat clean"
   },
@@ -25,7 +13,8 @@
     "axios": "^1.9.0",
     "dotenv": "^16.4.5",
     "hardhat": "^2.24.0",
-    "hyperlend-core": "file:../"
+    "hyperlend-core": "file:../",
+    "viem": "^2.29.4"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.8",

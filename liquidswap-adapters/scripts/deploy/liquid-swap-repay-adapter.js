@@ -46,6 +46,10 @@ async function main() {
     poolAddressesProvider,
     multiHopRouter,
     ownerAddress,
+    {
+      maxFeePerGas: hre.ethers.parseUnits("8", "gwei"),
+      maxPriorityFeePerGas: hre.ethers.parseUnits("5", "gwei"),
+    }
   );
 
   console.log(`Deployment transaction hash: ${adapter.deploymentTransaction().hash}`);

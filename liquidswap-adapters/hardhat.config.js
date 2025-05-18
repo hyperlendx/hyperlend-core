@@ -9,7 +9,7 @@ module.exports = {
         enabled: true,
         runs: 200,
       },
-      viaIR: true,
+      viaIR: false,
     },
   },
   sourcify: {
@@ -21,6 +21,7 @@ module.exports = {
     hardhat: {
       forking: {
         url: "https://rpc.hyperliquid.xyz/evm",
+        blockNumber: 3997005,
       },
       chainId: 999, // Match HyperEVM's chainId
     },

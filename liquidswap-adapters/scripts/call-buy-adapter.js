@@ -1,7 +1,7 @@
 const { ethers } = require("hardhat");
 require("dotenv").config();
 const { getRoute } = require("../utils/liquidSwapRouteAPI");
-const {multiHopAbi, adapterABI, erc20ABI} = require("./abis");
+const {multiHopAbi, erc20ABI, buyAdapterABI} = require("./abis/index");
 
 const { processRouteData, encodeRouterCall, encodeLiquidswapData } = require("../utils/routeProcessor");
 
@@ -26,13 +26,12 @@ async function main() {
   // Connect to the adapter contract
   const buyAdapter = new ethers.Contract(
     BASE_LIQUIDSWAP_BUY_ADAPTER_ADDRESS,
-    adapterABI,
+    buyAdapterABI,
     signer
   );
 
-
   const fromTokenAddress = "0x5555555555555555555555555555555555555555"; //wHYPE (asset to spend)
-  const toTokenAddress = "0x94e8396e0869c9F2200760aF0621aFd240E1CF38"; // PURR (asset to buy)
+  const toTokenAddress = "0x94e8396e0869c9F2200760aF0621aFd240E1CF38"; // wstHYPE (asset to buy)
   const targetAmountToBuy = "0.01"; // Amount of PURR we want to buyw
 
   // For buy operations, we need to estimate how much of the fromToken we need to spend

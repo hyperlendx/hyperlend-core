@@ -2,6 +2,25 @@
 const {ethers} = require("hardhat");
 
 
+/**
+ * Creates an EIP-2612 permit signature for token approval
+ *
+ * This function generates a permit signature that allows a spender (adapter contract)
+ * to spend a specific amount of tokens on behalf of the signer without requiring a separate
+ * approval transaction. It follows the EIP-2612 standard for permit signatures.
+ *
+ * @param {ethers.Signer} signer - The ethers signer object (wallet) that will sign the permit
+ * @param {string} aTokenAddress - The address of the token contract to be approved
+ * @param {string|ethers.BigNumber} debtRepayAmount - The amount of tokens to approve for spending
+ * @param {string} REPAY_ADAPTER_ADDRESS - The address of the adapter contract that will be the spender
+ * @returns {Object} permitSignature - An object containing the signature components
+ * @returns {string|ethers.BigNumber} permitSignature.amount - The approved token amount
+ * @returns {number} permitSignature.deadline - The timestamp when the permit expires (1 hour from now)
+ * @returns {number} permitSignature.v - The recovery parameter of the signature
+ * @returns {string} permitSignature.r - The r component of the signature
+ * @returns {string} permitSignature.s - The s component of the signature
+ * @throws {Error} If there's an issue with retrieving token information or signing the permit
+ */
 async function permitSignature(signer, aTokenAddress, debtRepayAmount, REPAY_ADAPTER_ADDRESS) {
   let permitSignature;
   // Manual EIP-2612 permit signing

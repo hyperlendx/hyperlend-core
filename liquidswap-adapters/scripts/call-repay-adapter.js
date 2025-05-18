@@ -2,21 +2,8 @@ const { ethers } = require("hardhat");
 require("dotenv").config();
 const { permitSignature } = require("../utils/permitSignature");
 const { getRoute } = require("../utils/liquidSwapRouteAPI");
-const multiHopAbi = require("../artifacts/contracts/interfaces/ILiquidSwapMultiHopRouter.sol/ILiquidSwapMultiHopRouter.json").abi;
 const { processRouteData, encodeRouterCall, encodeLiquidswapData } = require("../utils/routeProcessor");
-
-// ABI for the LiquidSwapRepayAdapter contract (only the function we need)
-const adapterABI = [
-  "function swapAndRepay(address collateralAsset, address debtAsset, uint256 collateralAmount, uint256 debtRepayAmount, uint256 debtRateMode, uint256 buyAllBalanceOffset, bytes calldata liquidswapData, tuple(uint256 amount, uint256 deadline, uint8 v, bytes32 r, bytes32 s) calldata permitSignature) external",
-];
-
-// Token ABI for approval
-const erc20ABI = [
-  "function approve(address spender, uint256 amount) external returns (bool)",
-  "function balanceOf(address account) external view returns (uint256)",
-  "function allowance(address owner, address spender) external view returns (uint256)",
-];
-
+const { erc20ABI, multiHopAbi, repayAdapterABI } = require("./abis/index");
 
 // Define addresses
 const MULTIHOP_ROUTER_ADDRESS = process.env.MULTIHOP_ROUTER_ADDRESS;
@@ -40,7 +27,7 @@ async function main() {
   // Connect to the adapter contract
   const repayAdapter = new ethers.Contract(
     REPAY_ADAPTER_ADDRESS,
-    adapterABI,
+    repayAdapterABI,
     signer
   );
 
@@ -92,14 +79,14 @@ async function main() {
       hopSwaps,
       multiHopAbi
     );
-
+    console.log("buyCalldata", buyCalldata);
     // Encode the liquidswap data
     const liquidswapData = encodeLiquidswapData(buyCalldata, MULTIHOP_ROUTER_ADDRESS);
-
+    console.log("liquidswapData", liquidswapData);
     const permitSig = await permitSignature(
       signer,
       aTokenAddress,
-      maxAmountCollateralToSpend,
+      maxCollateralToSpendWithSlippage,
       REPAY_ADAPTER_ADDRESS,
     );
 
@@ -126,6 +113,8 @@ async function main() {
       permitSig,
       {
         gasLimit: 2000000,
+        maxFeePerGas: ethers.parseUnits("10", "gwei"),
+        maxPriorityFeePerGas: ethers.parseUnits("5", "gwei"),
       }
     );
     console.log("Transaction submitted...");

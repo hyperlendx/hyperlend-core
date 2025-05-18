@@ -15,7 +15,6 @@ import {ReentrancyGuard} from 'hyperlend-core/src/contracts/dependencies/openzep
 /**
  * @title LiquidSwapRepayAdapter.sol
  * @notice LiquidSwap Adapter to perform a repay of a debt with collateral.
- * @author Aave
  **/
 contract LiquidSwapRepayAdapter is BaseLiquidSwapBuyAdapter, ReentrancyGuard {
   using SafeMath for uint256;
@@ -54,9 +53,9 @@ contract LiquidSwapRepayAdapter is BaseLiquidSwapBuyAdapter, ReentrancyGuard {
    *   uint256 rateMode Rate modes of the debt to be repaid
    *   uint256 deadline Deadline for the permit signature
    *   uint256 debtRateMode Rate mode of the debt to be repaid
-   *   bytes paraswapData Paraswap Data
-   *                    * bytes buyCallData Call data for augustus
-   *                    * address augustus Address of Augustus Swapper
+   *   bytes liquidSwapData LiquidSwap Data
+   *                    * bytes buyCallData Call data for multi-hop router
+   *                    * address multiHopRouter Address of multiHopRouter router
    *   PermitSignature permitParams Struct containing the permit signatures, set to all zeroes if not used
    */
   function executeOperation(
