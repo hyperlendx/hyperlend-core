@@ -1,0 +1,202 @@
+const { ethers } = require("hardhat");
+require("dotenv").config();
+const { getRoute } = require("../utils/liquidSwapRouteAPI");
+const {multiHopAbi, erc20ABI, buyAdapterABI} = require("./abis/index");
+
+const { processRouteData, encodeRouterCall, encodeLiquidswapData } = require("../utils/routeProcessor");
+
+const MULTIHOP_ROUTER_ADDRESS = process.env.MULTIHOP_ROUTER_ADDRESS;
+const BASE_LIQUIDSWAP_BUY_ADAPTER_ADDRESS =
+  process.env.BASE_LIQUIDSWAP_BUY_ADAPTER_ADDRESS;
+
+async function main() {
+  // Connect to the network
+  const privateKey = process.env.PRIVATE_KEY;
+  if (!privateKey) {
+    console.error("Please set PRIVATE_KEY in your environment variables");
+    process.exit(1);
+  }
+
+// Create a wallet/signer instance from the private key
+  const signer = new ethers.Wallet(privateKey, ethers.provider);
+  console.log(`Using account: ${signer.address}`);
+  console.log(`BASE_LIQUIDSWAP_BUY_ADAPTER_ADDRESS: ${BASE_LIQUIDSWAP_BUY_ADAPTER_ADDRESS}`);
+  console.log(`MULTIHOP_ROUTER_ADDRESS: ${MULTIHOP_ROUTER_ADDRESS}`);
+
+  // Connect to the adapter contract
+  const buyAdapter = new ethers.Contract(
+    BASE_LIQUIDSWAP_BUY_ADAPTER_ADDRESS,
+    buyAdapterABI,
+    signer
+  );
+
+  const fromTokenAddress = "0x5555555555555555555555555555555555555555"; //wHYPE (asset to spend)
+  const toTokenAddress = "0x94e8396e0869c9F2200760aF0621aFd240E1CF38"; // wstHYPE (asset to buy)
+  const targetAmountToBuy = "0.01"; // Amount of PURR we want to buyw
+
+  // For buy operations, we need to estimate how much of the fromToken we need to spend
+  // to get our target amount of toToken. For simplicity, we'll use the API with the target amount
+  // and then adjust our parameters accordingly.
+  console.log("Getting route for buying", targetAmountToBuy, "of", toTokenAddress, "by spending", fromTokenAddress);
+  const routeData = await getRoute(fromTokenAddress, toTokenAddress, targetAmountToBuy);
+
+  if (!routeData || !routeData.data || !routeData.data.bestPath) {
+    throw new Error("Invalid route data returned from API");
+  }
+
+  try {
+    // Process the route data using our utility
+    const { tokens, hopSwaps, tokenInfo } = processRouteData(routeData, fromTokenAddress, toTokenAddress);
+
+    // For a buy operation:
+    // 1. The amount we want to receive is our target amount
+    // 2. We need to calculate the maximum amount we're willing to spend (with some buffer)
+
+    console.log("Calculating buy parameters...");
+
+    // Parse the target amount we want to buy
+    let amountToReceive;
+    try {
+      amountToReceive = ethers.parseUnits(
+        targetAmountToBuy,
+        tokenInfo.tokenOut.decimals
+      );
+      console.log("Target amount to receive:", amountToReceive.toString());
+    } catch (error) {
+      console.error("Error parsing target amount:", error.message);
+      // Default to a small amount with 18 decimals
+      amountToReceive = ethers.parseUnits("0.01", 18);
+      console.log("Using default target amount:", amountToReceive.toString());
+    }
+
+    // In a buy operation, we need to estimate how much of the source token we need to spend
+    // The API gives us the expected output for a given input, but we need to reverse this
+    // We'll use the original amountIn from our API request as a starting point
+    let estimatedInput;
+    try {
+      estimatedInput = ethers.parseUnits(
+        tokenInfo.amountIn,
+        tokenInfo.tokenIn.decimals
+      );
+      console.log("Estimated input amount:", estimatedInput.toString());
+    } catch (error) {
+      console.error("Error parsing estimated input:", error.message);
+      // Default to a small amount with 18 decimals
+      estimatedInput = ethers.parseUnits("0.01", 18);
+      console.log("Using default estimated input:", estimatedInput.toString());
+    }
+
+    // Add a 20% buffer to the estimated input as our max amount to spend
+    const maxAmountToSpend = (estimatedInput * 102n) / 100n;
+    console.log("Max amount to spend (with buffer):", maxAmountToSpend.toString());
+
+    // Encode the router call and liquidswap data using our utility functions
+    const buyCalldata = encodeRouterCall(
+      tokens,
+      maxAmountToSpend,
+      amountToReceive,
+      hopSwaps,
+      multiHopAbi
+    );
+
+    // Encode the liquidswap data
+    const liquidswapData = encodeLiquidswapData(buyCalldata, MULTIHOP_ROUTER_ADDRESS);
+
+    // Approve first - we need to approve our max amount to spend
+    const tokenContract = new ethers.Contract(
+      tokenInfo.tokenIn.address,
+      erc20ABI,
+      signer
+    );
+    console.log("approving...");
+    const approveTx = await tokenContract.approve(
+      BASE_LIQUIDSWAP_BUY_ADAPTER_ADDRESS,
+      maxAmountToSpend
+    );
+    await approveTx.wait();
+    console.log("approved!");
+    // Execute the swap with ERC-20 token
+    console.log("Execute the swap with ERC-20 token");
+
+    console.log("Buy parameters:");
+    console.log("- From token (asset to spend):", fromTokenAddress);
+    console.log("- To token (asset to buy):", toTokenAddress);
+    console.log("- Max amount to spend:", maxAmountToSpend.toString());
+    console.log("- Target amount to buy:", amountToReceive.toString());
+
+
+    const tokenToBuy = new ethers.Contract(
+      tokenInfo.tokenOut.address,
+      erc20ABI,
+      signer
+    );
+    //balance of the token we want to buy before swap
+    const balanceBefore = await tokenToBuy.balanceOf(signer.address);
+    console.log("Balance before swap:", balanceBefore.toString());
+
+    const tx = await buyAdapter.buyOnLiquidSwap(
+      liquidswapData,
+      fromTokenAddress,
+      toTokenAddress,
+      maxAmountToSpend,
+      amountToReceive,
+      {
+        gasLimit: 2000000,
+      }
+    );
+    console.log("Transaction submitted...");
+    const receipt = await tx.wait();
+    console.log("Transaction successful!");
+
+    const balanceAfter = await tokenToBuy.balanceOf(signer.address);
+    console.log("Balance after swap:", balanceAfter.toString());
+
+
+    // Try to extract the swap details from the transaction logs
+    try {
+      // Look for the Bought event in the logs
+      const boughtEvent = receipt.logs.find(log => {
+        try {
+          const decoded = buyAdapter.interface.parseLog(log);
+          return decoded.name === 'Bought';
+        } catch (e) {
+          return false;
+        }
+      });
+
+      if (boughtEvent) {
+        const decoded = buyAdapter.interface.parseLog(boughtEvent);
+        console.log("Buy details:");
+        console.log("- From asset:", decoded.args.fromAsset);
+        console.log("- To asset:", decoded.args.toAsset);
+        console.log("- Amount spent:", decoded.args.amountSold.toString());
+        console.log("- Amount bought:", decoded.args.amountBought.toString());
+      }
+    } catch (error) {
+      console.log("Could not parse buy event details:", error.message);
+    }
+
+    return receipt;
+  } catch (error) {
+    console.error("Transaction reverted");
+
+    if (error.reason) {
+      console.error("Revert reason:", error.reason);
+    }
+
+    if (error.error && error.error.message) {
+      console.error("Nested error message:", error.error.message);
+    }
+
+    console.error("Full error object:", error);
+
+    throw error;
+  }
+}
+
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
