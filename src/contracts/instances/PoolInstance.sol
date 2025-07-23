@@ -19,6 +19,7 @@ contract PoolInstance is Pool {
    */
   function initialize(IPoolAddressesProvider provider) external virtual override initializer {
     require(provider == ADDRESSES_PROVIDER, Errors.INVALID_ADDRESSES_PROVIDER);
+    _status = _NOT_ENTERED; // Initialize reentrancy guard
   }
 
   function getRevision() internal pure virtual override returns (uint256) {

@@ -40,6 +40,21 @@ abstract contract Pool is VersionedInitializable, PoolStorage, IPool {
 
   IPoolAddressesProvider public immutable ADDRESSES_PROVIDER;
 
+  // Reentrancy protection
+  uint256 internal constant _NOT_ENTERED = 1;
+  uint256 internal constant _ENTERED = 2;
+  uint256 internal _status;
+
+  /**
+   * @dev Prevents a contract from calling itself, directly or indirectly.
+   */
+  modifier nonReentrant() {
+    require(_status != _ENTERED, 'ReentrancyGuard: reentrant call');
+    _status = _ENTERED;
+    _;
+    _status = _NOT_ENTERED;
+  }
+
   /**
    * @dev Only pool configurator can call functions marked by this modifier.
    */
@@ -136,7 +151,7 @@ abstract contract Pool is VersionedInitializable, PoolStorage, IPool {
     uint256 amount,
     address onBehalfOf,
     uint16 referralCode
-  ) public virtual override {
+  ) public virtual override nonReentrant {
     SupplyLogic.executeSupply(
       _reserves,
       _reservesList,
@@ -190,7 +205,7 @@ abstract contract Pool is VersionedInitializable, PoolStorage, IPool {
     address asset,
     uint256 amount,
     address to
-  ) public virtual override returns (uint256) {
+  ) public virtual override nonReentrant returns (uint256) {
     return
       SupplyLogic.executeWithdraw(
         _reserves,
@@ -215,7 +230,7 @@ abstract contract Pool is VersionedInitializable, PoolStorage, IPool {
     uint256 interestRateMode,
     uint16 referralCode,
     address onBehalfOf
-  ) public virtual override {
+  ) public virtual override nonReentrant {
     BorrowLogic.executeBorrow(
       _reserves,
       _reservesList,
@@ -243,7 +258,7 @@ abstract contract Pool is VersionedInitializable, PoolStorage, IPool {
     uint256 amount,
     uint256 interestRateMode,
     address onBehalfOf
-  ) public virtual override returns (uint256) {
+  ) public virtual override nonReentrant returns (uint256) {
     return
       BorrowLogic.executeRepay(
         _reserves,
@@ -340,7 +355,7 @@ abstract contract Pool is VersionedInitializable, PoolStorage, IPool {
     address user,
     uint256 debtToCover,
     bool receiveAToken
-  ) public virtual override {
+  ) public virtual override nonReentrant {
     LiquidationLogic.executeLiquidationCall(
       _reserves,
       _reservesList,
@@ -369,7 +384,7 @@ abstract contract Pool is VersionedInitializable, PoolStorage, IPool {
     address onBehalfOf,
     bytes calldata params,
     uint16 referralCode
-  ) public virtual override {
+  ) public virtual override nonReentrant {
     DataTypes.FlashloanParams memory flashParams = DataTypes.FlashloanParams({
       receiverAddress: receiverAddress,
       assets: assets,
@@ -405,7 +420,7 @@ abstract contract Pool is VersionedInitializable, PoolStorage, IPool {
     uint256 amount,
     bytes calldata params,
     uint16 referralCode
-  ) public virtual override {
+  ) public virtual override nonReentrant {
     DataTypes.FlashloanSimpleParams memory flashParams = DataTypes.FlashloanSimpleParams({
       receiverAddress: receiverAddress,
       asset: asset,
