@@ -20,8 +20,8 @@ contract DefaultMarketInput is MarketInput {
     roles.emergencyAdmin = deployer;
     roles.poolAdmin = deployer;
 
-    config.marketId = 'Aave V3 Testnet Market';
-    config.providerId = 8080;
+    config.marketId = 'HyperLend Aviya';
+    config.providerId = 1;
     config.oracleDecimals = 8;
     config.flashLoanPremium = 0.0005e4;
 
