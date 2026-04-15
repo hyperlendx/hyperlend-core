@@ -155,10 +155,10 @@ library ListingEngine {
         variableDebtTokenImpl: basics[i].implementations.vToken,
         interestRateData: abi.encode(rates[i]),
         underlyingAsset: ids[i],
-        aTokenName: string.concat('Aave ', context.networkName, ' ', basics[i].assetSymbol),
-        aTokenSymbol: string.concat('a', context.networkAbbreviation, basics[i].assetSymbol),
+        aTokenName: string.concat('HyperLend ', context.networkName, ' ', basics[i].assetSymbol),
+        aTokenSymbol: string.concat('h', context.networkAbbreviation, basics[i].assetSymbol),
         variableDebtTokenName: string.concat(
-          'Aave ',
+          'HyperLend ',
           context.networkName,
           ' Variable Debt ',
           basics[i].assetSymbol
