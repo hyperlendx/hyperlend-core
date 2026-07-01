@@ -1,3 +1,7 @@
+# HyperLend Core Contracts
+
+HyperLend is a [Friendly Fork](https://governance.aave.com/t/arfc-recognize-hyperlend-as-a-friendly-fork/) of [Aave v3](https://github.com/aave-dao/aave-v3-origin) (v3.6), deployed on HyperEVM chain.
+
 # Aave V3.6 Origin
 
 ![Aave v3.1 Origin_banner](./resources/v3-1-banner.jpeg)
