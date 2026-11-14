@@ -126,7 +126,7 @@ library ListingEngine {
         interestRateData: abi.encode(rates[i]),
         underlyingAsset: ids[i],
         aTokenName: string.concat('HyperLend ', context.networkName, ' ', basics[i].assetSymbol),
-        aTokenSymbol: string.concat('a', context.networkAbbreviation, basics[i].assetSymbol),
+        aTokenSymbol: string.concat('h', context.networkAbbreviation, basics[i].assetSymbol),
         variableDebtTokenName: string.concat(
           'HyperLend ',
           context.networkName,
